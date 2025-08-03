@@ -12,29 +12,23 @@ namespace Blacus.SlackAPIWrapper
 
     public partial class SlackClient
     {
-        public SlackClient(SlackCredential slackCredential)
-        {
-            SlackCredential = slackCredential;
-        }
-
-        public SlackCredential SlackCredential { get; }
-
-        public AppsConnectionsOpen AppsConnectionsOpen()
-              => Methods.AppsConnectionsOpen.ExecuteAsync(SlackCredential.AppToken).Result;
-
 
         public static async Task<T> MakeHttpRequestAsync<T>(string token, ISlackOptionalArguments? optionalArguments = null)
         {
 
-            var attribs = SlackMethodAttribute.GetSlackMethodAttribute<T>();
+            var attribsMethod = SlackMethodAttribute.GetSlackMethodAttribute<T>();
+            var attribLimiter = SlackLimiterTierAttribute.GetSlackLimiterAttribute<T>();
+
+            if (attribLimiter != null)
+                Limiter.LimiterFactory(attribLimiter.LimiterTier).Wait();
 
             var client = new HttpClient();
 
-            var request = new HttpRequestMessage(attribs.HttpMethod, $"https://slack.com/api/{attribs.Path}");
+            var request = new HttpRequestMessage(attribsMethod.HttpMethod, $"https://slack.com/api/{attribsMethod.Path}");
 
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            switch (attribs.ContentType)
+            switch (attribsMethod.ContentType)
             {
                 case SlackMethodContentType.Json:
                     request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

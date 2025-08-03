@@ -41,7 +41,7 @@ namespace Blacus.SlackAPIWrapper.Methods
         {
 
             [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-            [JsonPropertyName("channel")]
+            [JsonPropertyName("Channel")]
             public required string Channel { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.Never)]

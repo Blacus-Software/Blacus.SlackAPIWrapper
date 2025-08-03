@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Web;
 
 namespace Blacus.SlackAPIWrapper.Methods
 {
@@ -32,6 +34,40 @@ namespace Blacus.SlackAPIWrapper.Methods
                     else
                     {
                         toReturn.Add(new(jsonName.Name, propertyValue.ToString()));
+                    }
+
+                }
+
+            }
+
+            return toReturn;
+
+        }
+
+        public NameValueCollection GetRequestQuery()
+        {
+
+            var toReturn = HttpUtility.ParseQueryString(string.Empty);
+
+            PropertyInfo[] properties = this.GetType().GetProperties();
+
+            foreach (PropertyInfo property in properties)
+            {
+
+                var propertyValue = property.GetValue(this);
+
+                if (propertyValue != null)
+                {
+
+                    var jsonName = property.GetCustomAttribute<JsonPropertyNameAttribute>();
+
+                    if (jsonName == null)
+                    {
+                        toReturn.Add(property.Name, propertyValue.ToString());
+                    }
+                    else
+                    {
+                        toReturn.Add(jsonName.Name, propertyValue.ToString());
                     }
 
                 }

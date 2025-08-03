@@ -93,11 +93,11 @@ namespace Blacus.SlackAPIWrapper.Models
         public bool? IsEnterpriseInstall { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("channel")]
+        [JsonPropertyName("Channel")]
         public Channel Channel { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("message")]
+        [JsonPropertyName("Message")]
         public Message Message { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

@@ -1,6 +1,7 @@
 ﻿using Blacus.SlackAPIWrapper.Models;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Blacus.SlackAPIWrapper.Methods
 {
@@ -37,7 +38,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("provided")]
-        public string? Provided { get; set; }
+        public string? Provided { get; set; } 
 
     }
 

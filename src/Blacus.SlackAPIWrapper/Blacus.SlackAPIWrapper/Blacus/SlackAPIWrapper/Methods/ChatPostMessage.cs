@@ -11,70 +11,73 @@ namespace Blacus.SlackAPIWrapper.Methods
     {
 
         public static async Task<ChatPostMessage> ExecuteAsync(string token, OptionalArguments slackOptionalArguments)
-              => await SlackClient.MakeHttpRequestAsync<ChatPostMessage>(token, slackOptionalArguments);
+        {
+            Limiter.LimiterFactory(slackOptionalArguments.Channel, 1, new System.TimeSpan(0, 0, 1)).Wait();
+            return await SlackClient.MakeHttpRequestAsync<ChatPostMessage>(token, slackOptionalArguments);
+        }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("channel")]
-        public string Channel { get; set; }
+        [JsonPropertyName("Channel")]
+        public string? Channel { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("ts")]
-        public string Ts { get; set; }
+        public string? Ts { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("message")]
-        public Message Message { get; set; }
+        [JsonPropertyName("Message")]
+        public Message? Message { get; set; }
 
         public class OptionalArguments : SlackOptionalArguments
         {
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("message")]
-            public string message { get; set; }
+            [JsonPropertyName("Message")]
+            public string? Message { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("channel")]
-            public string channel { get; set; }
+            [JsonPropertyName("Channel")]
+            public string? Channel { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("blocks")]
-            public string? blocks { get; set; }
+            public string? Blocks { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("file_ids")]
-            public string? file_ids { get; set; }
+            [JsonPropertyName("FileIds")]
+            public string? FileIds { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("link_names")]
-            public string? link_names { get; set; }
+            public string? LinkNames { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("metadata")]
-            public string? metadata { get; set; }
+            public string? Metadata { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("parse")]
-            public string? parse { get; set; }
+            public string? Parse { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("text")]
-            public string? text { get; set; }
+            public string? Text { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("username")]
-            public string? username { get; set; }
+            public string? Username { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("icon_url")]
-            public string? icon_url { get; set; }
+            public string? IconUrl { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("thread_ts")]
-            public string? thread_ts { get; set; }
+            public string? ThreadTs { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("attachments")]
-            public string? attachments { get; set; }
+            public string? Attachments { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("markdown_text")]
@@ -82,19 +85,19 @@ namespace Blacus.SlackAPIWrapper.Methods
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("reply_broadcast")]
-            public bool? reply_broadcast { get; set; }
+            public bool? ReplyBroadcast { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("as_user")]
-            public bool? as_user { get; set; }
+            public bool? AsUser { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("mrkdwn")]
-            public bool? mrkdwn { get; set; }
+            public bool? Mrkdwn { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("response_type")]
-            public string response_type { get; set; }
+            public string? ResponseType { get; set; }
 
         }
 

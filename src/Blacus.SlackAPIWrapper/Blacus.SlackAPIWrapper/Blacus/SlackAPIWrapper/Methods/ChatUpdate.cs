@@ -7,6 +7,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 {
 
     [SlackMethod("chat.update", "Post", SlackMethodContentType.FormUrlEncoded)]
+    [SlackLimiterTier(LimiterTier.WebAPITier3)]
     public class ChatUpdate : SlackMethod
     {
 
@@ -18,7 +19,7 @@ namespace Blacus.SlackAPIWrapper.Methods
         public string Text { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("channel")]
+        [JsonPropertyName("Channel")]
         public string Channel { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -26,25 +27,83 @@ namespace Blacus.SlackAPIWrapper.Methods
         public string Ts { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("message")]
+        [JsonPropertyName("Message")]
         public Message Message { get; set; }
 
         public class OptionalArguments : SlackOptionalArguments
         {
 
-            public string message { get; set; }
-            public string channel { get; set; }
-            public bool? as_user { get; set; }
-            public string? blocks { get; set; }
-            public string? file_ids { get; set; }
-            public string? link_names { get; set; }
-            public string? metadata { get; set; }
-            public string? parse { get; set; }
-            public bool? reply_broadcast { get; set; }
-            public string? text { get; set; }
-            public string? ts { get; set; }
-            public string? username { get; set; }
-            public string? attachments { get; set; }
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("Message")]
+            public string? Message { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("Channel")]
+            public string? Channel { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("blocks")]
+            public string? Blocks { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("FileIds")]
+            public string? FileIds { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("link_names")]
+            public string? LinkNames { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("metadata")]
+            public string? Metadata { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("parse")]
+            public string? Parse { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("text")]
+            public string? Text { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("username")]
+            public string? Username { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("icon_url")]
+            public string? IconUrl { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("thread_ts")]
+            public string? ThreadTs { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("attachments")]
+            public string? Attachments { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("markdown_text")]
+            public string? MarkdownText { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("reply_broadcast")]
+            public bool? ReplyBroadcast { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("as_user")]
+            public bool? AsUser { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("mrkdwn")]
+            public bool? Mrkdwn { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("response_type")]
+            public string? ResponseType { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("ts")]
+            public string? Ts { get; set; } 
 
         }
 

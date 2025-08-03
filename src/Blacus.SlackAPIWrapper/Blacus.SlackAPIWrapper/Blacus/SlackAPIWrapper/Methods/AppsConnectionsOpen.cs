@@ -6,6 +6,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 {
 
     [SlackMethod("apps.connections.open", "POST", SlackMethodContentType.FormUrlEncoded)]
+    [SlackLimiterTier(LimiterTier.WebAPITier3)]
     public class AppsConnectionsOpen : SlackMethod
     {
 

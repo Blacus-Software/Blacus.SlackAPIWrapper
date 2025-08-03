@@ -30,7 +30,7 @@ namespace Blacus.SlackAPIWrapper.Models
         public List<SlackBlock> Blocks { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("channel")]
+        [JsonPropertyName("Channel")]
         public string Channel { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -82,7 +82,7 @@ namespace Blacus.SlackAPIWrapper.Models
         public string Text { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("message")]
+        [JsonPropertyName("Message")]
         public Message? Message { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

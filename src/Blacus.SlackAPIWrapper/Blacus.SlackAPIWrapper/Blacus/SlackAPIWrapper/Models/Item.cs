@@ -12,7 +12,7 @@ namespace Blacus.SlackAPIWrapper.Models
         // Example Value: message
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("channel")]
+        [JsonPropertyName("Channel")]
         public string? Channel { get; set; }
         // Example Value: C04PT7JEAV9
 
