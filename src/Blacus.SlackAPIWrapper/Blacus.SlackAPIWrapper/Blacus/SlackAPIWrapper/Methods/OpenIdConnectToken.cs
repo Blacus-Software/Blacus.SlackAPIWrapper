@@ -1,8 +1,7 @@
 ﻿using Blacus.SlackAPIWrapper.Attributes;
-using Blacus.SlackAPIWrapper.Methods;
 using System.Text.Json.Serialization;
 
-namespace Blacus.SlackAPIWrapper.Commands
+namespace Blacus.SlackAPIWrapper.Methods
 {
 
     [SlackMethod("openid.connect.token", "Post", SlackMethodContentType.FormUrlEncoded)]

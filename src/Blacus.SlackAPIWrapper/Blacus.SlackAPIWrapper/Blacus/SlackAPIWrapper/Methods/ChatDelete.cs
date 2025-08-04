@@ -1,9 +1,8 @@
 ﻿using Blacus.SlackAPIWrapper.Attributes;
-using Blacus.SlackAPIWrapper.Methods;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Blacus.SlackAPIWrapper.Commands
+namespace Blacus.SlackAPIWrapper.Methods
 {
 
     [SlackMethod("chat.delete", "Post", SlackMethodContentType.FormUrlEncoded)]

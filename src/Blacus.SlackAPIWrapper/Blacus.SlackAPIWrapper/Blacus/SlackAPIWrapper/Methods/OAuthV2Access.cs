@@ -1,12 +1,9 @@
 ﻿using Blacus.SlackAPIWrapper.Attributes;
-using Blacus.SlackAPIWrapper.Methods;
 using Blacus.SlackAPIWrapper.Models;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-#pragma warning disable CS8601, CS8603, CS8600, CS8602, CS1998, CS8625, CS8618, CS8604
-
-namespace Blacus.SlackAPIWrapper.Commands
+namespace Blacus.SlackAPIWrapper.Methods
 {
 
     [SlackMethod("oauth.v2.access", "Post", SlackMethodContentType.FormUrlEncoded)]
