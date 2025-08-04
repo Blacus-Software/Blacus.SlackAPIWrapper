@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+
 namespace Blacus.SlackAPIWrapper.Methods
 {
 
@@ -12,7 +14,7 @@ namespace Blacus.SlackAPIWrapper.Methods
     {
 
         public static async Task<ConversationsHistory> ExecuteAsync(string token, OptionalArguments slackOptionalArguments)
-              => await SlackClient.MakeHttpRequestAsync<ConversationsHistory>(token, slackOptionalArguments);
+              => await SlackClient.HttpRequestAsync<ConversationsHistory>(token, slackOptionalArguments);
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("messages")]

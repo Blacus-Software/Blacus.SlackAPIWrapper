@@ -18,22 +18,22 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyOrder(6)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_value")]
-        public string InitialValue { get; set; }
+        public string? InitialValue { get; set; }
 
         [JsonPropertyOrder(6)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("min_value")]
-        public string MinValue { get; set; }
+        public string? MinValue { get; set; }
 
         [JsonPropertyOrder(6)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("max_value")]
-        public string MaxValue { get; set; }
+        public string? MaxValue { get; set; }
 
         [JsonPropertyOrder(6)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("dispatch_action_config")]
-        public object DispatchActionConfig { get; set; }
+        public object? DispatchActionConfig { get; set; }
 
         [JsonPropertyOrder(6)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -43,7 +43,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyOrder(6)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("placeholder")]
-        public object Placeholder { get; set; }
+        public object? Placeholder { get; set; }
 
     }
 

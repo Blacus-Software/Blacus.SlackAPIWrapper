@@ -1,7 +1,12 @@
 ﻿using Blacus.SlackAPIWrapper.Attributes;
 using Blacus.SlackAPIWrapper.Models;
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+
+#pragma warning disable CS8601, CS8603, CS8600, CS8602, CS1998, CS8625, CS8618, CS8604
 
 namespace Blacus.SlackAPIWrapper.Methods
 {
@@ -13,7 +18,29 @@ namespace Blacus.SlackAPIWrapper.Methods
         public static async Task<ChatPostMessage> ExecuteAsync(string token, OptionalArguments slackOptionalArguments)
         {
             Limiter.LimiterFactory(slackOptionalArguments.Channel, 1, new System.TimeSpan(0, 0, 1)).Wait();
-            return await SlackClient.MakeHttpRequestAsync<ChatPostMessage>(token, slackOptionalArguments);
+            return await SlackClient.HttpRequestAsync<ChatPostMessage>(token, slackOptionalArguments);
+        }
+
+        public static async Task<string> Transmit(string token, Uri uri, OptionalArguments slackOptionalArguments)
+        {
+
+            var client = SlackClient.HttpClient;
+            var request = new HttpRequestMessage(HttpMethod.Post, uri);
+
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            string json = System.Text.Json.JsonSerializer.Serialize<ChatPostMessage.OptionalArguments>(slackOptionalArguments);
+
+            var content = new StringContent(json, null, "application/json");
+
+            request.Content = content;
+
+            var response = await client.SendAsync(request);
+
+            string toReturn = await response.Content.ReadAsStringAsync();
+
+            return toReturn;
+
         }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

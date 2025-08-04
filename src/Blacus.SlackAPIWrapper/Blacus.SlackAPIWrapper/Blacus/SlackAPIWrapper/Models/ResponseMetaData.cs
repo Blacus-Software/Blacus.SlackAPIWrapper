@@ -6,10 +6,10 @@ namespace Blacus.SlackAPIWrapper.Models
     {
 
         [JsonPropertyName("next_cursor")]
-        public string NextCursor { get; set; }
+        public string? NextCursor { get; set; }
 
         [JsonPropertyName("messages")]
-        public string[] Messages { get; set; }
+        public string[]? Messages { get; set; }
 
     }
 }

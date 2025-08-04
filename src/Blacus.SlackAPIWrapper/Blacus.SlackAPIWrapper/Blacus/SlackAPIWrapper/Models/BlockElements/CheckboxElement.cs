@@ -7,22 +7,22 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
     public class CheckboxElement : BlockElement
     {
 
-        public CheckboxElement(string actionId = null) : base(actionId) { }
+        public CheckboxElement(string? actionId = null) : base(actionId) { }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("options")]
-        public List<CheckBoxOption> Options { get; set; }
+        public List<CheckBoxOption>? Options { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_options")]
-        public List<object> InitialOptions { get; set; }
+        public List<object>? InitialOptions { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("confirm")]
-        public object Confirm { get; set; }
+        public object? Confirm { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -41,15 +41,15 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("text")]
-        public TextObject Text { get; set; }
+        public TextObject? Text { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("description")]
-        public TextObject Description { get; set; }
+        public TextObject? Description { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("value")]
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
     }
 

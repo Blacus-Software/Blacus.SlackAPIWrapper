@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Blacus.SlackAPIWrapper.Models;
+using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Blacus.SlackAPIWrapper.Models
+#pragma warning disable CS8603, CS8600, CS8602
+
+namespace Blacus.SlackAPIWrapper.JsonConverters
 {
     public class EventConverterJsonConverter : JsonConverter<ISlackPayload_EventCallback_Event>
     {

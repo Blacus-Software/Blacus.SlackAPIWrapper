@@ -7,7 +7,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
     public class SelectMenuElement : BlockElement
     {
 
-        public SelectMenuElement(string actionId = null) : base(actionId) { }
+        public SelectMenuElement(string? actionId = null) : base(actionId) { }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

@@ -7,7 +7,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
     {
 
         public string ToJson() =>
-            System.Text.Json.JsonSerializer.Serialize<object>(this, JsonConverterSettings.Singleton);
+            System.Text.Json.JsonSerializer.Serialize<object>(this, JsonConverters.JsonConverterSettings.Singleton);
 
     }
 

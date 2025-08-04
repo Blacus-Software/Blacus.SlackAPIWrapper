@@ -17,7 +17,7 @@ namespace Blacus.SlackAPIWrapper.Methods
         public class OptionalArguments : SlackOptionalArguments { }
 
         public static async Task<AppsConnectionsOpen> ExecuteAsync(string token)
-              => await SlackClient.MakeHttpRequestAsync<AppsConnectionsOpen>(token);
+              => await SlackClient.HttpRequestAsync<AppsConnectionsOpen>(token);
 
     }
 

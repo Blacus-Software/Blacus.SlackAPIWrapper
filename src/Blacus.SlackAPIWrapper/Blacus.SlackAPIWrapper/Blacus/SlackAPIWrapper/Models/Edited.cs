@@ -7,11 +7,11 @@ namespace Blacus.SlackAPIWrapper.Models
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("user")]
-        public string User { get; set; }
+        public string? User { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("ts")]
-        public string Ts { get; set; }
+        public string? Ts { get; set; }
     }
 
 }

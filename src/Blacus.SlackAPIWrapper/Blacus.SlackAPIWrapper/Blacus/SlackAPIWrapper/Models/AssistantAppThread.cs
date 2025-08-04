@@ -10,19 +10,19 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("title")]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("title_blocks")]
-        public List<SlackBlock> TitleBlocks { get; set; }
+        public List<SlackBlock>? TitleBlocks { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("artifacts")]
-        public List<object> Artifacts { get; set; }
+        public List<object>? Artifacts { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("context")]
-        public AssistantContext Context { get; set; }
+        public AssistantContext? Context { get; set; }
 
     }
 

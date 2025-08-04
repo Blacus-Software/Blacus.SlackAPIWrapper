@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
+#pragma warning disable CS8603, CS8600, CS8602
+
 namespace Blacus.SlackAPIWrapper.Models.BlockElements
 {
     public class BlockOptionObject
@@ -18,15 +20,15 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
                 _text.MaxTextLength = field_Text_MaxLength;
             }
         }
-        private TextObject _text;
+        private TextObject? _text;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("description")]
-        public TextObject Description { get; set; }
+        public TextObject? Description { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("value")]
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
     }
 

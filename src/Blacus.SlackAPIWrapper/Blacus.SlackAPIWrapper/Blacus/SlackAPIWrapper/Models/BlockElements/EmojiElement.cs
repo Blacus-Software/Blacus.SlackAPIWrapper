@@ -12,11 +12,11 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("unicode")]
-        public string Unicode { get; set; }
+        public string? Unicode { get; set; }
 
     }
 

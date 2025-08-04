@@ -11,19 +11,15 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
         }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-        [JsonPropertyName("type")]
-        public new string Type { get => "timepicker"; }
-
         [JsonPropertyOrder(0)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_time")]
-        public string InitialTime { get; set; }
+        public string? InitialTime { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("confirm")]
-        public ConfirmationDialogObject Confirm { get; set; }
+        public ConfirmationDialogObject? Confirm { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -33,12 +29,12 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("placeholder")]
-        public object Placeholder { get; set; }
+        public TextObject? Placeholder { get; set; }
 
         [JsonPropertyOrder(0)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("timezone")]
-        public string Timezone { get; set; }
+        public string? Timezone { get; set; }
 
     }
 

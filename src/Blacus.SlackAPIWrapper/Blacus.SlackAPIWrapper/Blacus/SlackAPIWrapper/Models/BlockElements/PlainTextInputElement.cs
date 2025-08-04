@@ -6,14 +6,14 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
     public class PlainTextInputElement : BlockElement
     {
 
-        public PlainTextInputElement(string actionId = null) : base(actionId)
+        public PlainTextInputElement(string? actionId = null) : base(actionId)
         {
         }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_value")]
-        public string InitialValue { get; set; }
+        public string? InitialValue { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -43,7 +43,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("placeholder")]
-        public TextObject Placeholder { get; set; }
+        public TextObject? Placeholder { get; set; }
 
     }
 

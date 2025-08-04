@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Reflection;
 
+#pragma warning disable CS8603 // Possible null reference return.
+
 namespace Blacus.SlackAPIWrapper.Attributes
 {
 
@@ -9,12 +11,11 @@ namespace Blacus.SlackAPIWrapper.Attributes
     {
 
         public LimiterTier LimiterTier { get; }
-    
+
         public SlackLimiterTierAttribute(LimiterTier limiterTier)
         {
             LimiterTier = limiterTier;
         }
-
 
         public static SlackLimiterTierAttribute GetSlackLimiterAttribute<T>()
         {
@@ -22,6 +23,7 @@ namespace Blacus.SlackAPIWrapper.Attributes
             var type = typeof(T);
             TypeInfo info = type.GetTypeInfo();
             var slackMethodAttribute = info.GetCustomAttributes<SlackLimiterTierAttribute>().FirstOrDefault();
+
             return slackMethodAttribute;
 
         }

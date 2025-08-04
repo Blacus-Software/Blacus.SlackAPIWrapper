@@ -8,7 +8,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("app_id")]
-        public string AppId { get; set; }
+        public string? AppId { get; set; }
 
     }
 

@@ -13,10 +13,6 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-        [JsonPropertyName("type")]
-        public new string Type { get => "checkboxes"; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [JsonPropertyName("options")]
         public List<object> Options { get; set; }
 

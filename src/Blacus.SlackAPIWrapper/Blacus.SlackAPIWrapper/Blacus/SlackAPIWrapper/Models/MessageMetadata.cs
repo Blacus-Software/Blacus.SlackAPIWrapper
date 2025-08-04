@@ -8,11 +8,11 @@ namespace Blacus.SlackAPIWrapper.Models
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("event_type")]
-        public string EventType { get; set; }
+        public string? EventType { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("event_payload")]
-        public Dictionary<string, string> EventPayload { get; set; }
+        public Dictionary<string, string>? EventPayload { get; set; }
 
     }
 

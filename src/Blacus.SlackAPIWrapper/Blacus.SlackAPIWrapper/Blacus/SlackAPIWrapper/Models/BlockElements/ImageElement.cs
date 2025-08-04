@@ -12,16 +12,12 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-        [JsonPropertyName("type")]
-        public new string Type { get => "image"; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [JsonPropertyName("image_url")]
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [JsonPropertyName("alt_text")]
-        public string AltText { get; set; }
+        public string? AltText { get; set; }
 
     }
 

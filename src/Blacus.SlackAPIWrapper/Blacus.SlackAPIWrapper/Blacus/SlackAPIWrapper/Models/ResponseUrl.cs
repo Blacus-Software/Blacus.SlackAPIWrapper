@@ -13,15 +13,15 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("action_id")]
-        public string ActionId { get; set; }
+        public string? ActionId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("channel_id")]
-        public string ChannelId { get; set; }
+        public string? ChannelId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("response_url")]
-        public Uri ResponseUrl { get; set; }
+        public Uri? ResponseUrl { get; set; }
 
     }
 

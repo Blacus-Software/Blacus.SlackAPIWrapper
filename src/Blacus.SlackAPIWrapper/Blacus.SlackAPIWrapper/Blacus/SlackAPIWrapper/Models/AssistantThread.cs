@@ -7,19 +7,19 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("user_id")]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("context")]
-        public AssistantThreadContext Context { get; set; }
+        public AssistantThreadContext? Context { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("channel_id")]
-        public string ChannelId { get; set; }
+        public string? ChannelId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("thread_ts")]
-        public string ThreadTs { get; set; }
+        public string? ThreadTs { get; set; }
 
     }
 }

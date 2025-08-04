@@ -1,7 +1,6 @@
 ﻿using Blacus.SlackAPIWrapper.Models;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Blacus.SlackAPIWrapper.Methods
 {
@@ -18,12 +17,15 @@ namespace Blacus.SlackAPIWrapper.Methods
         [JsonPropertyName("ok")]
         public bool Ok { get; set; }
 
+        /// <summary>
+        /// if ok is false, then this is the reason-code
+        /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [JsonPropertyName("error")]
         public string? Error { get; set; }
 
         [JsonExtensionData]
-        public Dictionary<string, object> ExtensionData { get; set; }
+        public Dictionary<string, object>? ExtensionData { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         public string? SourceJson { get; set; }
@@ -38,7 +40,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("provided")]
-        public string? Provided { get; set; } 
+        public string? Provided { get; set; }
 
     }
 

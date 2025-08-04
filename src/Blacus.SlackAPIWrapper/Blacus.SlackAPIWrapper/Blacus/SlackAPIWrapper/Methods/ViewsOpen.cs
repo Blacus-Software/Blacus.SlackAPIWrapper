@@ -11,7 +11,7 @@ namespace Blacus.SlackAPIWrapper.Methods
     {
 
         public static async Task<ViewsOpen> ExecuteAsync(string token, OptionalArguments slackOptionalArguments)
-              => await SlackClient.MakeHttpRequestAsync<ViewsOpen>(token, slackOptionalArguments);
+              => await SlackClient.HttpRequestAsync<ViewsOpen>(token, slackOptionalArguments);
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("view")]

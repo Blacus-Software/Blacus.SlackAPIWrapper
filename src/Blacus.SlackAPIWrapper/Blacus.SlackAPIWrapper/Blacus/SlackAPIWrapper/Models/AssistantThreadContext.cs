@@ -8,15 +8,15 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("channel_id")]
-        public string ChannelId { get; set; }
+        public string? ChannelId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("team_id")]
-        public string TeamId { get; set; }
+        public string? TeamId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("enterprise_id")]
-        public string EnterpriseId { get; set; }
+        public string? EnterpriseId { get; set; }
 
     }
 

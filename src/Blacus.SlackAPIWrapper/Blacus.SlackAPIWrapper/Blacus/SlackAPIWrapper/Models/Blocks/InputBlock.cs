@@ -6,19 +6,19 @@ namespace Blacus.SlackAPIWrapper.Models.Blocks
     public class InputBlock : SlackBlock
     {
 
-        public InputBlock(string blockId = null) : base(blockId)
+        public InputBlock(string? blockId = null) : base(blockId)
         {
         }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("label")]
-        public TextObject Label { get; set; }
+        public TextObject? Label { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("element")]
-        public BlockElements.BlockElement Element { get; set; }
+        public BlockElements.BlockElement? Element { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -28,7 +28,7 @@ namespace Blacus.SlackAPIWrapper.Models.Blocks
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("hint")]
-        public TextObject Hint { get; set; }
+        public TextObject? Hint { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

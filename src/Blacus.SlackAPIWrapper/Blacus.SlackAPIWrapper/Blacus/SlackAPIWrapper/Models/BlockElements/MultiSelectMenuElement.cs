@@ -19,22 +19,22 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("options")]
-        public List<object> Options { get; set; }
+        public List<object>? Options { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("option_groups")]
-        public List<object> OptionGroups { get; set; }
+        public List<object>? OptionGroups { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_options")]
-        public List<object> InitialOptions { get; set; }
+        public List<object>? InitialOptions { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("confirm")]
-        public ConfirmationDialogObject Confirm { get; set; }
+        public ConfirmationDialogObject? Confirm { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -54,17 +54,17 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("placeholder")]
-        public List<object> Placeholder { get; set; }
+        public List<object>? Placeholder { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_users")]
-        public List<string> InitialUsers { get; set; }
+        public List<string>? InitialUsers { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_conversations")]
-        public List<string> InitialConversations { get; set; }
+        public List<string>? InitialConversations { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -74,12 +74,12 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("filter")]
-        public ConversationListFilterObject Filter { get; set; }
+        public ConversationListFilterObject? Filter { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_channels")]
-        public List<string> InitialChannels { get; set; }
+        public List<string>? InitialChannels { get; set; }
 
 
         public enum MultiSelectMenuElementTypes

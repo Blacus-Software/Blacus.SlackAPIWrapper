@@ -38,7 +38,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyName("action_id")]
         public string? ActionId { get; set; }
 
-        public BlockElement(string actionId) =>
+        public BlockElement(string? actionId) =>
             ActionId = actionId;
 
     }

@@ -12,33 +12,33 @@ namespace Blacus.SlackAPIWrapper.Methods
     {
 
         public static async Task<ChatUpdate> ExecuteAsync(string token, OptionalArguments slackOptionalArguments)
-              => await SlackClient.MakeHttpRequestAsync<ChatUpdate>(token, slackOptionalArguments);
+              => await SlackClient.HttpRequestAsync<ChatUpdate>(token, slackOptionalArguments);
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("text")]
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("Channel")]
-        public string Channel { get; set; }
+        [JsonPropertyName("channel")]
+        public string? Channel { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("ts")]
-        public string Ts { get; set; }
+        public string? Ts { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("Message")]
-        public Message Message { get; set; }
+        [JsonPropertyName("message")]
+        public Message? Message { get; set; }
 
         public class OptionalArguments : SlackOptionalArguments
         {
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("Message")]
+            [JsonPropertyName("message")]
             public string? Message { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("Channel")]
+            [JsonPropertyName("channel")]
             public string? Channel { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -46,7 +46,7 @@ namespace Blacus.SlackAPIWrapper.Methods
             public string? Blocks { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("FileIds")]
+            [JsonPropertyName("file_ids")]
             public string? FileIds { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -103,7 +103,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("ts")]
-            public string? Ts { get; set; } 
+            public string? Ts { get; set; }
 
         }
 

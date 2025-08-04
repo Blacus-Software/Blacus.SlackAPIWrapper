@@ -28,6 +28,9 @@ namespace Blacus.SlackAPIWrapper
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string BotUserToken { get; set; } = string.Empty;
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string UserToken { get; set; } = string.Empty;
+
         public string ToJson() => JsonSerializer.Serialize<SlackCredential>(this, new JsonSerializerOptions
         {
             WriteIndented = true

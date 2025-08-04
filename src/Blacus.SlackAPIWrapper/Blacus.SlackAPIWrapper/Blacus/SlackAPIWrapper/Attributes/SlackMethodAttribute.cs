@@ -2,11 +2,13 @@
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using Blacus.SlackAPIWrapper;
+
+#pragma warning disable CS8603 // Possible null reference return.
 
 namespace Blacus.SlackAPIWrapper.Attributes
 {
 
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class SlackMethodAttribute : Attribute
     {
 
@@ -36,8 +38,7 @@ namespace Blacus.SlackAPIWrapper.Attributes
     public enum SlackMethodContentType
     {
         Json,
-        FormUrlEncoded,
-        MultipartFormData
+        FormUrlEncoded
     }
 
 }

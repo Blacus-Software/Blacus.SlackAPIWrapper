@@ -5,7 +5,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements;
 public class ButtonElement : BlockElement
 {
 
-    public ButtonElement(string actionId = null) : base(actionId)
+    public ButtonElement(string? actionId = null) : base(actionId)
     {
         Text = new TextObject();
     }

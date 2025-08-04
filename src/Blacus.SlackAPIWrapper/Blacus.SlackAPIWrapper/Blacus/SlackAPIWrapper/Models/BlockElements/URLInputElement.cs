@@ -9,17 +9,12 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         public URLInputElement(string actionId) : base(actionId)
         {
 
-
         }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-        [JsonPropertyName("type")]
-        public new string Type { get => "url_text_input"; }
 
         [JsonPropertyOrder(6)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_value")]
-        public string InitialValue { get; set; }
+        public string? InitialValue { get; set; }
 
         [JsonPropertyOrder(6)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -34,7 +29,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("placeholder")]
-        public object Placeholder { get; set; }
+        public object? Placeholder { get; set; }
 
     }
 

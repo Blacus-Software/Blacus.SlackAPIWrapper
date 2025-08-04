@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 
+#pragma warning disable CS8603, CS8600, CS8602
+
 namespace Blacus.SlackAPIWrapper
 {
 

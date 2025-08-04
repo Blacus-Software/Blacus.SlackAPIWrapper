@@ -13,12 +13,12 @@ namespace Blacus.SlackAPIWrapper.Models.Blocks
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("elements")]
-        public BlockElementCollection Elements { get; set; }
+        public BlockElementCollection? Elements { get; set; }
 
         [JsonPropertyOrder(3)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("element")]
-        public BlockElement Element { get; set; }
+        public BlockElement? Element { get; set; }
 
     }
 

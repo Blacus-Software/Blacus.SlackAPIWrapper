@@ -10,7 +10,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("values")]
-        public Dictionary<string, Dictionary<string, BlockElement>> Values { get; set; }
+        public Dictionary<string, Dictionary<string, BlockElement>>? Values { get; set; }
 
     }
 

@@ -13,7 +13,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("link")]
-        public Uri Link { get; set; }
+        public Uri? Link { get; set; }
 
 
     }

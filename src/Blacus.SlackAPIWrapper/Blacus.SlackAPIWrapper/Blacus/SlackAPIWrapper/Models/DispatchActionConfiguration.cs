@@ -9,7 +9,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("trigger_actions_on")]
-        public List<string> TriggerActionsOn { get; set; }
+        public List<string>? TriggerActionsOn { get; set; }
 
     }
 

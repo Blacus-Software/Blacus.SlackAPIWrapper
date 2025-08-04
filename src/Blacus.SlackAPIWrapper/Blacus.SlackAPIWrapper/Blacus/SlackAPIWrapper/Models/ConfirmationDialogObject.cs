@@ -1,5 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
+#pragma warning disable CS8603, CS8600, CS8602
+
 namespace Blacus.SlackAPIWrapper.Models
 {
 
@@ -44,7 +46,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("style")]
-        public string Style { get; set; }
+        public string? Style { get; set; }
 
     }
 

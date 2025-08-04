@@ -8,13 +8,12 @@ namespace Blacus.SlackAPIWrapper.Models.Blocks
 
         public ContextBlock(string blockId) : base(blockId)
         {
-            //Type = "context";
         }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("elements")]
-        public List<object> Elements { get; set; }
+        public List<object>? Elements { get; set; }
 
     }
 }
