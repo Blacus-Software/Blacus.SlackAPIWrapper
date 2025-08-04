@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text.Json.Serialization; 
+using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models
 {
@@ -91,7 +91,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("verbatim")]
-        public bool? Verbatim { get; set; } 
+        public bool? Verbatim { get; set; }
 
         [JsonIgnore]
         public int? MaxTextLength { get; set; }

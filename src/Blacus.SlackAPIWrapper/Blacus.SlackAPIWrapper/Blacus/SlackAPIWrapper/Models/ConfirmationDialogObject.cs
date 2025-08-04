@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization; 
+﻿using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models
 {
@@ -12,7 +12,7 @@ namespace Blacus.SlackAPIWrapper.Models
         {
 
             Title = new TextObject() { Type = TextObject.TextType.PlainText, };
-            Text = new TextObject() {  Text = string.Empty, };
+            Text = new TextObject() { Text = string.Empty, };
 
         }
 
@@ -27,7 +27,7 @@ namespace Blacus.SlackAPIWrapper.Models
             get { return _text; }
             set
             {
-                _text = value; 
+                _text = value;
                 _text.MaxTextLength = field_Text_MaxLength;
             }
         }

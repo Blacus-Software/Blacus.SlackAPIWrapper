@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text.Json.Serialization; 
+using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models.BlockElements
 {

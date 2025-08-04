@@ -23,8 +23,8 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
                     return boolValue;
 
                 case JsonTokenType.String:
-                    var stringValue = reader.GetString(); 
-                    
+                    var stringValue = reader.GetString();
+
                     if (Boolean.TryParse(stringValue, out boolValue))
                         return boolValue;
 
@@ -36,8 +36,8 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
 
         }
 
-        public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options)=>
-            JsonSerializer.Serialize(writer, value);  
+        public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) =>
+            JsonSerializer.Serialize(writer, value);
 
         public static readonly BoolConverter Singleton = new BoolConverter();
 

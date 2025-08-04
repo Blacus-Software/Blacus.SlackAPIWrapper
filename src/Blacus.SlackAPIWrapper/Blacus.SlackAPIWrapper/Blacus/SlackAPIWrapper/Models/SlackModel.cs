@@ -16,7 +16,7 @@ namespace Blacus.SlackAPIWrapper.Models
         public Dictionary<string, JsonElement>? ExtensionData { get; set; }
 
         public string ToJson() =>
-            System.Text.Json.JsonSerializer.Serialize<object>(this, JsonConverterSettings.Singleton);
+            JsonSerializer.Serialize<object>(this, JsonConverterSettings.Singleton);
 
     }
 

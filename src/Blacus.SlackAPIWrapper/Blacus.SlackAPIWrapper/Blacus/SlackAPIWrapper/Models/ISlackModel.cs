@@ -20,7 +20,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         public static T? FromJson<T>(System.IO.Stream json) where T : ISlackModel
         {
-            ISlackModel toReturn = JsonSerializer.Deserialize<T>(json, JsonConverterSettings.Singleton); 
+            ISlackModel toReturn = JsonSerializer.Deserialize<T>(json, JsonConverterSettings.Singleton);
             return (T?)toReturn;
         }
 
