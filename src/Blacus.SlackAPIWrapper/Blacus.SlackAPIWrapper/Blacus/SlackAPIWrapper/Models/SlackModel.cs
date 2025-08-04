@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Models
 {
 
-    public class SlackModel
+    public class SlackModel : ISlackModel
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
@@ -20,32 +20,14 @@ namespace Blacus.SlackAPIWrapper.Models
 
     }
 
-    public class SlackModel<T> : SlackModel
+    public class SlackModel<T> : SlackModel where T : ISlackModel
     {
 
-        public static T? FromJson(string json)
-        {
-            try
-            {
-                return System.Text.Json.JsonSerializer.Deserialize<T>(json, JsonConverterSettings.Singleton);
-            }
-            catch (System.Exception)
-            {
-                return default(T);
-            }
-        }
+        public static T? FromJson(string json) =>
+            ISlackModel.FromJson<T>(json);
 
-        public static T? FromJson(System.IO.Stream json)
-        {
-            try
-            {
-                return System.Text.Json.JsonSerializer.Deserialize<T>(json, JsonConverterSettings.Singleton);
-            }
-            catch (System.Exception)
-            {
-                return default(T);
-            }
-        }
+        public static T? FromJson(System.IO.Stream json) =>
+            ISlackModel.FromJson<T>(json);
 
     }
 

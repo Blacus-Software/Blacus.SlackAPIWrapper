@@ -16,7 +16,7 @@ namespace Blacus.SlackAPIWrapper.Attributes
         public HttpMethod HttpMethod { get; }
         public SlackMethodContentType ContentType { get; }
 
-        public SlackMethodAttribute(string path, string httpMethod, SlackMethodContentType contentType)
+        public SlackMethodAttribute(string path, string httpMethod, SlackMethodContentType contentType = SlackMethodContentType.FormUrlEncoded)
         {
             Path = path;
             HttpMethod = HttpMethod.Parse(httpMethod);

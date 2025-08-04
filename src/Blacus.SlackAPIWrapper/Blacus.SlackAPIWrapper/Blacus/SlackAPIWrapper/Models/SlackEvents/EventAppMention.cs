@@ -1,9 +1,10 @@
 ﻿using Blacus.SlackAPIWrapper.Models.Blocks;
 using System.Text.Json.Serialization;
 
-namespace Blacus.SlackAPIWrapper.Models
+namespace Blacus.SlackAPIWrapper.Models.SlackEvents
 {
-    public class SlackEvent_AppMention : SlackEvent, ISlackPayload_EventCallback_Event
+
+    public class EventAppMention : SlackEvent, ISlackPayloadEvent
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -47,4 +48,5 @@ namespace Blacus.SlackAPIWrapper.Models
         public string? EventTs { get; set; }
 
     }
+
 }

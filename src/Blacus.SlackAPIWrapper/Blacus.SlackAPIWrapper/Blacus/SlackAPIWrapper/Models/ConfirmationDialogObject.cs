@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-#pragma warning disable CS8603, CS8600, CS8602
+﻿using System.Text.Json.Serialization; 
 
 namespace Blacus.SlackAPIWrapper.Models
 {
@@ -13,8 +11,8 @@ namespace Blacus.SlackAPIWrapper.Models
         public ConfirmationDialogObject()
         {
 
-            Title = new TextObject() { Type = TextObject.TextType.plain_text, };
-            Text = new TextObject() { ThrowExceptionWhenNull = true, Text = string.Empty, };
+            Title = new TextObject() { Type = TextObject.TextType.PlainText, };
+            Text = new TextObject() {  Text = string.Empty, };
 
         }
 
@@ -29,8 +27,7 @@ namespace Blacus.SlackAPIWrapper.Models
             get { return _text; }
             set
             {
-                _text = value;
-                _text.ThrowExceptionWhenNull = true;
+                _text = value; 
                 _text.MaxTextLength = field_Text_MaxLength;
             }
         }

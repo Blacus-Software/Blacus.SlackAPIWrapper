@@ -1,17 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Blacus.SlackAPIWrapper.Models
-{
+namespace Blacus.SlackAPIWrapper.Models.SlackEvents
+{ 
 
-    public class SlackEvent_ReactionRemoved : SlackEvent_Reaction, ISlackPayload_EventCallback_Event
-    {
-    }
-
-    public class SlackEvent_ReactionAdded : SlackEvent_Reaction
-    {
-    }
-
-    public class SlackEvent_Reaction : SlackEvent
+    public class EventReaction : SlackEvent
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

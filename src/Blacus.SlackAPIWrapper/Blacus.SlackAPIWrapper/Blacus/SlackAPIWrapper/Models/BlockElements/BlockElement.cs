@@ -3,6 +3,8 @@
 namespace Blacus.SlackAPIWrapper.Models.BlockElements
 {
 
+    public interface IBlockElement;
+
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "type", UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor)]
     [JsonDerivedType(typeof(ButtonElement), typeDiscriminator: "button")]
     [JsonDerivedType(typeof(DatePickerElement), typeDiscriminator: "datepicker")]
@@ -40,11 +42,6 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
         public BlockElement(string? actionId) =>
             ActionId = actionId;
-
-    }
-
-    public interface IBlockElement
-    {
 
     }
 

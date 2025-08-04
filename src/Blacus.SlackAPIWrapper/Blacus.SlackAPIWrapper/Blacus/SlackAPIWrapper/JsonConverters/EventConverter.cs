@@ -1,20 +1,20 @@
 ﻿using Blacus.SlackAPIWrapper.Models;
+using Blacus.SlackAPIWrapper.Models.SlackEvents;
 using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-#pragma warning disable CS8603, CS8600, CS8602
-
 namespace Blacus.SlackAPIWrapper.JsonConverters
 {
-    public class EventConverterJsonConverter : JsonConverter<ISlackPayload_EventCallback_Event>
+
+    public class EventConverter : JsonConverter<ISlackPayloadEvent>
     {
 
-        public override bool CanConvert(Type t) => true;// t == typeof(ISlackPayload_EventCallback_Event);
+        public override bool CanConvert(Type type) => typeof(ISlackPayloadEvent).IsAssignableFrom(type);
 
-        public override ISlackPayload_EventCallback_Event Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override ISlackPayloadEvent Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
 
             JsonDocument jdoc = JsonDocument.ParseValue(ref reader);
@@ -32,13 +32,11 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
                 switch (evt.Type)
                 {
                     case "app_mention":
-                        return fromJson<SlackEvent_AppMention>(json);
-
-                    case "reaction_removed":
-                        return fromJson<SlackEvent_ReactionRemoved>(json);
+                        return fromJson<EventAppMention>(json);
 
                     case "reaction_added":
-                        return fromJson<SlackEvent_ReactionAdded>(json);
+                    case "reaction_removed":
+                        return fromJson<EventReaction>(json);
 
                     default:
                         return fromJson<SlackEvent_Fallback>(json);
@@ -62,13 +60,11 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
 
         }
 
-        public override void Write(Utf8JsonWriter writer, ISlackPayload_EventCallback_Event value, JsonSerializerOptions options)
-        {
+        public override void Write(Utf8JsonWriter writer, ISlackPayloadEvent value, JsonSerializerOptions options) =>
+            JsonSerializer.Serialize(writer, value, options);
 
-            return;
-        }
-
-        public static readonly EventConverterJsonConverter Singleton = new EventConverterJsonConverter();
+        public static readonly EventConverter Singleton = new EventConverter();
 
     }
+
 }

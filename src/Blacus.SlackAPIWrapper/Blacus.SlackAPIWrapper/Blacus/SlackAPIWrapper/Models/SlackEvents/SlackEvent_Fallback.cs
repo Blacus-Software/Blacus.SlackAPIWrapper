@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Blacus.SlackAPIWrapper.Models
+namespace Blacus.SlackAPIWrapper.Models.SlackEvents
 {
 
-    public class SlackEvent_Fallback : SlackModel, ISlackPayload_EventCallback_Event
+    public class SlackEvent_Fallback : SlackModel, ISlackPayloadEvent
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

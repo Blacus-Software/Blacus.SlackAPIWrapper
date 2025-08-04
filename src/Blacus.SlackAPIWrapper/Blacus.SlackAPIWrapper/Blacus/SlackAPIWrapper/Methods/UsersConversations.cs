@@ -1,11 +1,10 @@
 ﻿using Blacus.SlackAPIWrapper.Attributes;
-using Blacus.SlackAPIWrapper.Methods;
 using Blacus.SlackAPIWrapper.Models;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Blacus.SlackAPIWrapper
+namespace Blacus.SlackAPIWrapper.Methods
 {
 
     [SlackMethod("users.conversations", "Post", SlackMethodContentType.FormUrlEncoded)]

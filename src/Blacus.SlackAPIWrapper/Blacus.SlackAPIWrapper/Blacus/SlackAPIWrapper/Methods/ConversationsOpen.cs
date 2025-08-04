@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Methods
 {
 
-    [SlackMethod("conversations.open", "Post", SlackMethodContentType.FormUrlEncoded)]
+    [SlackMethod("conversations.open", "Post")]
     public class ConversationsOpen : SlackMethod
     {
 

@@ -1,4 +1,5 @@
 ﻿using Blacus.SlackAPIWrapper.JsonConverters;
+using Blacus.SlackAPIWrapper.Models.SlackEvents;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -26,8 +27,8 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("event")]
-        [JsonConverter(typeof(EventConverterJsonConverter))]
-        public ISlackPayload_EventCallback_Event? Event { get; set; }
+        [JsonConverter(typeof(EventConverter))]
+        public ISlackPayloadEvent? Event { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("context_team_id")]

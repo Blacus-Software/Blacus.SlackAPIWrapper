@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Text.Json.Serialization;
-
-#pragma warning disable CS8603, CS8600, CS8602, CS1998, CS8625, CS8618, CS8604
+using System.Text.Json.Serialization; 
 
 namespace Blacus.SlackAPIWrapper.Models
 {
@@ -9,45 +7,74 @@ namespace Blacus.SlackAPIWrapper.Models
     public class TextObject : SlackModel
     {
 
-
         public TextObject() { }
 
-        public TextObject(string text)
+        public TextObject(string text, TextType textType = TextType.Mrkdwn, bool emoji = true)
         {
             Text = text;
+            Type = textType;
+            Emoji = emoji;
         }
 
         public enum TextType
         {
-            plain_text,
-            mrkdwn
+            PlainText,
+            Mrkdwn
         }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+        public TextType Type { get; set; } = TextType.PlainText;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [JsonPropertyName("type")]
-        public TextType Type { get; set; } = TextType.plain_text;
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("text")]
-        public string Text
+        public string? TypeString
         {
             get
             {
-                if (text == null && ThrowExceptionWhenNull)
+                switch (Type)
                 {
-                    throw new ArgumentNullException(nameof(Text));
+                    default:
+                    case TextType.PlainText:
+                        return "plain_text";
+
+                    case TextType.Mrkdwn:
+                        return "mrkdwn";
                 }
+            }
+            set
+            {
+                switch (value)
+                {
+                    default:
+                    case "plain_text":
+                        Type = TextType.PlainText;
+                        break;
+
+                    case "mrkdwn":
+                        Type = TextType.Mrkdwn;
+                        break;
+                }
+            }
+        }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("text")]
+        public string? Text
+        {
+            get
+            {
 
                 if (MaxTextLength != null)
                 {
-                    return text.Substring(0, Math.Min(MaxTextLength ?? 9999, text.Length));
+                    return text.Substring(0, Math.Min(MaxTextLength ?? 3000, text.Length));
                 }
 
                 return text;
+
             }
             set { text = value; }
         }
-        private string text;
+        private string? text;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("emoji")]
@@ -55,7 +82,7 @@ namespace Blacus.SlackAPIWrapper.Models
         {
             get
             {
-                if (Type != TextType.plain_text) { return null; }
+                if (Type != TextType.PlainText) { return null; }
                 return _emoji;
             }
             set { _emoji = value; }
@@ -64,10 +91,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("verbatim")]
-        public bool? Verbatim { get; set; }
-
-        [JsonIgnore]
-        public bool ThrowExceptionWhenNull { get; set; } = false;
+        public bool? Verbatim { get; set; } 
 
         [JsonIgnore]
         public int? MaxTextLength { get; set; }

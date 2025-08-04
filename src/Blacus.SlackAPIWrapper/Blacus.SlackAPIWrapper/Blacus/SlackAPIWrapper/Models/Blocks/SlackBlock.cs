@@ -21,19 +21,8 @@ namespace Blacus.SlackAPIWrapper.Models.Blocks
         [JsonPropertyName("block_id")]
         public string BlockId { get; set; }
 
-        public SlackBlock(string? blockId = null)
-        {
-
-            if (blockId == null)
-            {
-                BlockId = Guid.NewGuid().ToString();
-            }
-            else
-            {
-                BlockId = blockId;
-            }
-
-        }
+        public SlackBlock(string? blockId = null) =>
+            BlockId = blockId ?? Guid.NewGuid().ToString();
 
     }
 

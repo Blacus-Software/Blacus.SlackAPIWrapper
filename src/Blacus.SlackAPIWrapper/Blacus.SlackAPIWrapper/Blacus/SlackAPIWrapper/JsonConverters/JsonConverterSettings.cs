@@ -12,7 +12,7 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
             Converters =
             {
                 new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
-                DecodingChoiceConverter.Singleton,
+                BoolConverter.Singleton,
             }
         };
     }
