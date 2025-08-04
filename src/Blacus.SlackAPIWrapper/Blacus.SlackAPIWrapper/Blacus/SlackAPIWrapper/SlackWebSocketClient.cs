@@ -196,7 +196,7 @@ namespace Blacus.SlackAPIWrapper
 
                     var toReturn = SlackWebSocketPayload.FromJson(text);
 
-                    switch (toReturn.Type)
+                    switch (toReturn.TypeString)
                     {
                         case "hello":
                             break;

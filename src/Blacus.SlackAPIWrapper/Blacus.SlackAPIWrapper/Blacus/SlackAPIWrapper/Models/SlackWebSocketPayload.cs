@@ -1,32 +1,39 @@
 ﻿using Blacus.SlackAPIWrapper.JsonConverters;
 using Blacus.SlackAPIWrapper.Models.SlackPayloads;
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models
 {
 
-    public interface ISlackWebSocketPayload
+    public interface ISlackWebSocketPayload : ISlackModel
     {
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public string? SourceJson { get; set; }
+        public string? TypeString { get; set; }
+        public SlackWebSocketPayloadType? Type { get; }
 
-        [JsonExtensionData]
-        public Dictionary<string, JsonElement>? ExtensionData { get; set; }
+    }
 
-        public string? Type { get; set; }
-
+    public enum SlackWebSocketPayloadType
+    {
+        SlashCommands,
+        Interactive,
+        Hello
     }
 
     public class SlackWebSocketPayload : SlackModel, ISlackWebSocketPayload
     {
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+        public SlackWebSocketPayloadType? Type
+        {
+            get => Enum.Parse<SlackWebSocketPayloadType>(TypeString.Replace("_", string.Empty), true);
+        }
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("type")]
-        public string? Type { get; set; }
+        public string? TypeString { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("envelope_id")]

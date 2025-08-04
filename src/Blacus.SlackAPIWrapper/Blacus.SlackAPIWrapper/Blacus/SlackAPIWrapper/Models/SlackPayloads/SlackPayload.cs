@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 {
 
-    public interface ISlackPayload
+    public interface ISlackPayload : ISlackModel
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
@@ -14,6 +15,14 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
         [JsonExtensionData]
         public Dictionary<string, JsonElement>? ExtensionData { get; set; }
 
+        public PayloadType? Type { get; }
+
+    }
+
+    public enum PayloadType
+    {
+        BlockActions,
+        ViewSubmission
     }
 
     public class SlackPayload : SlackModel, ISlackPayload
@@ -23,9 +32,12 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
         [JsonPropertyName("token")]
         public string? Token { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+        public PayloadType? Type { get => Enum.Parse<PayloadType>(TypeString.Replace("_", string.Empty), true); }
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("type")]
-        public string? Type { get; set; }
+        public string? TypeString { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("api_app_id")]

@@ -39,11 +39,11 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
 
                 switch (payload.Type)
                 {
-                    case "block_actions":
+                    case PayloadType.BlockActions: // "block_actions":
                         toReturn = fromJson<SlackPayload_BlockAction>(json);
                         break;
 
-                    case "view_submission":
+                    case PayloadType.ViewSubmission: // "view_submission":
                         toReturn = fromJson<SlackPayload_ViewSubmission>(json);
                         break;
 
