@@ -21,7 +21,7 @@ namespace Blacus.SlackAPIWrapper.Methods
             return await SlackClient.HttpRequestAsync<ChatPostMessage>(token, slackOptionalArguments);
         }
 
-        public static async Task<string> Transmit(string token, Uri uri, OptionalArguments slackOptionalArguments)
+        public static async Task<string> TransmitAsync(string token, Uri uri, OptionalArguments slackOptionalArguments)
         {
 
             var client = SlackClient.HttpClient;
@@ -44,7 +44,7 @@ namespace Blacus.SlackAPIWrapper.Methods
         }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("Channel")]
+        [JsonPropertyName("channel")]
         public string? Channel { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -52,18 +52,18 @@ namespace Blacus.SlackAPIWrapper.Methods
         public string? Ts { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("Message")]
+        [JsonPropertyName("message")]
         public Message? Message { get; set; }
 
         public class OptionalArguments : SlackOptionalArguments
         {
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("Message")]
+            [JsonPropertyName("message")]
             public string? Message { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("Channel")]
+            [JsonPropertyName("channel")]
             public string? Channel { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -71,7 +71,7 @@ namespace Blacus.SlackAPIWrapper.Methods
             public string? Blocks { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("FileIds")]
+            [JsonPropertyName("fileIds")]
             public string? FileIds { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

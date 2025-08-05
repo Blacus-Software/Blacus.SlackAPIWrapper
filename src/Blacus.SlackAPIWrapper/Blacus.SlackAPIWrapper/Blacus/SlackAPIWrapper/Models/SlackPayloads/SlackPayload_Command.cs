@@ -4,8 +4,12 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 {
 
-    public class SlackPayload_WebSocketCommand : SlackPayload
+    public class SlackPayload_Command : SlackPayload
     {
+
+        public SlackPayload_Command()
+        { 
+        }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("trigger_id")]
@@ -39,6 +43,9 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
         [JsonPropertyName("response_url")]
         public Uri? ResponseUrl { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("team_id")]
+        public string? TeamID { get; set; }
     }
 
 }

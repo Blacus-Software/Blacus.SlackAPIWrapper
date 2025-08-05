@@ -4,17 +4,23 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.JsonConverters
 {
 
-    public class JsonConverterSettings
+    public static class JsonConverterSettings
     {
-        public static readonly System.Text.Json.JsonSerializerOptions Singleton = new System.Text.Json.JsonSerializerOptions
+
+        public static readonly JsonSerializerOptions Singleton = Generate();
+
+        public static JsonSerializerOptions Generate() => new System.Text.Json.JsonSerializerOptions
         {
             WriteIndented = true,
             Converters =
             {
                 new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
                 BoolConverter.Singleton,
+                SlackActionConverter.Singleton,
+                SlackPayloadConverter.Singleton
             }
         };
+
     }
 
 }

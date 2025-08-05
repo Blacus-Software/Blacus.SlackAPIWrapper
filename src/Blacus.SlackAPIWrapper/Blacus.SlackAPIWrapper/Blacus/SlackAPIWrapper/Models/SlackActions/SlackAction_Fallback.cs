@@ -1,20 +1,11 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Blacus.SlackAPIWrapper.Models
+namespace Blacus.SlackAPIWrapper.Models.SlackActions
 {
 
-    public class SlackAction : SlackModel
+    public class SlackAction_Fallback : SlackAction
     {
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("action_id")]
-        public string? ActionId { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("block_id")]
-        public string? BlockId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("text")]
@@ -26,7 +17,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("type")]
-        public string? Type { get; set; }
+        public string? TypeString { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("action_ts")]

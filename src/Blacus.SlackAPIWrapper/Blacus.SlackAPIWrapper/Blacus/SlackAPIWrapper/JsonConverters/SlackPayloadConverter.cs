@@ -2,6 +2,7 @@
 using Blacus.SlackAPIWrapper.Models.SlackPayloads;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -35,24 +36,29 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
 
                 }
 
-                payload = fromJson<SlackPayload>(json);
+                payload = ISlackModel.FromJson<SlackPayload>(json, JsonConverterSettingsSingleton);
 
                 switch (payload.Type)
                 {
-                    case PayloadType.BlockActions: // "block_actions":
-                        toReturn = fromJson<SlackPayload_BlockAction>(json);
+                    case PayloadType.BlockActions:
+                        toReturn = ISlackModel.FromJson<SlackPayload_BlockAction>(json, JsonConverterSettingsSingleton);
                         break;
 
-                    case PayloadType.ViewSubmission: // "view_submission":
-                        toReturn = fromJson<SlackPayload_ViewSubmission>(json);
+                    case PayloadType.ViewSubmission:
+                        toReturn = ISlackModel.FromJson<SlackPayload_ViewSubmission>(json, JsonConverterSettingsSingleton);
+                        break;
+
+                    case PayloadType.UrlVerification:
+                        toReturn = ISlackModel.FromJson<SlackPayload_UrlResponse>(json, JsonConverterSettingsSingleton);
                         break;
 
                     case null:
-                        toReturn = fromJson<SlackPayload_WebSocketCommand>(json);
+                    case PayloadType.SlashCommand:
+                        toReturn = ISlackModel.FromJson<SlackPayload_Command>(json, JsonConverterSettingsSingleton);
                         break;
 
                     default:
-                        toReturn = fromJson<SlackPayload_FallBack>(json);
+                        toReturn = ISlackModel.FromJson<SlackPayload_FallBack>(json, JsonConverterSettingsSingleton);
                         break;
 
                 }
@@ -82,21 +88,7 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
                 throw;
             }
 
-        }
-
-        private static T fromJson<T>(string json) where T : SlackModel
-        {
-
-            if (string.IsNullOrWhiteSpace(json))
-                throw new NullReferenceException();
-
-            T toReturn = JsonSerializer.Deserialize<T>(json, JsonConverterSettings.Singleton);
-
-            toReturn.SourceJson = json;
-
-            return toReturn;
-
-        }
+        } 
 
         public override void Write(Utf8JsonWriter writer, ISlackPayload value, JsonSerializerOptions options)
         {
@@ -104,6 +96,17 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
         }
 
         public static readonly SlackPayloadConverter Singleton = new SlackPayloadConverter();
+
+        private static JsonSerializerOptions JsonConverterSettingsSingleton { get => jsonConverterSettings.Value; }
+        private static Lazy<JsonSerializerOptions> jsonConverterSettings = new Lazy<JsonSerializerOptions>(() =>
+        {
+
+            var option = JsonConverterSettings.Generate();
+            var converter = option.Converters.SingleOrDefault(conv => conv.GetType() == typeof(SlackPayloadConverter));
+            option.Converters.Remove(converter);
+            return option;
+
+        });
 
     }
 

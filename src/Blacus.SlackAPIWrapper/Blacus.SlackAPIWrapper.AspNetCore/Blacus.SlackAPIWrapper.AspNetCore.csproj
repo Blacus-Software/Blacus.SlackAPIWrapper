@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace />
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>Blacus Slack API Wrapper AspNetCore</Title>
+		<Version>8.1.1-beta</Version>
+		<PackageId>Blacus.$(AssemblyName)</PackageId>
+		<Authors>Blacus</Authors>
+		<Product>Blacus.$(AssemblyName)</Product>
+		<PackageOutputPath>$(OutputPath)</PackageOutputPath> 
+		<RepositoryUrl>https://github.com/Blacus-Software/Blacus.SlackAPIWrapper</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Blacus.SlackAPIWrapper\Blacus.SlackAPIWrapper.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
+		<PackageReference Include="System.Text.Json" Version="9.0.8" />
+	</ItemGroup>
+
+</Project>

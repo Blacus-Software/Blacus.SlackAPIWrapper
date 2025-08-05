@@ -1,16 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using Blacus.SlackAPIWrapper.JsonConverters;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Web;
-
-#pragma warning disable CS8601, CS8603, CS8600, CS8602, CS1998, CS8625, CS8618, CS8604
+using System.Web; 
 
 namespace Blacus.SlackAPIWrapper.Methods
 {
 
     public interface ISlackOptionalArguments
     {
+
+        public string ToJson() =>
+            JsonSerializer.Serialize<object>(this, JsonConverterSettings.Singleton);
+
 
         public List<KeyValuePair<string, string>> GetFormUrlEncode()
         {

@@ -1,9 +1,9 @@
 ﻿using Blacus.SlackAPIWrapper.Models;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
+
 
 namespace Blacus.SlackAPIWrapper
 {
@@ -40,14 +40,14 @@ namespace Blacus.SlackAPIWrapper
         private static void AddClass(JsonExtensionDataHelper helper, ref Dictionary<string, string> classes)
         {
 
-            classes.TryAdd(helper.ClassName, helper.ToClassString(helper.ClassName));
+            classes.TryAdd(helper.ClassName, helper.GetClassString(helper.ClassName));
 
             foreach (var item in helper.Items.Where(itm => itm.IsObject))
             {
 
                 var extJamd = new JsonExtensionDataHelper(item.Model, item.ObjectName);
 
-                classes.TryAdd(item.ObjectName, extJamd.ToClassString(item.ObjectName));
+                classes.TryAdd(item.ObjectName, extJamd.GetClassString(item.ObjectName));
 
                 // AddClass(new(item.Model, $"{helper.ClassName}{item.ObjectName}"), ref classes);
                 AddClass(new(item.Model, item.ObjectName), ref classes);
@@ -66,7 +66,24 @@ namespace Blacus.SlackAPIWrapper
             return null;
         }
 
-        public string ToClassString(string? className = "Root")
+        public string GetAllClassStrings()
+        {
+
+            string toReturn = null;
+
+            //var model = ISlackModel.FromJson(sampleJson);
+            //var extJamd = new JsonExtensionDataHelper(model, "WebsocketPayload");
+
+            //foreach (var classItem in Classes)
+            //    Console.WriteLine(classItem.Value);
+
+            toReturn = string.Join("\\n", Classes.Select(cls => cls.Value));
+
+            return toReturn;
+
+        }
+
+        public string GetClassString(string? className = "Root")
         {
 
             string properties = string.Join("\n", Items.Select(im => im.PropertyDefinition));

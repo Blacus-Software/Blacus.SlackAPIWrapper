@@ -1,13 +1,10 @@
 ﻿
 using Blacus.SlackAPIWrapper.Attributes;
 using Blacus.SlackAPIWrapper.Methods;
-using System;
+using Blacus.SlackAPIWrapper.Models;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-
-#pragma warning disable CS8603 // Possible null reference return.
-#pragma warning disable CS8604 // Possible null reference argument.
 
 namespace Blacus.SlackAPIWrapper
 {
@@ -30,7 +27,7 @@ namespace Blacus.SlackAPIWrapper
         /// <param name="token">The authentication token for the request.</param>
         /// <param name="optionalArguments">Optional arguments for the request (e.g. JSON payload).</param>
         /// <returns>The deserialized response data.</returns>
-        public static async Task<T> HttpRequestAsync<T>(string token, ISlackOptionalArguments? optionalArguments = null)
+        public static async Task<T> HttpRequestAsync<T>(string token, ISlackOptionalArguments? optionalArguments = null, bool streamJson = true) where T : SlackMethod
         {
 
             var attribsMethod = SlackMethodAttribute.GetSlackMethodAttribute<T>();
@@ -38,8 +35,6 @@ namespace Blacus.SlackAPIWrapper
 
             if (attribLimiter != null)
                 Limiter.LimiterFactory(attribLimiter.LimiterTier).Wait();
-
-            var client = SlackClient.HttpClient;
 
             var request = new HttpRequestMessage(attribsMethod.HttpMethod, $"https://slack.com/api/{attribsMethod.Path}");
 
@@ -49,25 +44,36 @@ namespace Blacus.SlackAPIWrapper
             {
                 case SlackMethodContentType.Json:
                     request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    throw new NotImplementedException("JSON content type is not implemented yet.");
+                    var jsonContent = new StringContent(optionalArguments.ToJson(), null, "application/json");
+                    request.Content = jsonContent;
+                    break;
 
                 case SlackMethodContentType.FormUrlEncoded:
                     if (optionalArguments != null)
                     {
-                        var content = new FormUrlEncodedContent(optionalArguments?.GetFormUrlEncode());
-                        request.Content = content;
+                        var formUrlEncodedContent = new FormUrlEncodedContent(optionalArguments?.GetFormUrlEncode());
+                        request.Content = formUrlEncodedContent;
                     }
                     break;
 
             }
 
-            var response = await client.SendAsync(request);
+            var response = await HttpClient.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
 
-            string json = await response.Content.ReadAsStringAsync();
+            T toReturn = null;
 
-            T toReturn = System.Text.Json.JsonSerializer.Deserialize<T>(json, JsonConverters.JsonConverterSettings.Singleton);
+            if (streamJson)
+            {
+                toReturn = ISlackModel.FromJson<T>(response.Content.ReadAsStream());
+            }
+            else
+            {
+                string json = await response.Content.ReadAsStringAsync();
+
+                toReturn = ISlackModel.FromJson<T>(json);
+            }
 
             return toReturn;
 

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Blacus.SlackAPIWrapper.Models.SlackActions;
+using System;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
 
@@ -8,6 +8,10 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 
     public class SlackPayload_BlockAction : SlackPayload
     {
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("actions")] 
+        public ISlackAction[]? Actions { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("response_url")]
@@ -40,10 +44,6 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("state")]
         public State? State { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("actions")]
-        public List<SlackAction>? Actions { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("view")]

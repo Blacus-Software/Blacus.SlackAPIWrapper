@@ -1,4 +1,5 @@
 ﻿using Blacus.SlackAPIWrapper.JsonConverters;
+using Blacus.SlackAPIWrapper.Models.SlackActions;
 using Blacus.SlackAPIWrapper.Models.SlackEvents;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -8,6 +9,26 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 
     public class SlackPayload_FallBack : SlackPayload, ISlackPayload
     {
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("user")]
+        public User? User { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("response_urls")]
+        public ResponseUrls[]? ResponseUrls { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("trigger_id")]
+        public string? TriggerId { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("view")]
+        public View? View { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("actions")]
+        public ISlackAction[]? Actions { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("event_id")]
@@ -63,11 +84,7 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("enterprise_id")]
-        public string? EnterpriseId { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("view")]
-        public View? View { get; set; }
+        public string? EnterpriseId { get; set; } 
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("channel_id")]

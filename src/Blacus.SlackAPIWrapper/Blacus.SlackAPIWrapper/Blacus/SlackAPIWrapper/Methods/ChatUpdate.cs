@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Blacus.SlackAPIWrapper.Methods
 {
 
-    [SlackMethod("chat.update", "Post", SlackMethodContentType.FormUrlEncoded)]
+    [SlackMethod("chat.update", "Post", SlackMethodContentType.Json)]
     [SlackLimiterTier(LimiterTier.WebAPITier3)]
     public class ChatUpdate : SlackMethod
     {
@@ -32,10 +32,6 @@ namespace Blacus.SlackAPIWrapper.Methods
 
         public class OptionalArguments : SlackOptionalArguments
         {
-
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("message")]
-            public string? Message { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("channel")]
@@ -66,18 +62,6 @@ namespace Blacus.SlackAPIWrapper.Methods
             public string? Text { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("username")]
-            public string? Username { get; set; }
-
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("icon_url")]
-            public string? IconUrl { get; set; }
-
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("thread_ts")]
-            public string? ThreadTs { get; set; }
-
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("attachments")]
             public string? Attachments { get; set; }
 
@@ -92,14 +76,6 @@ namespace Blacus.SlackAPIWrapper.Methods
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("as_user")]
             public bool? AsUser { get; set; }
-
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("mrkdwn")]
-            public bool? Mrkdwn { get; set; }
-
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            [JsonPropertyName("response_type")]
-            public string? ResponseType { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("ts")]

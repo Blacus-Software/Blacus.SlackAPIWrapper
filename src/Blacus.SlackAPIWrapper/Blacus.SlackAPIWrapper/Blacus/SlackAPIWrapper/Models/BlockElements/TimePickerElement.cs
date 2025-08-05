@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using Microsoft.VisualBasic;
+using System;
+using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models.BlockElements
 {
@@ -6,15 +8,20 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
     public class TimePickerElement : BlockElement
     {
 
-        public TimePickerElement(string actionId) : base(actionId)
-        {
+        const string dateFormat = "HH:mm";
 
-        }
+        public TimePickerElement(string actionId) : base(actionId) { }
 
-        [JsonPropertyOrder(0)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+        public DateTime? InitialTime { get; set; }
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_time")]
-        public string? InitialTime { get; set; }
+        public string? InitialTimeString
+        {
+            get => InitialTime.Value.ToString(dateFormat);
+            set => InitialTime = DateTime.Parse(value);
+        }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -34,7 +41,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyOrder(0)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("timezone")]
-        public string? Timezone { get; set; }
+        public string? TimeZone { get; set; }
 
     }
 

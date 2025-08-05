@@ -28,6 +28,7 @@ namespace Blacus.SlackAPIWrapper.Methods
         [JsonPropertyName("pin_count")]
         public long? PinCount { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("channel_actions_ts")]
         public string ChannelActionsTs { get; set; }
 
@@ -43,7 +44,7 @@ namespace Blacus.SlackAPIWrapper.Methods
         {
 
             [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-            [JsonPropertyName("Channel")]
+            [JsonPropertyName("channel")]
             public required string Channel { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.Never)]

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blacus.SlackAPIWrapper.Helpers;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models.BlockElements
@@ -7,14 +8,18 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
     public class DatetimePickerElement : BlockElement
     {
 
-        public DatetimePickerElement(string actionId) : base(actionId)
-        {
+        public DatetimePickerElement(string actionId) : base(actionId) { }
 
-        }
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+        public DateTime? InitialDateTime { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("initial_date")]
-        public DateTime? InitialDate { get; set; }
+        [JsonPropertyName("initial_date_time")]
+        public long? InitialDateTimeString
+        {
+            get => ((DateTimeOffset)InitialDateTime.Value).ToUnixTimeSeconds();
+            set => InitialDateTime = value.Value.ToDateTimeFromUnixTimeStamp();
+        }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("confirm")]
@@ -22,8 +27,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("focus_on_load")]
-        public bool? FocusOnLoad { get; set; }
-
+        public bool? FocusOnLoad { get; set; } 
     }
 
 }

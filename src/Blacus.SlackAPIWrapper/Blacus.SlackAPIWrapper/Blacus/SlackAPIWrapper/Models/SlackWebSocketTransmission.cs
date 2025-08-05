@@ -19,10 +19,11 @@ namespace Blacus.SlackAPIWrapper.Models
     {
         SlashCommands,
         Interactive,
-        Hello
+        Hello,
+        EventsApi
     }
 
-    public class SlackWebSocketPayload : SlackModel, ISlackWebSocketPayload
+    public class SlackWebSocketTransmission : SlackModel, ISlackWebSocketPayload
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
@@ -52,8 +53,7 @@ namespace Blacus.SlackAPIWrapper.Models
         public SlackWebSocketDebugInfo? DebugInfo { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("payload")]
-        [JsonConverter(typeof(SlackPayloadConverter))]
+        [JsonPropertyName("payload")] 
         public ISlackPayload? Payload { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -68,15 +68,15 @@ namespace Blacus.SlackAPIWrapper.Models
         [JsonPropertyName("retry_reason")]
         public string? RetryReason { get; set; }
 
-        public static SlackWebSocketPayload FromJson(string json)
+        public static SlackWebSocketTransmission FromJson(string json)
         {
 
             if (string.IsNullOrWhiteSpace(json))
                 throw new NullReferenceException("Json is empty");
 
-            SlackWebSocketPayload? toReturn = null;
+            SlackWebSocketTransmission? toReturn = null;
 
-            toReturn = JsonSerializer.Deserialize<SlackWebSocketPayload>(json, JsonConverters.JsonConverterSettings.Singleton);
+            toReturn = JsonSerializer.Deserialize<SlackWebSocketTransmission>(json, JsonConverters.JsonConverterSettings.Singleton);
             toReturn.SourceJson = json;
 
             return toReturn;

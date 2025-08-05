@@ -8,8 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-#pragma warning disable CS8603, CS8600, CS8602, CS1998, CS8625, CS8618, CS8604
-
 namespace Blacus.SlackAPIWrapper
 {
 
@@ -18,14 +16,14 @@ namespace Blacus.SlackAPIWrapper
 
         public int ReceiveBufferSize { get; set; } = 8192;
 
-        public List<Task<SlackWebSocketPayload>> Tasks = new();
+        public List<Task<SlackWebSocketTransmission>> Tasks = new();
 
         public void Dispose() => DisconnectAsync().Wait();
 
         private ClientWebSocket WS;
         private CancellationTokenSource CTS;
 
-        public required Action<ISlackWebSocketPayload> OnMessageReceived { get; set; }
+        public required Action<SlackWebSocketTransmission> OnMessageReceived { get; set; }
 
         private async Task SendMessageAsync(string text) =>
             await this.WS.SendAsync(Encoding.UTF8.GetBytes(text), WebSocketMessageType.Text, true, CTS.Token);
@@ -184,17 +182,13 @@ namespace Blacus.SlackAPIWrapper
         private async Task ResponseReceived(Stream inputStream)
         {
 
-            // convert stream to string
-            StreamReader reader = new StreamReader(inputStream);
-            string text = reader.ReadToEnd();
-
             lock (Tasks)
             {
 
                 Tasks.Add(Task.Run(async () =>
                 {
 
-                    var toReturn = SlackWebSocketPayload.FromJson(text);
+                    var toReturn = ISlackModel.FromJson<SlackWebSocketTransmission>(inputStream);
 
                     switch (toReturn.TypeString)
                     {
