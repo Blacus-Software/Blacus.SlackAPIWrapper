@@ -17,12 +17,12 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_options")]
-        public List<object>? InitialOptions { get; set; }
+        public List<CheckBoxOption>? InitialOptions { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("confirm")]
-        public object? Confirm { get; set; }
+        public SlackModel? Confirm { get; set; }
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -36,7 +36,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
     }
 
-    public class CheckBoxOption
+    public class CheckBoxOption : SlackModel
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

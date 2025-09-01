@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Models.SlackActions
 {
 
+    [SlackAction(ActionType.DateTimePicker)]
     public class DateTimePickerAction : SlackAction
     {
 

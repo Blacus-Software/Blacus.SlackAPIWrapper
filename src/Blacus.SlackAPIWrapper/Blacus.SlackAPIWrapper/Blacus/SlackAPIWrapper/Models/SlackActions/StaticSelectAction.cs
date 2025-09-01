@@ -2,6 +2,8 @@
 
 namespace Blacus.SlackAPIWrapper.Models.SlackActions
 {
+
+    [SlackAction(ActionType.StaticSelect)]
     public class StaticSelectAction : SlackAction
     {
 

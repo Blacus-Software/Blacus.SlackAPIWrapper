@@ -1,6 +1,5 @@
 ﻿using Blacus.SlackAPIWrapper.Models.Blocks;
 using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models
@@ -111,11 +110,11 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("reply_users")]
-        public List<string>? ReplyUsers { get; set; }
+        public string[]? ReplyUsers { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("files")]
-        public List<SlackFile>? Files { get; set; }
+        public SlackFile[]? Files { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("display_as_bot")]

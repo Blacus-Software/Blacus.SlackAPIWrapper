@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models
 {
@@ -9,7 +8,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("trigger_actions_on")]
-        public List<string>? TriggerActionsOn { get; set; }
+        public string[]? TriggerActionsOn { get; set; }
 
     }
 

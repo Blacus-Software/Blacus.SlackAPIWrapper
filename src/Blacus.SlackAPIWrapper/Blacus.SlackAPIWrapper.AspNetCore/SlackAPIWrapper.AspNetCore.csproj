@@ -17,14 +17,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Blacus.SlackAPIWrapper\Blacus.SlackAPIWrapper.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
+		<PackageReference Include="Blacus.SlackAPIWrapper" Version="8.1.1-beta" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.8" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
 		<PackageReference Include="System.Text.Json" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.8" />
+
 	</ItemGroup>
 
 </Project>

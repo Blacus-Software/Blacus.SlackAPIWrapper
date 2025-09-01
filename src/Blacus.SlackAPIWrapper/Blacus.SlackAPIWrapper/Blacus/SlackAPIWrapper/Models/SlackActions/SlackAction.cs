@@ -5,10 +5,14 @@ namespace Blacus.SlackAPIWrapper.Models.SlackActions
 {
 
     public interface ISlackAction : ISlackModel
-    { 
-        public ActionType? Type { get; } 
-        public string? ActionId { get; set; } 
+    {
+
+        public ActionType? Type { get; }
+        public string? ActionId { get; set; }
         public string? BlockId { get; set; }
+
+        public static ActionType ConversionType { get; set; }
+
     }
 
     public enum ActionType
@@ -19,8 +23,9 @@ namespace Blacus.SlackAPIWrapper.Models.SlackActions
         DatePicker,
         ConversationsSelect,
         StaticSelect,
-        Checkboxes
-    } 
+        Checkboxes,
+        ChannelsSelect
+    }
 
     public class SlackAction : SlackModel, ISlackAction
     {

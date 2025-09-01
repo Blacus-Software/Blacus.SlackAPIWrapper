@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blacus.SlackAPIWrapper", "B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppSlackTestApp", "..\..\gitIgnore\ConsoleAppSlackTestApp\ConsoleAppSlackTestApp.csproj", "{BC183565-B92E-4A7F-9983-1F25F4E97E9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blacus.SlackAPIWrapper.AspNetCore", "Blacus.SlackAPIWrapper.AspNetCore\Blacus.SlackAPIWrapper.AspNetCore.csproj", "{E5FA9549-4149-9FAE-C3F7-743E056C7249}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BC183565-B92E-4A7F-9983-1F25F4E97E9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC183565-B92E-4A7F-9983-1F25F4E97E9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC183565-B92E-4A7F-9983-1F25F4E97E9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5FA9549-4149-9FAE-C3F7-743E056C7249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5FA9549-4149-9FAE-C3F7-743E056C7249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5FA9549-4149-9FAE-C3F7-743E056C7249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5FA9549-4149-9FAE-C3F7-743E056C7249}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

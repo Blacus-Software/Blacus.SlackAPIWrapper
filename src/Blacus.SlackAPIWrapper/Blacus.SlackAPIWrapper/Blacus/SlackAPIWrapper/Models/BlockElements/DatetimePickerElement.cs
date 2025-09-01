@@ -11,15 +11,21 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         public DatetimePickerElement(string actionId) : base(actionId) { }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public DateTime? InitialDateTime { get; set; }
+        public DateTime? InitialDateTime
+        {
+            get { return long.Parse(InitialDateTimeString).ToDateTimeFromUnixTimeStamp(); }
+            set
+            {
+
+                if (value != null)
+                    InitialDateTimeString = ((DateTimeOffset)(value)).ToUnixTimeSeconds().ToString();
+
+            }
+        }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_date_time")]
-        public long? InitialDateTimeString
-        {
-            get => ((DateTimeOffset)InitialDateTime.Value).ToUnixTimeSeconds();
-            set => InitialDateTime = value.Value.ToDateTimeFromUnixTimeStamp();
-        }
+        public string? InitialDateTimeString { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("confirm")]
@@ -27,7 +33,8 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("focus_on_load")]
-        public bool? FocusOnLoad { get; set; } 
+        public bool? FocusOnLoad { get; set; }
+
     }
 
 }

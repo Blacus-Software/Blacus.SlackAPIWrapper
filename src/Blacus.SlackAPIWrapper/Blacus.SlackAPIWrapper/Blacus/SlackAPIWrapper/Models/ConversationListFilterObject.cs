@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models
 {
@@ -9,7 +8,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("include")]
-        public List<string>? Include { get; set; }
+        public string[]? Include { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("exclude_external_shared_channels")]

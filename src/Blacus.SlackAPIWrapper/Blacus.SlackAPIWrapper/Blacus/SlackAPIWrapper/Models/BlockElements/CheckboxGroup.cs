@@ -14,11 +14,11 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [JsonPropertyName("options")]
-        public List<object> Options { get; set; }
+        public List<SlackModel> Options { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [JsonPropertyName("initial_options")]
-        public List<object>? InitialOptions { get; set; }
+        public List<SlackModel>? InitialOptions { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [JsonPropertyName("confirm")]

@@ -1,5 +1,6 @@
 ﻿using Blacus.SlackAPIWrapper.Methods;
 using Blacus.SlackAPIWrapper.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,7 @@ namespace Blacus.SlackAPIWrapper
     public class SlackWebSocketClient : IDisposable
     {
 
-        public int ReceiveBufferSize { get; set; } = 8192;
+        public int ReceiveBufferSize { get; } = 8192;
 
         public List<Task<SlackWebSocketTransmission>> Tasks = new();
 
@@ -24,18 +25,26 @@ namespace Blacus.SlackAPIWrapper
         private CancellationTokenSource CTS;
 
         public required Action<SlackWebSocketTransmission> OnMessageReceived { get; set; }
+        private ILogger logger { get; }
 
-        private async Task SendMessageAsync(string text) =>
+        public async Task SendMessageAsync(string text) =>
             await this.WS.SendAsync(Encoding.UTF8.GetBytes(text), WebSocketMessageType.Text, true, CTS.Token);
 
         private Task taskCleanUp;
         private Task taskReceiveLoop;
+
+        public SlackWebSocketClient(ILogger logger)
+        {
+            this.logger = logger;
+        }
 
         public async Task ConnectAsync(string appToken)
         {
 
             var openResponse = AppsConnectionsOpen.ExecuteAsync(appToken).Result;
             var url = openResponse.Url;
+
+            logger.LogTrace($"Connecting to WebSocket at {url}");
 
             if (WS != null)
                 WS.Dispose();
@@ -100,7 +109,7 @@ namespace Blacus.SlackAPIWrapper
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"WebSocket Error: {ex.Message}");
+                    logger.LogError($"WebSocket Error: {ex.Message}");
                 }
 
             }
@@ -126,6 +135,8 @@ namespace Blacus.SlackAPIWrapper
             WS = null;
             CTS.Dispose();
             CTS = null;
+
+            logger.LogInformation($"WebSocket Disconnected");
 
         }
 
@@ -169,7 +180,7 @@ namespace Blacus.SlackAPIWrapper
             catch (TaskCanceledException) { }
             catch (WebSocketException ex)
             {
-                Console.WriteLine($"Websocket error: {ex.Message}");
+                logger.LogError($"WebSocket error: {ex.Message}");
                 DisconnectAsync().Wait();
             }
             finally
@@ -182,30 +193,44 @@ namespace Blacus.SlackAPIWrapper
         private async Task ResponseReceived(Stream inputStream)
         {
 
-            lock (Tasks)
-            {
+            bool stream = true;
+            SlackWebSocketTransmission slackWebSocketTransmission = null;
 
-                Tasks.Add(Task.Run(async () =>
+            if (stream)
+            {
+                slackWebSocketTransmission = ISlackModel.FromJson<SlackWebSocketTransmission>(inputStream);
+            }
+            else
+            {
+                string json = null;
+                try
+                {
+                    using (StreamReader reader = new StreamReader(inputStream, Encoding.UTF8))
+                    {
+                        json = await reader.ReadToEndAsync();
+                        slackWebSocketTransmission = ISlackModel.FromJson<SlackWebSocketTransmission>(json);
+                    }
+                }
+                catch (Exception ex)
                 {
 
-                    var toReturn = ISlackModel.FromJson<SlackWebSocketTransmission>(inputStream);
-
-                    switch (toReturn.TypeString)
-                    {
-                        case "hello":
-                            break;
-
-                        default:
-                            await SendMessageAsync(new SlackWebSocketAcknowledge() { EnvelopeId = toReturn.EnvelopeId, }.ToJson());
-                            OnMessageReceived(toReturn);
-                            break;
-
-                    }
-
-                    return toReturn;
-
                 }
-                ));
+            }
+
+            slackWebSocketTransmission.Client = this;
+            slackWebSocketTransmission.AcknowledgePayload = new() { EnvelopeId = slackWebSocketTransmission.EnvelopeId, };
+
+            switch (slackWebSocketTransmission.TypeString)
+            {
+                case "hello":
+                    logger.LogInformation($"WebSocket Hello");
+                    break;
+
+                default:
+                    OnMessageReceived(slackWebSocketTransmission);
+                    string ackPayload = slackWebSocketTransmission.AcknowledgePayload.ToJson();
+                    await SendMessageAsync(ackPayload);
+                    break;
 
             }
 

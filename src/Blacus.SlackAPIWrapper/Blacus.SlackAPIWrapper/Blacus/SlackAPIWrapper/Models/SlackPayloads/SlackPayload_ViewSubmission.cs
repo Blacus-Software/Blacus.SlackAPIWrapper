@@ -14,14 +14,6 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
         [JsonPropertyName("response_urls")]
         public ResponseUrls[]? ResponseUrls { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("trigger_id")]
-        public string? TriggerId { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("view")]
-        public View? View { get; set; }
-
     }
 
 }

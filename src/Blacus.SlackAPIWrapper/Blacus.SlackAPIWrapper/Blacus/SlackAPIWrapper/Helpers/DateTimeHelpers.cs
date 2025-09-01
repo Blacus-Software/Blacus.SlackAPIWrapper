@@ -4,7 +4,7 @@ namespace Blacus.SlackAPIWrapper.Helpers
 {
 
     public static class DateTimeHelpers
-    { 
+    {
 
         public static DateTime ToDateTimeFromUnixTimeStamp(this long unixTimeStamp)
         {

@@ -1,6 +1,8 @@
 ﻿namespace Blacus.SlackAPIWrapper.Models
 {
-    public class AssistantContext
+
+    public class AssistantContext : SlackModel
     {
     }
+
 }

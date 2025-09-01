@@ -1,5 +1,4 @@
 ﻿using Blacus.SlackAPIWrapper.JsonConverters;
-using Blacus.SlackAPIWrapper.Methods;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;

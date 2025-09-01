@@ -3,6 +3,7 @@
 namespace Blacus.SlackAPIWrapper.Models.SlackActions
 {
 
+    [SlackAction(ActionType.ConversationsSelect)]
     public class ConversationsSelectAction : SlackAction
     {
 

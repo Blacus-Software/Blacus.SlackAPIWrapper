@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Blacus.SlackAPIWrapper.Helpers;
+using System;
 using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models
@@ -22,7 +22,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("selected_options")]
-        public List<OptionObject>? SelectedOptions { get; set; }
+        public OptionObject[]? SelectedOptions { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("selected_option")]
@@ -35,6 +35,21 @@ namespace Blacus.SlackAPIWrapper.Models
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("actionId")]
         public TextObject? ActionId { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+        public DateTime? SelectedDateTime { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("selected_date_time")]
+        public string? SelectedDateTimeString
+        {
+            get => ((DateTimeOffset)SelectedDateTime.Value).ToUnixTimeSeconds().ToString();
+            set
+            {
+                if (value != null)
+                    SelectedDateTime = long.Parse(value).ToDateTimeFromUnixTimeStamp();
+            }
+        }
 
     }
 

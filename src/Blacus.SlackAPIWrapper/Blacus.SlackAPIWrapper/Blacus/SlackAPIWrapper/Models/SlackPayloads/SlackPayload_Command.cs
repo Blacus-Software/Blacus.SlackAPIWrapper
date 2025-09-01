@@ -8,12 +8,8 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
     {
 
         public SlackPayload_Command()
-        { 
-        }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("trigger_id")]
-        public string? TriggerId { get; set; }
+        {
+        } 
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("channel_name")]
@@ -43,9 +39,6 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
         [JsonPropertyName("response_url")]
         public Uri? ResponseUrl { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("team_id")]
-        public string? TeamID { get; set; }
     }
 
 }

@@ -1,5 +1,4 @@
-﻿using Blacus.SlackAPIWrapper.JsonConverters;
-using Blacus.SlackAPIWrapper.Models.SlackPayloads;
+﻿using Blacus.SlackAPIWrapper.Models.SlackPayloads;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -25,6 +24,12 @@ namespace Blacus.SlackAPIWrapper.Models
 
     public class SlackWebSocketTransmission : SlackModel, ISlackWebSocketPayload
     {
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+        public SlackWebSocketClient Client { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+        public SlackWebSocketAcknowledge AcknowledgePayload { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         public SlackWebSocketPayloadType? Type
@@ -53,7 +58,7 @@ namespace Blacus.SlackAPIWrapper.Models
         public SlackWebSocketDebugInfo? DebugInfo { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("payload")] 
+        [JsonPropertyName("payload")]
         public ISlackPayload? Payload { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

@@ -9,7 +9,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         public TextObject() { }
 
-        public TextObject(string text, TextType textType = TextType.Mrkdwn, bool emoji = true)
+        public TextObject(string text, TextType textType = TextType.PlainText, bool emoji = true)
         {
             Text = text;
             Type = textType;

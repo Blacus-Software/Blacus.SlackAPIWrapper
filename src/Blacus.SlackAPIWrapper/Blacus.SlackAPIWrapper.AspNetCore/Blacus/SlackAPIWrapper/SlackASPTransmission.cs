@@ -31,7 +31,7 @@
         public string Code { get; set; }
 
         public SlackASPTransmission(IHttpContextAccessor httpContextAccessor, SlackCredential slackCredential)
-        {
+        { 
 
             this.httpContextAccessor = httpContextAccessor;
             DefaultSlackCredential = slackCredential;
@@ -121,7 +121,7 @@
                 {
                     TypeString = "slash_command",
                     Token = HttpUtility.UrlDecode(values["token"]),
-                    TeamID = HttpUtility.UrlDecode(values["team_id"]),
+                    TeamId = HttpUtility.UrlDecode(values["team_id"]),
                     // EnterpriseId = HttpUtility.UrlDecode(values["enterprise_id"]),
                     ResponseUrl = new Uri(HttpUtility.UrlDecode(values["response_url"])),
                     TriggerId = HttpUtility.UrlDecode(values["trigger_id"]),

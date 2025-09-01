@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Blacus.SlackAPIWrapper.Methods
 {
 
-    [SlackMethod("views.open", "Post", SlackMethodContentType.FormUrlEncoded)]
+    [SlackMethod("views.open", "Post", SlackMethodContentType.Json)]
     public class ViewsOpen : SlackMethod
     {
 

@@ -44,6 +44,7 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
                         toReturn = ISlackModel.FromJson<SlackPayload_BlockAction>(json, JsonConverterSettingsSingleton);
                         break;
 
+                    case PayloadType.ViewClosed:
                     case PayloadType.ViewSubmission:
                         toReturn = ISlackModel.FromJson<SlackPayload_ViewSubmission>(json, JsonConverterSettingsSingleton);
                         break;
@@ -88,12 +89,19 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
                 throw;
             }
 
-        } 
-
-        public override void Write(Utf8JsonWriter writer, ISlackPayload value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
         }
+
+        public override void Write(Utf8JsonWriter writer, ISlackPayload value, JsonSerializerOptions options) =>
+            JsonSerializer.Serialize<object>(writer, value, new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                Converters =
+                {
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+                    BoolConverter.Singleton,
+                    SlackActionConverter.Singleton,
+                }
+            });
 
         public static readonly SlackPayloadConverter Singleton = new SlackPayloadConverter();
 

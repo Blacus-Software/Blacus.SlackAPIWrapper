@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Blacus.SlackAPIWrapper": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "websocket": ""
+      }
+    }
+  }
+}

@@ -1,5 +1,4 @@
 ﻿using Blacus.SlackAPIWrapper.Models;
-using System.IO;
 
 namespace Blacus.SlackAPIWrapper
 {

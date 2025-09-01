@@ -69,7 +69,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("pending_shared")]
-        public List<object>? PendingShared { get; set; }
+        public SlackModel[]? PendingShared { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("context_team_id")]
@@ -136,7 +136,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
     }
 
-    public partial class Purpose
+    public partial class Purpose : SlackModel
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

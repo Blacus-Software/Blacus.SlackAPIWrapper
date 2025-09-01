@@ -1,9 +1,10 @@
 ﻿using Blacus.SlackAPIWrapper.Models;
 using Blacus.SlackAPIWrapper.Models.SlackActions;
-using Blacus.SlackAPIWrapper.Models.SlackPayloads;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -15,6 +16,12 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
     {
 
         public override bool CanConvert(Type type) => typeof(ISlackAction).IsAssignableFrom(type);
+
+        private static Dictionary<ActionType, Type> actionTypes = typeof(ISlackAction).Assembly.GetTypes()
+            .Where(t => t.IsClass && !t.IsAbstract && typeof(ISlackAction).IsAssignableFrom(t) && t.GetCustomAttributes<SlackActionAttribute>().Any())
+            .Select(t => new { Type = t, Attribute = t.GetCustomAttributes<SlackActionAttribute>().FirstOrDefault() })
+            .Where(t => t.Attribute != null)
+            .ToDictionary(t => t.Attribute.ActionType, t => t.Type);
 
         public override ISlackAction? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -37,44 +44,14 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
 
             payload = ISlackModel.FromJson<SlackAction>(json, JsonConverterSettingsSingleton);
 
-            switch (payload.Type)
-            {
-                case ActionType.Button:
-                    toReturn = ISlackModel.FromJson<ButtonAction>(json, JsonConverterSettingsSingleton);
-                    break;
-
-                case ActionType.DateTimePicker:
-                    toReturn = ISlackModel.FromJson<DateTimePickerAction>(json, JsonConverterSettingsSingleton);
-                    break;
-
-                case ActionType.DatePicker:
-                    toReturn = ISlackModel.FromJson<DatePickerAction>(json, JsonConverterSettingsSingleton);
-                    break;
-
-                case ActionType.TimePicker:
-                    toReturn = ISlackModel.FromJson<TimePickerAction>(json, JsonConverterSettingsSingleton);
-                    break;
-
-                case ActionType.ConversationsSelect:
-                    toReturn = ISlackModel.FromJson<ConversationsSelectAction>(json, JsonConverterSettingsSingleton);
-                    break;
-
-                case ActionType.StaticSelect:
-                    toReturn = ISlackModel.FromJson<StaticSelectAction>(json, JsonConverterSettingsSingleton);
-                    break;
-
-                case ActionType.Checkboxes:
-                    toReturn = ISlackModel.FromJson<CheckBoxAction>(json, JsonConverterSettingsSingleton);
-                    break;
-
-                default:
-                    toReturn = ISlackModel.FromJson<SlackAction>(json, JsonConverterSettingsSingleton);
-                    break;
-            }
+            toReturn = (ISlackAction?)System.Text.Json.JsonSerializer.Deserialize(
+                json: json,
+                returnType: actionTypes.SingleOrDefault(act => act.Key == payload.Type).Value,
+                options: JsonConverterSettingsSingleton);
 
             if (toReturn.ExtensionData?.Count > 0)
             {
-                var j = new JsonExtensionDataHelper(toReturn, "DateTimePickerAction");
+                var j = new JsonExtensionDataHelper(toReturn, payload.Type.ToString());
                 Console.WriteLine(j.GetAllClassStrings());
             }
 

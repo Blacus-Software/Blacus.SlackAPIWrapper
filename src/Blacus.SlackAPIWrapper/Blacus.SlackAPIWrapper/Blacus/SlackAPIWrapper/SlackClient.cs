@@ -44,7 +44,8 @@ namespace Blacus.SlackAPIWrapper
             {
                 case SlackMethodContentType.Json:
                     request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var jsonContent = new StringContent(optionalArguments.ToJson(), null, "application/json");
+                    var jsonText = optionalArguments.ToJson();
+                    var jsonContent = new StringContent(jsonText, null, "application/json");
                     request.Content = jsonContent;
                     break;
 

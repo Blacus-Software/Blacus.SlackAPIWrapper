@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models.SlackActions
 {
 
+    [SlackAction(ActionType.TimePicker)]
     public class TimePickerAction : SlackAction
     {
 

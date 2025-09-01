@@ -4,8 +4,9 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Models.SlackActions
 {
 
+    [SlackAction(ActionType.DatePicker)]
     public class DatePickerAction : SlackAction
-    { 
+    {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         public DateTime? SelectedDate { get; set; }

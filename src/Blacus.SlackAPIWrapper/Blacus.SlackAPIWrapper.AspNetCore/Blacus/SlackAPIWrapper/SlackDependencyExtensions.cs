@@ -13,7 +13,7 @@
             services.AddScoped<ISlackASPTransmission>((myDep) =>
                 new SlackASPTransmission(
                     services.BuildServiceProvider().GetService<IHttpContextAccessor>(),
-                    slackCredential
+                    slackCredential 
                     ));
 
             return services;

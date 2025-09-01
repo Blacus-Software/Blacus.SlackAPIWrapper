@@ -10,7 +10,7 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("actions")] 
+        [JsonPropertyName("actions")]
         public ISlackAction[]? Actions { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -19,11 +19,7 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("response_urls")]
-        public ResponseUrls[]? ResponseUrls { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("trigger_id")]
-        public string? TriggerId { get; set; }
+        public ResponseUrls[]? ResponseUrls { get; set; } 
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("user")]
@@ -38,16 +34,8 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
         public Channel? Channel { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("message")]
-        public Message? Message { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("state")]
         public State? State { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("view")]
-        public View? View { get; set; }
 
     }
 

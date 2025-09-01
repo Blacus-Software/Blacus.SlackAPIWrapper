@@ -4,6 +4,13 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Models
 {
 
+    public class ViewModel : View
+    {
+
+        public ViewModel() : base(ViewType.modal) { }
+
+    }
+
     public class View : SlackModel
     {
 
@@ -21,6 +28,10 @@ namespace Blacus.SlackAPIWrapper.Models
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("type")]
         public ViewType? Type { get; private set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("submit_disabled")]
+        public bool? SubmitDisabled { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("title")]
@@ -64,7 +75,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("previous_view_id")]
-        public object? PreviousViewId { get; set; }
+        public string? PreviousViewId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("root_view_id")]

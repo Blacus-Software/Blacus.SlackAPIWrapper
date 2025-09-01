@@ -35,7 +35,7 @@ namespace Blacus.SlackAPIWrapper.Models
         public string? DisplayNameNormalized { get; set; }
 
         [JsonPropertyName("fields")]
-        public object? Fields { get; set; }
+        public SlackModel? Fields { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("status_text")]
@@ -47,7 +47,7 @@ namespace Blacus.SlackAPIWrapper.Models
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("status_emoji_display_info")]
-        public object[]? StatusEmojiDisplayInfo { get; set; }
+        public SlackModel[]? StatusEmojiDisplayInfo { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("status_expiration")]

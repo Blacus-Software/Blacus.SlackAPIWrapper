@@ -10,14 +10,14 @@ namespace Blacus.SlackAPIWrapper.Methods
     public class AppsConnectionsOpen : SlackMethod
     {
 
+        public static async Task<AppsConnectionsOpen> ExecuteAsync(string token)
+              => await SlackClient.HttpRequestAsync<AppsConnectionsOpen>(token);
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("url")]
         public string? Url { get; set; }
 
         public class OptionalArguments : SlackOptionalArguments { }
-
-        public static async Task<AppsConnectionsOpen> ExecuteAsync(string token)
-              => await SlackClient.HttpRequestAsync<AppsConnectionsOpen>(token);
 
     }
 

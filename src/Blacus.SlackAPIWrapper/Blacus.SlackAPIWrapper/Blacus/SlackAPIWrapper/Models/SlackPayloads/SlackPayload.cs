@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using System.Web;
 
 namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 {
@@ -10,6 +8,14 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
     {
 
         public PayloadType? Type { get; }
+
+        public Message? Message { get; set; }
+
+        public View? View { get; set; }
+                
+        public string? TriggerId { get; set; }
+
+        public string? ApiAppId { get; set; }
 
     }
 
@@ -38,12 +44,16 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
             {
 
                 if (string.IsNullOrWhiteSpace(TypeString))
-                    return null;
+                    return PayloadType.SlashCommand;
 
                 return Enum.Parse<PayloadType>(TypeString.Replace("_", string.Empty), true);
 
             }
         }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("is_cleared")]
+        public bool? IsCleared { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("type")]
@@ -72,6 +82,18 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("is_enterprise_install")]
         public bool? IsEnterpriseInstall { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("message")]
+        public Message? Message { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("view")]
+        public View? View { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("trigger_id")]
+        public string? TriggerId { get; set; }
 
     }
 
