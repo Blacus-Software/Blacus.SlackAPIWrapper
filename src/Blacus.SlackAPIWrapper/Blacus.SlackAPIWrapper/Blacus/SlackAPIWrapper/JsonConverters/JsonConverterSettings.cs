@@ -14,11 +14,13 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
             WriteIndented = true,
             Converters =
             {
-                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
                 BoolConverter.Singleton,
-                SlackActionConverter.Singleton,
-                SlackPayloadConverter.Singleton
-            }
+                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+                new DateTimeOffsetAsIntConverter(),
+                new TimeOnlyConverter(),
+                new DateOnlyConverter()
+            },
+            AllowOutOfOrderMetadataProperties = true,             
         };
 
     }

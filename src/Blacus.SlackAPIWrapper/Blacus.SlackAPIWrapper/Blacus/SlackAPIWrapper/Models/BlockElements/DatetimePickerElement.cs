@@ -1,4 +1,4 @@
-﻿using Blacus.SlackAPIWrapper.Helpers;
+﻿using Blacus.SlackAPIWrapper.JsonConverters;
 using System;
 using System.Text.Json.Serialization;
 
@@ -10,22 +10,9 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
         public DatetimePickerElement(string actionId) : base(actionId) { }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public DateTime? InitialDateTime
-        {
-            get { return long.Parse(InitialDateTimeString).ToDateTimeFromUnixTimeStamp(); }
-            set
-            {
-
-                if (value != null)
-                    InitialDateTimeString = ((DateTimeOffset)(value)).ToUnixTimeSeconds().ToString();
-
-            }
-        }
-
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("initial_date_time")]
-        public string? InitialDateTimeString { get; set; }
+        [JsonPropertyName("initial_date_time")] 
+        public DateTimeOffset? InitialDateTime { get; set; } 
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("confirm")]

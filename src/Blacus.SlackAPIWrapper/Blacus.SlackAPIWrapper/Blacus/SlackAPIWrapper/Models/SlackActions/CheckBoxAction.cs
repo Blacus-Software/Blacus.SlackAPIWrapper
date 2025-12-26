@@ -3,7 +3,6 @@
 namespace Blacus.SlackAPIWrapper.Models.SlackActions
 {
 
-    [SlackAction(ActionType.Checkboxes)]
     public class CheckBoxAction : SlackAction
     {
 

@@ -11,16 +11,9 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
         public DatePickerElement(string actionId) : base(actionId) { }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public DateTime? InitialDate { get; set; }
-
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_date")]
-        public string? InitialDateString
-        {
-            get => InitialDate.Value.ToString("yyyy-MM-dd");
-            set => InitialDate = DateTime.Parse(value);
-        }
+        public DateOnly? InitialDate { get; set; } 
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("confirm")]

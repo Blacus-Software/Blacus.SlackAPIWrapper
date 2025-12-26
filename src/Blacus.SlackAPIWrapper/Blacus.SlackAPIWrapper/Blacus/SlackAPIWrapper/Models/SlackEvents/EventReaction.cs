@@ -28,4 +28,7 @@ namespace Blacus.SlackAPIWrapper.Models.SlackEvents
 
     }
 
+    public class EventReactionAdded : EventReaction;
+    public class EventReactionRemoved : EventReaction;
+
 }

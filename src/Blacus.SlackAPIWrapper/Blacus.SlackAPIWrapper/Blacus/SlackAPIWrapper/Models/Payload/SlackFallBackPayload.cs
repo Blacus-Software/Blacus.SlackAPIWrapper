@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 {
 
-    public class SlackPayload_FallBack : SlackPayload, ISlackPayload
+    public class SlackFallBackPayload : SlackPayload, ISlackPayload
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -38,8 +38,7 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
         public string? EventContext { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("event")]
-        [JsonConverter(typeof(EventConverter))]
+        [JsonPropertyName("event")] 
         public ISlackPayloadEvent? Event { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

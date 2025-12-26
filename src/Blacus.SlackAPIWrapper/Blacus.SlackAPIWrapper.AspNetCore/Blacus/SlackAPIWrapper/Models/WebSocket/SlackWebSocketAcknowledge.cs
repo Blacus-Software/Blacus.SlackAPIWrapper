@@ -2,7 +2,7 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace Blacus.SlackAPIWrapper.Models
+namespace Blacus.SlackAPIWrapper.Models.WebSocket
 {
 
     public class SlackWebSocketAcknowledge : SlackModel

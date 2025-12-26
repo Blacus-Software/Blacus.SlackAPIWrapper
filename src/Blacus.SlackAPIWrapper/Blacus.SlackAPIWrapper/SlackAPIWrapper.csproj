@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace />
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Blacus Slack API Wrapper</Title>
-    <Version>8.1.1-beta</Version>
+    <Version>9.1.2-beta</Version>
     <PackageId>Blacus.$(AssemblyName)</PackageId>
     <Authors>Blacus</Authors>
     <Product>Blacus.$(AssemblyName)</Product>
@@ -29,7 +29,14 @@
     <None Include="..\..\..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
-    </None>
+    </None> 
+	  <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
+	  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.8" />
+	  <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
+	  <PackageReference Include="System.Text.Json" Version="9.0.8" />
+	  <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.8" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.8" />
   </ItemGroup>	 
 
 </Project>

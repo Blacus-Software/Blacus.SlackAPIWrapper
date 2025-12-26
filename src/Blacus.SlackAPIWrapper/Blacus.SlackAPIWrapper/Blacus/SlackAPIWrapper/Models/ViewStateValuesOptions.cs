@@ -36,21 +36,10 @@ namespace Blacus.SlackAPIWrapper.Models
         [JsonPropertyName("actionId")]
         public TextObject? ActionId { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public DateTime? SelectedDateTime { get; set; }
-
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("selected_date_time")]
-        public string? SelectedDateTimeString
-        {
-            get => ((DateTimeOffset)SelectedDateTime.Value).ToUnixTimeSeconds().ToString();
-            set
-            {
-                if (value != null)
-                    SelectedDateTime = long.Parse(value).ToDateTimeFromUnixTimeStamp();
-            }
-        }
-
+        [JsonPropertyName("selected_date_time")] 
+        public DateTimeOffset? SelectedDateTime { get; set; }
+                
     }
 
 }

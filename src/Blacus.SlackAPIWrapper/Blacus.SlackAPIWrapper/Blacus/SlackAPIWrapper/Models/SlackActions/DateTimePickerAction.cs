@@ -5,31 +5,16 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Models.SlackActions
 {
 
-    [SlackAction(ActionType.DateTimePicker)]
     public class DateTimePickerAction : SlackAction
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public DateTime? SelectedDateTime { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("selected_date_time")]
-        public long? SelectedDateTimeValue
-        {
-            get => ((DateTimeOffset)SelectedDateTime.Value).ToUnixTimeSeconds();
-            set => SelectedDateTime = value.Value.ToDateTimeFromUnixTimeStamp();
-        }
+        public DateTimeOffset? SelectedDateTime { get; set; } 
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public DateTime? InitialDateTime { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_date_time")]
-        public long? InitialDateTimeValue
-        {
-            get => ((DateTimeOffset)InitialDateTime.Value).ToUnixTimeSeconds();
-            set => InitialDateTime = value.Value.ToDateTimeFromUnixTimeStamp();
-        }
+        public DateTimeOffset? InitialDateTime { get; set; } 
 
     }
 

@@ -1,4 +1,5 @@
 ﻿using Blacus.SlackAPIWrapper.Attributes;
+using Blacus.SlackAPIWrapper.Models;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -14,6 +15,10 @@ namespace Blacus.SlackAPIWrapper.Methods
 
         public string? external_id { get; set; }
         public string? view_id { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("view")]
+        public View? View { get; set; }
 
         public class OptionalArguments : SlackOptionalArguments
         {

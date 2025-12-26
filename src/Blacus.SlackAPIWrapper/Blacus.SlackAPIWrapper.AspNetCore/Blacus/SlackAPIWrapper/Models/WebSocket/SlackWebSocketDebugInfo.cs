@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Blacus.SlackAPIWrapper.Models
+namespace Blacus.SlackAPIWrapper.Models.WebSocket
 {
 
     public partial class SlackWebSocketDebugInfo

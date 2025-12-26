@@ -1,5 +1,6 @@
 ﻿using Blacus.SlackAPIWrapper.Methods;
 using Blacus.SlackAPIWrapper.Models;
+using Blacus.SlackAPIWrapper.Models.WebSocket;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace Blacus.SlackAPIWrapper
         private ClientWebSocket WS;
         private CancellationTokenSource CTS;
 
-        public required Action<SlackWebSocketTransmission> OnMessageReceived { get; set; }
+        public required Action<ISlackWebSocketBase> OnMessageReceived { get; set; }
         private ILogger logger { get; }
 
         public async Task SendMessageAsync(string text) =>
@@ -188,17 +189,17 @@ namespace Blacus.SlackAPIWrapper
                 outputStream?.Dispose();
             }
 
-        }
+        } 
 
         private async Task ResponseReceived(Stream inputStream)
         {
 
             bool stream = true;
-            SlackWebSocketTransmission slackWebSocketTransmission = null;
+            ISlackWebSocketBase slackWebSocketTransmission = null; 
 
             if (stream)
             {
-                slackWebSocketTransmission = ISlackModel.FromJson<SlackWebSocketTransmission>(inputStream);
+                slackWebSocketTransmission = ISlackModel.FromJson<ISlackWebSocketBase>(inputStream);
             }
             else
             {
@@ -208,21 +209,21 @@ namespace Blacus.SlackAPIWrapper
                     using (StreamReader reader = new StreamReader(inputStream, Encoding.UTF8))
                     {
                         json = await reader.ReadToEndAsync();
-                        slackWebSocketTransmission = ISlackModel.FromJson<SlackWebSocketTransmission>(json);
+                        slackWebSocketTransmission = ISlackModel.FromJson<ISlackWebSocketBase>(json);
                     }
                 }
                 catch (Exception ex)
                 {
-
+                    throw;
                 }
             }
 
             slackWebSocketTransmission.Client = this;
             slackWebSocketTransmission.AcknowledgePayload = new() { EnvelopeId = slackWebSocketTransmission.EnvelopeId, };
 
-            switch (slackWebSocketTransmission.TypeString)
+            switch (slackWebSocketTransmission)
             {
-                case "hello":
+                case SlackWebSocketTransmissionHello:
                     logger.LogInformation($"WebSocket Hello");
                     break;
 

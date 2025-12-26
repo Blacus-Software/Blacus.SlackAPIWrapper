@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 {
 
-    public class SlackPayload_ResponseAction : ISlackPayload
+    public class SlackResponseActionPayload : ISlackPayload
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -14,10 +14,7 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("errors")]
-        public Dictionary<string, string>? Errors { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public PayloadType? Type { get; set; }
+        public Dictionary<string, string>? Errors { get; set; } 
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         public Message? Message { get; set; }

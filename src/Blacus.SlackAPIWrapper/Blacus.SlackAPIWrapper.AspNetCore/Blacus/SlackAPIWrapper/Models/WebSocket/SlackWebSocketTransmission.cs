@@ -1,65 +1,28 @@
 ﻿using Blacus.SlackAPIWrapper.Models.SlackPayloads;
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Blacus.SlackAPIWrapper.Models
+namespace Blacus.SlackAPIWrapper.Models.WebSocket
 {
 
-    public interface ISlackWebSocketPayload : ISlackModel
-    {
-
-        public string? TypeString { get; set; }
-        public SlackWebSocketPayloadType? Type { get; }
-
-    }
-
-    public enum SlackWebSocketPayloadType
-    {
-        SlashCommands,
-        Interactive,
-        Hello,
-        EventsApi
-    }
-
-    public class SlackWebSocketTransmission : SlackModel, ISlackWebSocketPayload
+    public abstract class SlackWebSocketTransmission : SlackModel, ISlackWebSocketPayload
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
         public SlackWebSocketClient Client { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public SlackWebSocketAcknowledge AcknowledgePayload { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public SlackWebSocketPayloadType? Type
-        {
-            get => Enum.Parse<SlackWebSocketPayloadType>(TypeString.Replace("_", string.Empty), true);
-        }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("type")]
-        public string? TypeString { get; set; }
+        public SlackWebSocketAcknowledge AcknowledgePayload { get; set; } 
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("envelope_id")]
         public Guid? EnvelopeId { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("connection_info")]
-        public ConnectionInfo? ConnectionInfo { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("num_connections")]
-        public long? NumConnections { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("debug_info")]
-        public SlackWebSocketDebugInfo? DebugInfo { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("payload")]
-        public ISlackPayload? Payload { get; set; }
+        public virtual ISlackPayload? Payload { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("retry_attempt")]

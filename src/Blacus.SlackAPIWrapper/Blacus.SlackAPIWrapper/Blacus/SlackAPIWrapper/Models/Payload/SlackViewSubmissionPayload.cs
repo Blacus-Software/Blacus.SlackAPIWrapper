@@ -3,7 +3,7 @@
 namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 {
 
-    public class SlackPayload_ViewSubmission : SlackPayload
+    public class SlackViewSubmissionPayload : SlackPayload
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

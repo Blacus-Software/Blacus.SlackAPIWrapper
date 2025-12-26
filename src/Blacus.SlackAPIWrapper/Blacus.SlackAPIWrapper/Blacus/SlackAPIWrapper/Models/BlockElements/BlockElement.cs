@@ -23,7 +23,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
     [JsonDerivedType(typeof(TextElement), typeDiscriminator: "text")]
     [JsonDerivedType(typeof(UserElement), typeDiscriminator: "user")]
     [JsonDerivedType(typeof(LinkElement), typeDiscriminator: "link")]
-    [JsonDerivedType(typeof(ChannelElement), typeDiscriminator: "Channel")]
+    [JsonDerivedType(typeof(ChannelElement), typeDiscriminator: "channel")]
     [JsonDerivedType(typeof(EmojiElement), typeDiscriminator: "emoji")]
     [JsonDerivedType(typeof(BroadcastElement), typeDiscriminator: "broadcast")]
     [JsonDerivedType(typeof(CheckboxElement), typeDiscriminator: "checkboxes")]

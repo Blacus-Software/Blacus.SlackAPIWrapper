@@ -40,7 +40,7 @@ namespace Blacus.SlackAPIWrapper.Models.SlackEvents
         public BlockCollection? Blocks { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("Channel")]
+        [JsonPropertyName("channel")]
         public string? Channel { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

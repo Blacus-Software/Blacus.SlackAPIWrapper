@@ -11,16 +11,9 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
         public TimePickerElement(string actionId) : base(actionId) { }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public DateTime? InitialTime { get; set; }
-
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("initial_time")]
-        public string? InitialTimeString
-        {
-            get => InitialTime.Value.ToString(dateFormat);
-            set => InitialTime = DateTime.Parse(value);
-        }
+        public TimeOnly? InitialTime { get; set; } 
 
         [JsonPropertyOrder(2)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 {
 
-    public class SlackPayload_BlockAction : SlackPayload
+    public class SlackBlockActionPayload : SlackPayload
     {
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

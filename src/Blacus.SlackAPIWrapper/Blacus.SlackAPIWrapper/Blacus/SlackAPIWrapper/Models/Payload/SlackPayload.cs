@@ -1,34 +1,7 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 {
-
-    public interface ISlackPayload : ISlackModel
-    {
-
-        public PayloadType? Type { get; }
-
-        public Message? Message { get; set; }
-
-        public View? View { get; set; }
-                
-        public string? TriggerId { get; set; }
-
-        public string? ApiAppId { get; set; }
-
-    }
-
-    public enum PayloadType
-    {
-        BlockActions,
-        ViewSubmission,
-        ViewClosed,
-        MessageActions,
-        EventCallback,
-        UrlVerification,
-        SlashCommand
-    }
 
     public class SlackPayload : SlackModel, ISlackPayload
     {
@@ -37,27 +10,9 @@ namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
         [JsonPropertyName("token")]
         public string? Token { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-        public PayloadType? Type
-        {
-            get
-            {
-
-                if (string.IsNullOrWhiteSpace(TypeString))
-                    return PayloadType.SlashCommand;
-
-                return Enum.Parse<PayloadType>(TypeString.Replace("_", string.Empty), true);
-
-            }
-        }
-
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("is_cleared")]
         public bool? IsCleared { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("type")]
-        public string? TypeString { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("api_app_id")]

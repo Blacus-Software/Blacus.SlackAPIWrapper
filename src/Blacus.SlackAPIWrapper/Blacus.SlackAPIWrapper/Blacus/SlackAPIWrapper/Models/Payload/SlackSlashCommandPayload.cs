@@ -4,10 +4,10 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Models.SlackPayloads
 {
 
-    public class SlackPayload_Command : SlackPayload
+    public class SlackSlashCommandPayload : SlackPayload
     {
 
-        public SlackPayload_Command()
+        public SlackSlashCommandPayload()
         {
         } 
 

@@ -14,6 +14,7 @@
     {
 
         public ISlackPayload Payload { get; set; }
+
         public SlackCredential DefaultSlackCredential { get; set; }
 
         public string Code { get; set; }
@@ -31,7 +32,7 @@
         public string Code { get; set; }
 
         public SlackASPTransmission(IHttpContextAccessor httpContextAccessor, SlackCredential slackCredential)
-        { 
+        {
 
             this.httpContextAccessor = httpContextAccessor;
             DefaultSlackCredential = slackCredential;
@@ -46,9 +47,9 @@
             if (Payload == null)
                 return;
 
-            if (Payload.Type == PayloadType.UrlVerification)
+            if (Payload.GetType() == typeof(SlackUrlResponsePayload))
             {
-                this.HttpContext.Response.WriteAsync(new UrlVerificationResponse(((SlackPayload_UrlResponse)Payload).Challenge).ToJson()).Wait();
+                this.HttpContext.Response.WriteAsync(new UrlVerificationResponse(((SlackUrlResponsePayload)Payload).Challenge).ToJson()).Wait();
                 return;
             }
 
@@ -84,7 +85,7 @@
                     break;
 
                 case "application/json":
-                    toReturn = ISlackModel.FromJson<SlackPayload>(json);
+                    toReturn = ISlackModel.FromJson<ISlackPayload>(json);
                     break;
 
                 default:
@@ -102,7 +103,7 @@
             if (bodyString.StartsWith("payload="))
             {
                 var json = HttpUtility.UrlDecode(bodyString.Substring(8));
-                var toReturn = ISlackModel.FromJson<SlackPayload>(json);
+                var toReturn = ISlackModel.FromJson<ISlackPayload>(json);
                 return toReturn;
             }
             else
@@ -117,9 +118,8 @@
                     values.Add(split[0], split[1]);
                 }
 
-                SlackPayload_Command toReturn = new()
+                SlackSlashCommandPayload toReturn = new()
                 {
-                    TypeString = "slash_command",
                     Token = HttpUtility.UrlDecode(values["token"]),
                     TeamId = HttpUtility.UrlDecode(values["team_id"]),
                     // EnterpriseId = HttpUtility.UrlDecode(values["enterprise_id"]),

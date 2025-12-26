@@ -51,39 +51,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("refresh_token")]
-        public string? RefreshToken { get; set; }
-
-        public SlackCredential ToSlackCredential()
-        {
-
-            var toReturn = new SlackCredential()
-            {
-                //Scope = Scope,
-                //BotUserId = BotUserId,
-                AppId = AppId,
-                //Team = Team,
-                //Enterprise = new() { Id = Enterprise.Id, Name = Enterprise.Name },
-                //AuthedUser = AuthedUser,
-                //ExpiresIn = ExpiresIn,
-                //RefreshToken = RefreshToken
-            };
-
-            switch (TokenType)
-            {
-                case "bot":
-                    toReturn.BotUserToken = AccessToken;
-                    break;
-                case "user":
-                    toReturn.UserToken = AccessToken;
-                    break;
-                case "app":
-                    toReturn.AppToken = AccessToken;
-                    break;
-            }
-
-            return toReturn;
-
-        }
+        public string? RefreshToken { get; set; } 
 
     }
 
