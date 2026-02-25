@@ -1,4 +1,5 @@
 ﻿using Blacus.SlackAPIWrapper.Attributes;
+using Blacus.SlackAPIWrapper.Models;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -15,6 +16,10 @@ namespace Blacus.SlackAPIWrapper.Methods
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [JsonPropertyName("display_name")]
         public string? DisplayName { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+        [JsonPropertyName("profile")]
+        public Profile Profile { get; set; }
 
         public class OptionalArguments : SlackOptionalArguments
         {

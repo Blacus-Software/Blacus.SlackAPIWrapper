@@ -94,6 +94,10 @@ namespace Blacus.SlackAPIWrapper.Models
         [JsonPropertyName("username")]
         public string? Username { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("email")]
+        public string? Email { get; set; }
+
     }
 
 }

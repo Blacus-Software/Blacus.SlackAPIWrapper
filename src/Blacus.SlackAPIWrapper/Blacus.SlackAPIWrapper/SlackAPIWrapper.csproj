@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace />
@@ -31,12 +31,11 @@
       <PackagePath>\</PackagePath>
     </None> 
 	  <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
-	  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.8" />
-	  <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
-	  <PackageReference Include="System.Text.Json" Version="9.0.8" />
-	  <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.8" />
-	  <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.8" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.1" />
+	  <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.1" />
   </ItemGroup>	 
 
 </Project>

@@ -59,7 +59,7 @@ namespace Blacus.SlackAPIWrapper
 
             }
 
-            var response = await HttpClient.SendAsync(request);
+            var response = HttpClient.Send(request);
 
             response.EnsureSuccessStatusCode();
 

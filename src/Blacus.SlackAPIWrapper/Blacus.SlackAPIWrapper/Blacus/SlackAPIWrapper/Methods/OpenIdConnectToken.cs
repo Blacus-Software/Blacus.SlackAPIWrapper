@@ -1,5 +1,6 @@
 ﻿using Blacus.SlackAPIWrapper.Attributes;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Blacus.SlackAPIWrapper.Methods
 {
@@ -7,6 +8,9 @@ namespace Blacus.SlackAPIWrapper.Methods
     [SlackMethod("openid.connect.token", "Post", SlackMethodContentType.FormUrlEncoded)]
     public class OpenIdConnectToken : SlackMethod
     {
+
+        public static async Task<OpenIdConnectToken> ExecuteAsync(string token, OptionalArguments slackOptionalArguments)
+              => await SlackClient.HttpRequestAsync<OpenIdConnectToken>(token, slackOptionalArguments);
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("access_token")]
