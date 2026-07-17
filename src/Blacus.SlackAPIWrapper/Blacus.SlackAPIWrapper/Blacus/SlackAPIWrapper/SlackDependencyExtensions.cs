@@ -10,9 +10,9 @@
         public static IServiceCollection AddSlackDependency(this IServiceCollection services, SlackCredential slackCredential)
         {
 
-            services.AddScoped<ISlackASPTransmission>((myDep) =>
+            services.AddScoped<ISlackASPTransmission>((sp) =>
                 new SlackASPTransmission(
-                    services.BuildServiceProvider().GetService<IHttpContextAccessor>(),
+                    sp.GetService<IHttpContextAccessor>(),
                     slackCredential 
                     ));
 

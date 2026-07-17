@@ -11,7 +11,7 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
 
         public static JsonSerializerOptions Generate() => new System.Text.Json.JsonSerializerOptions
         {
-            WriteIndented = true,
+            WriteIndented = false,
             Converters =
             {
                 BoolConverter.Singleton,

@@ -1,5 +1,8 @@
 ﻿using Blacus.SlackAPIWrapper.Attributes;
 using Blacus.SlackAPIWrapper.Models;
+using System;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -10,8 +13,12 @@ namespace Blacus.SlackAPIWrapper.Methods
     public class OAuthV2Access : SlackMethod
     {
 
-        public static async Task<OAuthV2Access> ExecuteAsync(string token, OptionalArguments slackOptionalArguments)
-              => await SlackClient.HttpRequestAsync<OAuthV2Access>(token, slackOptionalArguments);
+        public static async Task<OAuthV2Access> ExecuteAsync(OptionalArguments slackOptionalArguments)
+        {
+            var authToken = Encoding.ASCII.GetBytes($"{slackOptionalArguments.client_id}:{slackOptionalArguments.client_secret}");
+            return await SlackClient.HttpRequestAsync<OAuthV2Access>(new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken)), slackOptionalArguments);
+        }
+
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("access_token")]
@@ -51,7 +58,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("refresh_token")]
-        public string? RefreshToken { get; set; } 
+        public string? RefreshToken { get; set; }
 
     }
 

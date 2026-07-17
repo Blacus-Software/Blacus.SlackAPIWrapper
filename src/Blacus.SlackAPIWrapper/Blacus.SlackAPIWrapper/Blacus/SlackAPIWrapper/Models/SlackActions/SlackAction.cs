@@ -9,11 +9,7 @@ namespace Blacus.SlackAPIWrapper.Models.SlackActions
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("action_ts")]
-        public string? ActionTs { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("type")]
-        public string? TypeString { get; set; }
+        public string? ActionTs { get; set; } 
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("action_id")]

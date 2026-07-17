@@ -32,14 +32,19 @@ namespace Blacus.SlackAPIWrapper.Methods
                 {
 
                     var jsonName = property.GetCustomAttribute<JsonPropertyNameAttribute>();
+                    string stringValue = propertyValue switch
+                    {
+                        bool b => b ? "true" : "false",
+                        _ => propertyValue.ToString() ?? string.Empty
+                    };
 
                     if (jsonName == null)
                     {
-                        toReturn.Add(new(property.Name, propertyValue.ToString()));
+                        toReturn.Add(new(property.Name, stringValue));
                     }
                     else
                     {
-                        toReturn.Add(new(jsonName.Name, propertyValue.ToString()));
+                        toReturn.Add(new(jsonName.Name, stringValue));
                     }
 
                 }
@@ -66,14 +71,19 @@ namespace Blacus.SlackAPIWrapper.Methods
                 {
 
                     var jsonName = property.GetCustomAttribute<JsonPropertyNameAttribute>();
+                    string stringValue = propertyValue switch
+                    {
+                        bool b => b ? "true" : "false",
+                        _ => propertyValue.ToString() ?? string.Empty
+                    };
 
                     if (jsonName == null)
                     {
-                        toReturn.Add(property.Name, propertyValue.ToString());
+                        toReturn.Add(property.Name, stringValue);
                     }
                     else
                     {
-                        toReturn.Add(jsonName.Name, propertyValue.ToString());
+                        toReturn.Add(jsonName.Name, stringValue);
                     }
 
                 }

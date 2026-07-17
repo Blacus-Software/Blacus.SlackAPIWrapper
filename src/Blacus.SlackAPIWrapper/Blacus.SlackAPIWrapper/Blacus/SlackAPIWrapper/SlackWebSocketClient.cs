@@ -12,15 +12,27 @@ using System.Threading.Tasks;
 
 namespace Blacus.SlackAPIWrapper
 {
-
-    public class SlackWebSocketClient : IDisposable
+    public class SlackWebSocketClient : IDisposable, IAsyncDisposable
     {
 
         public int ReceiveBufferSize { get; } = 8192;
 
-        public List<Task<SlackWebSocketTransmission>> Tasks = new();
+        public void Dispose()
+        {
+            try
+            {
+                DisconnectAsync().GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error during dispose: {ex.Message}");
+            }
+        }
 
-        public void Dispose() => DisconnectAsync().Wait();
+        public async ValueTask DisposeAsync()
+        {
+            await DisconnectAsync();
+        }
 
         private ClientWebSocket WS;
         private CancellationTokenSource CTS;
@@ -31,7 +43,6 @@ namespace Blacus.SlackAPIWrapper
         public async Task SendMessageAsync(string text) =>
             await this.WS.SendAsync(Encoding.UTF8.GetBytes(text), WebSocketMessageType.Text, true, CTS.Token);
 
-        private Task taskCleanUp;
         private Task taskReceiveLoop;
 
         public SlackWebSocketClient(ILogger logger)
@@ -42,7 +53,7 @@ namespace Blacus.SlackAPIWrapper
         public async Task ConnectAsync(string appToken)
         {
 
-            var openResponse = AppsConnectionsOpen.ExecuteAsync(appToken).Result;
+            var openResponse = await AppsConnectionsOpen.ExecuteAsync(appToken);
             var url = openResponse.Url;
 
             logger.LogTrace($"Connecting to WebSocket at {url}");
@@ -59,61 +70,7 @@ namespace Blacus.SlackAPIWrapper
 
             await WS.ConnectAsync(new Uri(url), CTS.Token);
 
-            if (taskCleanUp?.Status != TaskStatus.Running)
-                taskCleanUp = Task.Run(() => cleanUp());
-
-            taskReceiveLoop = await Task.Factory.StartNew(ReceiveLoop, CTS.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
-
-            taskReceiveLoop.Wait();
-
-        }
-
-        private void cleanUp()
-        {
-
-            var loopToken = CTS.Token;
-
-            while (!loopToken.IsCancellationRequested)
-            {
-
-                try
-                {
-
-                    if (Tasks.Count == 0)
-                    {
-                        Thread.Sleep(1000);
-                    }
-                    else
-                    {
-
-                        var taskArray = Tasks.ToArray();
-
-                        int taskId = Task.WaitAny(taskArray, new TimeSpan(0, 0, 1));
-
-                        var task = taskArray[taskId];
-
-                        lock (Tasks)
-                        {
-                            Tasks.Remove(task);
-                        }
-
-                        if (task.Exception != null)
-                        {
-                            foreach (var ex in task.Exception.InnerExceptions)
-                            {
-                                Console.WriteLine(ex.ToString());
-                            }
-                        }
-
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError($"WebSocket Error: {ex.Message}");
-                }
-
-            }
+            taskReceiveLoop = Task.Run(ReceiveLoop, CTS.Token);
 
         }
 
@@ -145,8 +102,6 @@ namespace Blacus.SlackAPIWrapper
         {
 
             var loopToken = CTS.Token;
-
-            MemoryStream outputStream = null;
             WebSocketReceiveResult receiveResult = null;
 
             var buffer = new byte[ReceiveBufferSize];
@@ -156,25 +111,28 @@ namespace Blacus.SlackAPIWrapper
                 while (!loopToken.IsCancellationRequested)
                 {
 
-                    outputStream = new MemoryStream(ReceiveBufferSize);
-
-                    do
+                    using (var outputStream = new MemoryStream(ReceiveBufferSize))
                     {
 
-                        receiveResult = await WS.ReceiveAsync(buffer, CTS.Token);
+                        do
+                        {
 
-                        if (receiveResult.MessageType != WebSocketMessageType.Close)
-                            outputStream.Write(buffer, 0, receiveResult.Count);
+                            receiveResult = await WS.ReceiveAsync(buffer, CTS.Token);
+
+                            if (receiveResult.MessageType != WebSocketMessageType.Close)
+                                outputStream.Write(buffer, 0, receiveResult.Count);
+
+                        }
+                        while (!receiveResult.EndOfMessage);
+
+                        if (receiveResult.MessageType == WebSocketMessageType.Close)
+                            break;
+
+                        outputStream.Position = 0;
+
+                        await ResponseReceived(outputStream);
 
                     }
-                    while (!receiveResult.EndOfMessage);
-
-                    if (receiveResult.MessageType == WebSocketMessageType.Close)
-                        break;
-
-                    outputStream.Position = 0;
-
-                    await ResponseReceived(outputStream);
 
                 }
             }
@@ -182,11 +140,7 @@ namespace Blacus.SlackAPIWrapper
             catch (WebSocketException ex)
             {
                 logger.LogError($"WebSocket error: {ex.Message}");
-                DisconnectAsync().Wait();
-            }
-            finally
-            {
-                outputStream?.Dispose();
+                await DisconnectAsync();
             }
 
         } 

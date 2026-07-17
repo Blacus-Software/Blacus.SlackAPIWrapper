@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Blacus.SlackAPIWrapper
 {
@@ -10,7 +11,7 @@ namespace Blacus.SlackAPIWrapper
 
         public string Id { get; }
 
-        private static Dictionary<string, Limiter> limiters = new();
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, Limiter> limiters = new();
 
         private System.Timers.Timer processorTimer;
 
@@ -18,12 +19,14 @@ namespace Blacus.SlackAPIWrapper
 
         private int limit = 0;
 
+        private readonly object processorLock = new();
+
         private void runProcessor()
         {
 
             int toRelease = 0;
 
-            lock (semaphoreSlim)
+            lock (processorLock)
             {
 
                 if (semaphoreSlim.CurrentCount == limit)
@@ -66,6 +69,16 @@ namespace Blacus.SlackAPIWrapper
 
         }
 
+        public async Task WaitAsync()
+        {
+
+            if (!this.processorTimer.Enabled)
+                this.processorTimer.Enabled = true;
+
+            await semaphoreSlim.WaitAsync();
+
+        }
+
         public static Limiter LimiterFactory(LimiterTier limierTier)
         {
 
@@ -102,23 +115,15 @@ namespace Blacus.SlackAPIWrapper
         public static Limiter LimiterFactory(string id, int? limit = null, TimeSpan? timeSpan = null)
         {
 
-            Limiter limiter;
-
-            if (!limiters.TryGetValue(id, out limiter))
+            return limiters.GetOrAdd(id, (key) =>
             {
 
                 if (limit == null || timeSpan == null)
                     throw new NullReferenceException("Limit or Timespan not provided");
 
-                limiter = new Limiter(id, limit.Value, timeSpan.Value) { };
-                lock (limiters)
-                {
-                    limiters.Add(id, limiter);
-                }
+                return new Limiter(key, limit.Value, timeSpan.Value);
 
-            }
-
-            return limiter;
+            });
 
         }
 

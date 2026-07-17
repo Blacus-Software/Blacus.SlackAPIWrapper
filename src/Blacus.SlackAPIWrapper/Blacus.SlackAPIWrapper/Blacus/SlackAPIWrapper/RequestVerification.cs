@@ -8,7 +8,7 @@ namespace Blacus.SlackAPIWrapper.Authentication
     public class RequestVerification
     {
 
-        private const int timeStampValidForSeconds = 10;
+        private const int timeStampValidForSeconds = 300;
         private const string slackVersion = "v0";
 
         public string SlackSignature { get; set; }
@@ -35,8 +35,8 @@ namespace Blacus.SlackAPIWrapper.Authentication
                 if (!IgnoreTimestamp)
                 {
 
-                    double currentTime = (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-                    double delta = currentTime - SlackRequestTimestampInt;
+                    double currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                    double delta = Math.Abs(currentTime - SlackRequestTimestampInt);
 
                     if (delta > timeStampValidForSeconds)
                     {
@@ -47,8 +47,9 @@ namespace Blacus.SlackAPIWrapper.Authentication
 
                 if (_verified == null)
                 {
-                    StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-                    _verified = comparer.Compare(SlackSignature, Hash) == 0;
+                    byte[] signatureBytes = Encoding.UTF8.GetBytes(SlackSignature ?? string.Empty);
+                    byte[] hashBytes = Encoding.UTF8.GetBytes(Hash ?? string.Empty);
+                    _verified = CryptographicOperations.FixedTimeEquals(signatureBytes, hashBytes);
                 }
 
                 return (bool)_verified;
@@ -60,26 +61,11 @@ namespace Blacus.SlackAPIWrapper.Authentication
         private static string getHash(string signingSecret, string input)
         {
 
-            ASCIIEncoding encoder = new ASCIIEncoding();
-            byte[] code = encoder.GetBytes(signingSecret);
-            HashAlgorithm hashAlgorithm = new HMACSHA256(code);
+            byte[] key = Encoding.UTF8.GetBytes(signingSecret ?? string.Empty);
+            byte[] sourceBytes = Encoding.UTF8.GetBytes(input ?? string.Empty);
+            byte[] hashBytes = HMACSHA256.HashData(key, sourceBytes);
 
-            // Convert the input string to a byte array and compute the hash.
-            byte[] data = hashAlgorithm.ComputeHash(Encoding.ASCII.GetBytes(input));
-
-            // Create a new Stringbuilder to collect the bytes
-            // and create a string.
-            var sBuilder = new StringBuilder();
-
-            // Loop through each byte of the hashed data
-            // and format each one as a hexadecimal string.
-            for (int i = 0; i < data.Length; i++)
-            {
-                sBuilder.Append(data[i].ToString("x2"));
-            }
-
-            // Return the hexadecimal string.
-            return sBuilder.ToString();
+            return Convert.ToHexString(hashBytes).ToLowerInvariant();
 
         }
 

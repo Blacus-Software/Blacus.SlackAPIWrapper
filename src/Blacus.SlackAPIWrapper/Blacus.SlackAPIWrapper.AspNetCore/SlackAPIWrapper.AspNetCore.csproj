@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<RootNamespace />
@@ -17,15 +17,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Blacus.SlackAPIWrapper" Version="9.1.1-beta" />
+		<ProjectReference Include="..\Blacus.SlackAPIWrapper\SlackAPIWrapper.csproj" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.8" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.8" />
-		<PackageReference Include="System.Text.Json" Version="9.0.8" />
-		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.8" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.8" />
-
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.1" />
+		<PackageReference Include="System.Text.Json" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.1" />
 	</ItemGroup>
  
 </Project>

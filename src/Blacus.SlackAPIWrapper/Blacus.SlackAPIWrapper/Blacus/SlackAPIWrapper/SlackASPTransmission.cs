@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Web;
 
     public interface ISlackASPTransmission
@@ -39,8 +40,10 @@
 
             string bodyAsString = null;
 
-            using StreamReader reader = new(HttpContext.Request.Body, leaveOpen: true);
-            bodyAsString = reader.ReadToEndAsync().Result;
+            using (StreamReader reader = new(HttpContext.Request.Body, encoding: Encoding.UTF8, detectEncodingFromByteOrderMarks: true, bufferSize: 1024, leaveOpen: true))
+            {
+                bodyAsString = reader.ReadToEnd();
+            }
 
             Payload = PayloadFromASP(HttpContext.Request.ContentType, bodyAsString);
 
@@ -49,7 +52,8 @@
 
             if (Payload.GetType() == typeof(SlackUrlResponsePayload))
             {
-                this.HttpContext.Response.WriteAsync(new UrlVerificationResponse(((SlackUrlResponsePayload)Payload).Challenge).ToJson()).Wait();
+                byte[] responseBytes = Encoding.UTF8.GetBytes(new UrlVerificationResponse(((SlackUrlResponsePayload)Payload).Challenge).ToJson());
+                this.HttpContext.Response.Body.Write(responseBytes, 0, responseBytes.Length);
                 return;
             }
 

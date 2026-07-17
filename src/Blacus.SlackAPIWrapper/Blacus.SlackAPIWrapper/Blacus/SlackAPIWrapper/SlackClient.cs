@@ -34,7 +34,7 @@ namespace Blacus.SlackAPIWrapper
             var attribLimiter = SlackLimiterTierAttribute.GetSlackLimiterAttribute<T>();
 
             if (attribLimiter != null)
-                Limiter.LimiterFactory(attribLimiter.LimiterTier).Wait();
+                await Limiter.LimiterFactory(attribLimiter.LimiterTier).WaitAsync();
 
             var request = new HttpRequestMessage(attribsMethod.HttpMethod, $"https://slack.com/api/{attribsMethod.Path}");
 
@@ -67,7 +67,60 @@ namespace Blacus.SlackAPIWrapper
 
             if (streamJson)
             {
-                toReturn = ISlackModel.FromJson<T>(response.Content.ReadAsStream());
+                toReturn = await ISlackModel.FromJsonAsync<T>(await response.Content.ReadAsStreamAsync());
+            }
+            else
+            {
+                string json = await response.Content.ReadAsStringAsync();
+
+                toReturn = ISlackModel.FromJson<T>(json);
+            }
+
+            return toReturn;
+
+        }
+
+        public static async Task<T> HttpRequestAsync<T>(AuthenticationHeaderValue authenticationHeaderValue, ISlackOptionalArguments? optionalArguments = null, bool streamJson = true) where T : SlackMethod
+        {
+
+            var attribsMethod = SlackMethodAttribute.GetSlackMethodAttribute<T>();
+            var attribLimiter = SlackLimiterTierAttribute.GetSlackLimiterAttribute<T>();
+
+            if (attribLimiter != null)
+                await Limiter.LimiterFactory(attribLimiter.LimiterTier).WaitAsync();
+
+            var request = new HttpRequestMessage(attribsMethod.HttpMethod, $"https://slack.com/api/{attribsMethod.Path}");
+
+            request.Headers.Authorization = authenticationHeaderValue;
+
+            switch (attribsMethod.ContentType)
+            {
+                case SlackMethodContentType.Json:
+                    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    var jsonText = optionalArguments.ToJson();
+                    var jsonContent = new StringContent(jsonText, null, "application/json");
+                    request.Content = jsonContent;
+                    break;
+
+                case SlackMethodContentType.FormUrlEncoded:
+                    if (optionalArguments != null)
+                    {
+                        var formUrlEncodedContent = new FormUrlEncodedContent(optionalArguments?.GetFormUrlEncode());
+                        request.Content = formUrlEncodedContent;
+                    }
+                    break;
+
+            }
+
+            var response = await HttpClient.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            T toReturn = null;
+
+            if (streamJson)
+            {
+                toReturn = await ISlackModel.FromJsonAsync<T>(await response.Content.ReadAsStreamAsync());
             }
             else
             {
