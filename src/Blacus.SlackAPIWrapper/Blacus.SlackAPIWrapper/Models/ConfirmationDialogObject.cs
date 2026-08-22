@@ -6,7 +6,7 @@ namespace Blacus.SlackAPIWrapper.Models
     public class ConfirmationDialogObject : SlackModel
     {
 
-        private const int field_Text_MaxLength = 300;
+        private const int field_MaxTextLength = 300;
 
         public ConfirmationDialogObject()
         {
@@ -24,14 +24,13 @@ namespace Blacus.SlackAPIWrapper.Models
         [JsonPropertyName("text")]
         public TextObject? Text
         {
-            get { return _text; }
+            get { return field; }
             set
             {
-                _text = value;
-                _text.MaxTextLength = field_Text_MaxLength;
+                field = value;
+                field.MaxTextLength = field_MaxTextLength;
             }
         }
-        private TextObject? _text;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("confirm")]

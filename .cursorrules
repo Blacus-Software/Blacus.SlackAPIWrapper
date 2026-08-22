@@ -3,7 +3,7 @@
 Please follow the rules and project guidelines defined in [AGENTS.md](./AGENTS.md).
 
 Key reminders:
-- Target framework is .NET 9 (`net9.0`, C# 13).
+- Target framework is .NET 10 (`net10.0`, C# 14).
 - `ImplicitUsings` is disabled: always include explicit `using` statements.
 - Never commit or log API tokens/secrets (especially from `gitIgnore/`).
 - Build and verify changes with `dotnet build src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/SlackAPIWrapper.csproj` and `dotnet build src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper.AspNetCore/SlackAPIWrapper.AspNetCore.csproj`.

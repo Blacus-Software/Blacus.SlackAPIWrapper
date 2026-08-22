@@ -7,7 +7,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
     public class DatePickerElement : BlockElement
     {
 
-        private const int field_Placeholder_MaxLength = 150;
+        private const int field_MaxPlaceholderLength = 150;
 
         public DatePickerElement(string actionId) : base(actionId) { }
 
@@ -27,14 +27,13 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
         [JsonPropertyName("placeholder")]
         public TextObject? Placeholder
         {
-            get { return placeholder; }
+            get { return field; }
             set
             {
-                placeholder = value;
-                placeholder.MaxTextLength = field_Placeholder_MaxLength;
+                field = value;
+                field.MaxTextLength = field_MaxPlaceholderLength;
             }
         }
-        private TextObject? placeholder;
 
     }
 

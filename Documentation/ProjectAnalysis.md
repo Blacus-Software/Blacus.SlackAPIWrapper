@@ -2,11 +2,11 @@
 
 ## 1. Executive Summary
 
-**Blacus.SlackAPIWrapper** is an open-source .NET 9 library (current version `9.1.2-beta`) providing a typed wrapper around the Slack Web API, Slack Socket Mode (WebSocket), and Slack ASP.NET Core request handling.
+**Blacus.SlackAPIWrapper** is an open-source .NET 10 library (current version `10.2.1`) providing a typed wrapper around the Slack Web API, Slack Socket Mode (WebSocket), and Slack ASP.NET Core request handling.
 
 The library features a declarative, attribute-driven architecture for Slack API methods, token-bucket rate limiting, generic JSON serialization with unknown-property retention, and webhook signature verification.
 
-- **Target Framework:** `net9.0`
+- **Target Framework:** `net10.0`
 - **Total Code Volume:** ~8,000 lines of C# across 173 tracked files
 - **Primary Package:** `Blacus.SlackAPIWrapper` (Core)
 - **Extension Package:** `Blacus.SlackAPIWrapper.AspNetCore` (ASP.NET Core integration)
@@ -130,9 +130,7 @@ The library features a declarative, attribute-driven architecture for Slack API 
    - `ISlackASPTransmission.Code` property is unused.
 2. **Nullability Warnings Suppressed Globally:**
    - Both `.csproj` files suppress critical nullability warnings (`CS8600`, `CS8601`, `CS8602`, `CS8603`, `CS8604`, `CS8629`), masking potential runtime `NullReferenceException`s.
-3. **Version Mismatch:**
-   - Core project is configured as `9.1.2-beta`, while AspNetCore project references `9.1.1-beta`.
-4. **Missing Test Suite and CI/CD:**
+3. **Missing Test Suite and CI/CD:**
    - No automated unit/integration test projects (`*.Tests`).
    - `.github/workflows` folder is empty.
 

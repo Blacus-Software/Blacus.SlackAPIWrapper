@@ -7,9 +7,9 @@
 ## 1. Project Overview
 
 - **Name:** `Blacus.SlackAPIWrapper`
-- **Target Framework:** `net9.0` (C# 13)
+- **Target Framework:** `net10.0` (C# 14)
 - **Language / Project settings:** `ImplicitUsings` is **disabled** (always add explicit `using` statements). `Nullable` is **enabled**, but CS86xx warnings are globally suppressed via `<NoWarn>`.
-- **Purpose:** A typed, attribute-driven .NET 9 wrapper around the Slack Web API, Slack Socket Mode (WebSocket), and ASP.NET Core request/webhook verification.
+- **Purpose:** A typed, attribute-driven .NET 10 wrapper around the Slack Web API, Slack Socket Mode (WebSocket), and ASP.NET Core request/webhook verification.
 - **Projects:**
   - `src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/` — Core library (HTTP client, methods, models, converters, rate limiter).
   - `src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper.AspNetCore/` — ASP.NET Core integration extensions.

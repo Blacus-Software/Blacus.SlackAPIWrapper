@@ -66,15 +66,14 @@ namespace Blacus.SlackAPIWrapper.Models
 
                 if (MaxTextLength != null)
                 {
-                    return text.Substring(0, Math.Min(MaxTextLength ?? 3000, text.Length));
+                    return field.Substring(0, Math.Min(MaxTextLength ?? 3000, field.Length));
                 }
 
-                return text;
+                return field;
 
             }
-            set { text = value; }
+            set { field = value; }
         }
-        private string? text;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("emoji")]
@@ -83,11 +82,10 @@ namespace Blacus.SlackAPIWrapper.Models
             get
             {
                 if (Type != TextType.PlainText) { return null; }
-                return _emoji;
+                return field;
             }
-            set { _emoji = value; }
+            set { field = value; }
         }
-        private bool? _emoji;
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("verbatim")]
