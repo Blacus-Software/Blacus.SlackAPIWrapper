@@ -23,7 +23,7 @@ The library features a declarative, attribute-driven architecture for Slack API 
 │   └── workflows/                           # Empty directory (no active CI/CD)
 ├── Documentation/
 │   └── ProjectAnalysis.md                   # This analysis
-├── gitIgnore/                               # Tracked test projects & utility scripts
+├── gitIgnore/                               # Git-ignored test projects & utility scripts
 │   ├── DeployToNuGet.ps1                    # Manual PowerShell deployment script
 │   ├── ConsoleAppSlackTestApp/              # Manual console test client
 │   └── WebApplicationSlackAPIWrapper/       # Test ASP.NET Core web application
@@ -91,11 +91,7 @@ The library features a declarative, attribute-driven architecture for Slack API 
 ## 5. Identified Issues & Technical Debt
 
 ### 5.1. Security Vulnerabilities (High Severity)
-1. **Committed Secrets in Repository:**
-   - `gitIgnore/DeployToNuGet.ps1`: Contains a hardcoded plaintext NuGet API key.
-   - `gitIgnore/ConsoleAppSlackTestApp/Program.cs`: Contains hardcoded credentials including `ClientId`, `ClientSecret`, `SigningSecret`, `VerificationToken`, `AppToken` (`xapp-...`), and `BotUserToken` (`xoxb-...`).
-   - *Action required:* Revoke/rotate all exposed tokens immediately and remove hardcoded secrets from source control.
-2. **Timing Attack Vulnerability in Signature Verification:**
+1. **Timing Attack Vulnerability in Signature Verification:**
    - `RequestVerification.cs`: Uses `StringComparer.OrdinalIgnoreCase.Compare(SlackSignature, Hash) == 0`.
    - *Fix:* Replace with `CryptographicOperations.FixedTimeEquals` to prevent side-channel timing attacks.
 
@@ -146,7 +142,7 @@ The library features a declarative, attribute-driven architecture for Slack API 
 
 | Priority | Task | Description |
 |---|---|---|
-| **P0** | **Revoke & Scrub Secrets** | Revoke exposed Slack and NuGet tokens. Scrub from git history. Replace with User Secrets / Environment Variables. |
+| **P0** | **Rotate & Externalize Secrets** | Rotate any exposed Slack and NuGet tokens, and store the replacements in User Secrets / Environment Variables rather than in source files. |
 | **P0** | **Fix Constant-Time Signature Check** | Use `CryptographicOperations.FixedTimeEquals` in `RequestVerification.cs`. |
 | **P1** | **Fix Async WebSocket Lifecycle** | Remove `taskReceiveLoop.Wait()` in `SlackWebSocketClient.cs`. Ensure `ConnectAsync` runs non-blocking and handles reconnection cleanly. |
 | **P1** | **Refactor `SlackASPTransmission`** | Eliminate constructor side-effects and sync-over-async (`.Result`, `.Wait()`). Implement as middleware/endpoint filter or async service. |
