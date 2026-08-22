@@ -1,0 +1,11 @@
+# Cursor Rules for Blacus.SlackAPIWrapper
+
+Please follow the rules and project guidelines defined in [AGENTS.md](./AGENTS.md).
+
+Key reminders:
+- Target framework is .NET 9 (`net9.0`, C# 13).
+- `ImplicitUsings` is disabled: always include explicit `using` statements.
+- Never commit or log API tokens/secrets (especially from `gitIgnore/`).
+- Build and verify changes with `dotnet build src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/SlackAPIWrapper.csproj` and `dotnet build src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper.AspNetCore/SlackAPIWrapper.AspNetCore.csproj`.
+- Do not introduce sync-over-async (`.Wait()`, `.Result`).
+- Maintain and update `Documentation/AI_CHANGELOG.md` with all AI-made modifications.
