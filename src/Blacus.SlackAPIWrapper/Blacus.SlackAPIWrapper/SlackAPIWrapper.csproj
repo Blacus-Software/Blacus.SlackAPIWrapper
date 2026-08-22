@@ -7,10 +7,13 @@
     <RootNamespace />
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Blacus Slack API Wrapper</Title>
-    <Version>9.1.2-beta</Version>
+    <Version>10.2.1</Version>
     <PackageId>Blacus.$(AssemblyName)</PackageId>
     <Authors>Blacus</Authors>
     <Product>Blacus.$(AssemblyName)</Product>
+    <Description>A typed, attribute-driven .NET wrapper around the Slack Web API, Slack Socket Mode (WebSocket), and ASP.NET Core request/webhook verification.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>slack;slack-api;slack-bot;webapi;socket-mode;wrapper;aspnetcore</PackageTags>
     <PackageOutputPath>$(OutputPath)</PackageOutputPath>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/Blacus-Software/Blacus.SlackAPIWrapper</RepositoryUrl>
