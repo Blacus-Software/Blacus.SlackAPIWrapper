@@ -49,37 +49,16 @@ namespace Blacus.SlackAPIWrapper
 
                 classes.TryAdd(item.ObjectName, extJamd.GetClassString(item.ObjectName));
 
-                // AddClass(new(item.Model, $"{helper.ClassName}{item.ObjectName}"), ref classes);
                 AddClass(new(item.Model, item.ObjectName), ref classes);
 
             }
 
         }
 
-        public string[] GetMatchedProperties()
-        {
-            return null;
-        }
-
-        public string[] GetMissedProperties()
-        {
-            return null;
-        }
-
         public string GetAllClassStrings()
         {
 
-            string toReturn = null;
-
-            //var model = ISlackModel.FromJson(sampleJson);
-            //var extJamd = new JsonExtensionDataHelper(model, "WebsocketPayload");
-
-            //foreach (var classItem in Classes)
-            //    Console.WriteLine(classItem.Value);
-
-            toReturn = string.Join("\\n", Classes.Select(cls => cls.Value));
-
-            return toReturn;
+            return string.Join("\\n", Classes.Select(cls => cls.Value));
 
         }
 

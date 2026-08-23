@@ -14,15 +14,18 @@ namespace Blacus.SlackAPIWrapper.Models.WebSocket
     public interface ISlackWebSocketBase : ISlackModel
     {
 
-        public SlackWebSocketClient Client { get; set; }
+        public SlackWebSocketClient? Client { get; set; }
 
-        public SlackWebSocketAcknowledge AcknowledgePayload { get; set; }
+        public SlackWebSocketAcknowledge? AcknowledgePayload { get; set; }
 
         public Guid? EnvelopeId { get; set; }
 
-        public ISlackPayload GetPayload()
+        public ISlackPayload? GetPayload()
         {
-            return (ISlackPayload)this.GetType().GetProperty("Payload").GetValue(this);
+            if (this is ISlackWebSocketPayload payloadContainer)
+                return payloadContainer.Payload;
+
+            return null;
         }
 
     }

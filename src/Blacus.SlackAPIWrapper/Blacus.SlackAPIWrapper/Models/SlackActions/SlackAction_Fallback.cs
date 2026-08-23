@@ -20,10 +20,6 @@ namespace Blacus.SlackAPIWrapper.Models.SlackActions
         public string? TypeString { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("action_ts")]
-        public string? ActionTs { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("selected_date")]
         public string? SelectedDate { get; set; }
 

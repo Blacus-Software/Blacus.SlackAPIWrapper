@@ -4,6 +4,8 @@ using Blacus.SlackAPIWrapper.Models;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Blacus.SlackAPIWrapper
@@ -47,22 +49,25 @@ namespace Blacus.SlackAPIWrapper
         /// <summary>
         /// Sends an instance-based request to the Slack API with the specified Bearer token and optional arguments.
         /// </summary>
-        public async Task<T> SendAsync<T>(string token, ISlackOptionalArguments? optionalArguments = null, bool streamJson = true) where T : SlackMethod
+        public async Task<T> SendAsync<T>(string token, ISlackOptionalArguments? optionalArguments = null, bool streamJson = true, CancellationToken cancellationToken = default) where T : SlackMethod
         {
-            return await SendAsync<T>(new AuthenticationHeaderValue("Bearer", token), optionalArguments, streamJson);
+            return await SendAsync<T>(new AuthenticationHeaderValue("Bearer", token), optionalArguments, streamJson, cancellationToken);
         }
 
         /// <summary>
         /// Sends an instance-based request to the Slack API with the specified authentication header and optional arguments.
         /// </summary>
-        public async Task<T> SendAsync<T>(AuthenticationHeaderValue authenticationHeaderValue, ISlackOptionalArguments? optionalArguments = null, bool streamJson = true) where T : SlackMethod
+        public async Task<T> SendAsync<T>(AuthenticationHeaderValue authenticationHeaderValue, ISlackOptionalArguments? optionalArguments = null, bool streamJson = true, CancellationToken cancellationToken = default) where T : SlackMethod
         {
 
             var attribsMethod = SlackMethodAttribute.GetSlackMethodAttribute<T>();
+            if (attribsMethod == null)
+                throw new InvalidOperationException($"Type '{typeof(T).FullName}' is missing the required [SlackMethod] attribute.");
+
             var attribLimiter = SlackLimiterTierAttribute.GetSlackLimiterAttribute<T>();
 
             if (attribLimiter != null)
-                await Limiter.LimiterFactory(attribLimiter.LimiterTier).WaitAsync();
+                await Limiter.LimiterFactory(attribLimiter.LimiterTier).WaitAsync(cancellationToken);
 
             var request = new HttpRequestMessage(attribsMethod.HttpMethod, $"https://slack.com/api/{attribsMethod.Path}");
 
@@ -73,7 +78,7 @@ namespace Blacus.SlackAPIWrapper
                 case SlackMethodContentType.Json:
                     request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     var jsonText = optionalArguments?.ToJson();
-                    var jsonContent = new StringContent(jsonText ?? string.Empty, null, "application/json");
+                    var jsonContent = new StringContent(jsonText ?? string.Empty, Encoding.UTF8, "application/json");
                     request.Content = jsonContent;
                     break;
 
@@ -86,7 +91,7 @@ namespace Blacus.SlackAPIWrapper
                     break;
             }
 
-            var response = await _httpClient.SendAsync(request);
+            var response = await _httpClient.SendAsync(request, cancellationToken);
 
             response.EnsureSuccessStatusCode();
 
@@ -94,11 +99,11 @@ namespace Blacus.SlackAPIWrapper
 
             if (streamJson)
             {
-                toReturn = (await ISlackModel.FromJsonAsync<T>(await response.Content.ReadAsStreamAsync()))!;
+                toReturn = (await ISlackModel.FromJsonAsync<T>(await response.Content.ReadAsStreamAsync(cancellationToken)))!;
             }
             else
             {
-                string json = await response.Content.ReadAsStringAsync();
+                string json = await response.Content.ReadAsStringAsync(cancellationToken);
                 toReturn = ISlackModel.FromJson<T>(json)!;
             }
 
@@ -109,17 +114,17 @@ namespace Blacus.SlackAPIWrapper
         /// <summary>
         /// Makes a static request to the Slack API with the specified Bearer token and optional arguments.
         /// </summary>
-        public static async Task<T> HttpRequestAsync<T>(string token, ISlackOptionalArguments? optionalArguments = null, bool streamJson = true) where T : SlackMethod
+        public static async Task<T> HttpRequestAsync<T>(string token, ISlackOptionalArguments? optionalArguments = null, bool streamJson = true, CancellationToken cancellationToken = default) where T : SlackMethod
         {
-            return await new SlackClient(HttpClient).SendAsync<T>(token, optionalArguments, streamJson);
+            return await new SlackClient(HttpClient).SendAsync<T>(token, optionalArguments, streamJson, cancellationToken);
         }
 
         /// <summary>
         /// Makes a static request to the Slack API with the specified authentication header and optional arguments.
         /// </summary>
-        public static async Task<T> HttpRequestAsync<T>(AuthenticationHeaderValue authenticationHeaderValue, ISlackOptionalArguments? optionalArguments = null, bool streamJson = true) where T : SlackMethod
+        public static async Task<T> HttpRequestAsync<T>(AuthenticationHeaderValue authenticationHeaderValue, ISlackOptionalArguments? optionalArguments = null, bool streamJson = true, CancellationToken cancellationToken = default) where T : SlackMethod
         {
-            return await new SlackClient(HttpClient).SendAsync<T>(authenticationHeaderValue, optionalArguments, streamJson);
+            return await new SlackClient(HttpClient).SendAsync<T>(authenticationHeaderValue, optionalArguments, streamJson, cancellationToken);
         }
 
     }

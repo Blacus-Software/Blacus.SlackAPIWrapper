@@ -17,7 +17,10 @@ namespace Blacus.SlackAPIWrapper.Methods
 
         public static async Task<ChatPostMessage> ExecuteAsync(string token, OptionalArguments slackOptionalArguments)
         {
-            await Limiter.LimiterFactory(slackOptionalArguments.Channel, 1, new System.TimeSpan(0, 0, 1)).WaitAsync();
+            if (slackOptionalArguments != null && !string.IsNullOrEmpty(slackOptionalArguments.Channel))
+            {
+                await Limiter.LimiterFactory(slackOptionalArguments.Channel, 1, new System.TimeSpan(0, 0, 1)).WaitAsync();
+            }
             return await SlackClient.HttpRequestAsync<ChatPostMessage>(token, slackOptionalArguments);
         }
 

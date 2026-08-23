@@ -43,7 +43,7 @@ using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Methods
 {
-    [SlackMethod("users.info", "POST", SlackMethodContentType.ApplicationJson)]
+    [SlackMethod("users.info", "POST", SlackMethodContentType.Json)]
     public class UsersInfo : SlackModel
     {
         [JsonPropertyName("user")]
@@ -79,10 +79,10 @@ namespace Blacus.SlackAPIWrapper.Methods
 
 ### 3.4. Rate Limiting
 - `Limiter.cs` enforces Slack's tier-based request limits (Tier 1 = 1 req/min, Tier 2 = 20 req/min, Tier 3 = 50 req/min, Tier 4 = 100 req/min).
-- Endpoints can be tagged with `[SlackLimiterTier(SlackRateLimitTier.TierX)]`.
+- Endpoints can be tagged with `[SlackLimiterTier(LimiterTier.WebAPITierX)]`.
 
 ### 3.5. DI & Service Registration
-- The DI extension method is `services.AddSlackDependency(slackCredential)` (note: the method name in code is `AddSlackDependency`, not `AddSlackAPIWrapper`).
+- The DI extension methods are `services.AddSlackDependency(slackCredential)` and `services.AddSlackDependency()`. They register `ISlackClient` and `SlackClient` via `AddHttpClient`, along with `SlackCredential` and `ISlackASPTransmission`.
 
 ---
 
@@ -125,7 +125,7 @@ For full analysis, see `Documentation/ProjectAnalysis.md`. When modifying or ref
 
 1. Navigate to `src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/Blacus/SlackAPIWrapper/Methods/`.
 2. Create a new file named after the method (e.g. `ConversationsArchive.cs`).
-3. Decorate the class with `[SlackMethod("conversations.archive", "POST", SlackMethodContentType.ApplicationJson)]`.
+3. Decorate the class with `[SlackMethod("conversations.archive", "POST", SlackMethodContentType.Json)]`.
 4. Inherit from `SlackModel` (gives you `Ok`, `Error`, `Warning`, `SourceJson`).
 5. Add response properties matching the Slack API docs using `[JsonPropertyName("...")]`.
 6. Add a nested `public class OptionalArguments : SlackOptionalArguments` with request properties.

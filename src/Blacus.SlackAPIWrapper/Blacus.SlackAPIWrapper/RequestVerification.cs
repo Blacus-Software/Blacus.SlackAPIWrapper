@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -11,37 +12,41 @@ namespace Blacus.SlackAPIWrapper.Authentication
         private const int timeStampValidForSeconds = 300;
         private const string slackVersion = "v0";
 
-        public string SlackSignature { get; set; }
-        public string SlackRequestTimestamp { get; set; }
-        public string RequestBody { get; set; }
-        public string SigningSecret { get; set; }
+        public string? SlackSignature { get; set; }
+        public string? SlackRequestTimestamp { get; set; }
+        public string? RequestBody { get; set; }
+        public string? SigningSecret { get; set; }
 
         public bool IgnoreTimestamp { get; set; } = false;
 
-        public int SlackRequestTimestampInt
+        public long SlackRequestTimestampLong
         {
             get
             {
-                if (int.TryParse(SlackRequestTimestamp ?? string.Empty, out int timestamp))
+                if (long.TryParse(SlackRequestTimestamp ?? string.Empty, NumberStyles.Integer, CultureInfo.InvariantCulture, out long timestamp))
                     return timestamp;
 
-                return int.MinValue;
+                return long.MinValue;
             }
         }
 
-        public bool HasValidTimestamp { get => int.TryParse(SlackRequestTimestamp ?? string.Empty, out _); }
+        public int SlackRequestTimestampInt => (int)Math.Clamp(SlackRequestTimestampLong, int.MinValue, int.MaxValue);
 
-        public DateTime SlackRequestTimestampUTC { get => HasValidTimestamp ? DateTime.UnixEpoch.AddSeconds(SlackRequestTimestampInt) : DateTime.MinValue; }
+        public bool HasValidTimestamp => long.TryParse(SlackRequestTimestamp ?? string.Empty, NumberStyles.Integer, CultureInfo.InvariantCulture, out _);
 
-        public string Hash { get => "v0=" + getHash(SigningSecret, SignatureBaseString); }
-        public string SignatureBaseString { get => $"{slackVersion}:{SlackRequestTimestamp}:{RequestBody}"; }
+        public DateTime SlackRequestTimestampUTC => HasValidTimestamp ? DateTime.UnixEpoch.AddSeconds(SlackRequestTimestampLong) : DateTime.MinValue;
 
-        private bool? _verified = null;
+        public string Hash => "v0=" + getHash(SigningSecret, SignatureBaseString);
+        public string SignatureBaseString => $"{slackVersion}:{SlackRequestTimestamp}:{RequestBody}";
+
         public bool Verified
         {
 
             get
             {
+
+                if (string.IsNullOrWhiteSpace(SigningSecret) || string.IsNullOrWhiteSpace(SlackSignature))
+                    return false;
 
                 if (!IgnoreTimestamp)
                 {
@@ -51,8 +56,8 @@ namespace Blacus.SlackAPIWrapper.Authentication
                         return false;
                     }
 
-                    double currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                    double delta = Math.Abs(currentTime - SlackRequestTimestampInt);
+                    long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                    long delta = Math.Abs(currentTime - SlackRequestTimestampLong);
 
                     if (delta > timeStampValidForSeconds)
                     {
@@ -61,27 +66,26 @@ namespace Blacus.SlackAPIWrapper.Authentication
 
                 }
 
-                if (_verified == null)
-                {
-                    byte[] signatureBytes = Encoding.UTF8.GetBytes(SlackSignature ?? string.Empty);
-                    byte[] hashBytes = Encoding.UTF8.GetBytes(Hash ?? string.Empty);
-                    _verified = CryptographicOperations.FixedTimeEquals(signatureBytes, hashBytes);
-                }
-
-                return (bool)_verified;
+                byte[] signatureBytes = Encoding.UTF8.GetBytes(SlackSignature);
+                byte[] hashBytes = Encoding.UTF8.GetBytes(Hash);
+                return CryptographicOperations.FixedTimeEquals(signatureBytes, hashBytes);
 
             }
 
         }
 
-        private static string getHash(string signingSecret, string input)
+        private static string getHash(string? signingSecret, string? input)
         {
 
             byte[] key = Encoding.UTF8.GetBytes(signingSecret ?? string.Empty);
             byte[] sourceBytes = Encoding.UTF8.GetBytes(input ?? string.Empty);
             byte[] hashBytes = HMACSHA256.HashData(key, sourceBytes);
 
+#if NET9_0_OR_GREATER
+            return Convert.ToHexStringLower(hashBytes);
+#else
             return Convert.ToHexString(hashBytes).ToLowerInvariant();
+#endif
 
         }
 

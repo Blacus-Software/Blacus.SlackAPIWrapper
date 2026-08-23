@@ -1,6 +1,7 @@
 ﻿using Blacus.SlackAPIWrapper.JsonConverters;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -19,28 +20,35 @@ namespace Blacus.SlackAPIWrapper.Models
         {
 
             if (string.IsNullOrWhiteSpace(json))
-                throw new NullReferenceException();
+                throw new ArgumentException("JSON cannot be null or whitespace.", nameof(json));
 
             options ??= JsonConverterSettings.Singleton;
 
-            ISlackModel toReturn = JsonSerializer.Deserialize<T>(json, options);
-            toReturn.SourceJson = json;
+            T? toReturn = JsonSerializer.Deserialize<T>(json, options);
+            if (toReturn != null)
+                toReturn.SourceJson = json;
 
-            return (T?)toReturn;
+            return toReturn;
 
         }
 
-        public static T? FromJson<T>(System.IO.Stream json) where T : ISlackModel
+        public static T? FromJson<T>(Stream json) where T : ISlackModel
         {
-            ISlackModel toReturn = JsonSerializer.Deserialize<T>(json, JsonConverterSettings.Singleton);
-            return (T?)toReturn;
+            if (json == null)
+                throw new ArgumentNullException(nameof(json));
+
+            T? toReturn = JsonSerializer.Deserialize<T>(json, JsonConverterSettings.Singleton);
+            return toReturn;
         }
 
-        public static async Task<T?> FromJsonAsync<T>(System.IO.Stream json, JsonSerializerOptions? options = null) where T : ISlackModel
+        public static async Task<T?> FromJsonAsync<T>(Stream json, JsonSerializerOptions? options = null) where T : ISlackModel
         {
+            if (json == null)
+                throw new ArgumentNullException(nameof(json));
+
             options ??= JsonConverterSettings.Singleton;
-            ISlackModel? toReturn = await JsonSerializer.DeserializeAsync<T>(json, options);
-            return (T?)toReturn;
+            T? toReturn = await JsonSerializer.DeserializeAsync<T>(json, options);
+            return toReturn;
         }
 
     }

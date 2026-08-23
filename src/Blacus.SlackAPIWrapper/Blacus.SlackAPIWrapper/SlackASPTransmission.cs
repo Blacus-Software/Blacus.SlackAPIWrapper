@@ -19,8 +19,6 @@
 
         public SlackCredential DefaultSlackCredential { get; set; }
 
-        public string Code { get; set; }
-
         public bool Verified { get; }
 
         public bool ShortCircuited { get; }
@@ -56,7 +54,6 @@
         }
 
         public SlackCredential DefaultSlackCredential { get; set; }
-        public string Code { get; set; }
 
         public bool Verified { get; private set; }
         public bool ShortCircuited { get; private set; }
@@ -89,10 +86,10 @@
                 return;
             }
 
-            if (payload.GetType() == typeof(SlackUrlResponsePayload))
+            if (payload is SlackUrlResponsePayload urlPayload)
             {
 
-                string response = new UrlVerificationResponse(((SlackUrlResponsePayload)payload).Challenge).ToJson();
+                string response = new UrlVerificationResponse(urlPayload.Challenge).ToJson();
                 HttpContext.Response.ContentType = "application/json";
                 await HttpContext.Response.WriteAsync(response);
 
@@ -124,24 +121,27 @@
         }
 
 
-        public static ISlackPayload PayloadFromASP(string contentType, string bodyString)
+        public static ISlackPayload? PayloadFromASP(string? contentType, string? bodyString)
         {
 
-            ISlackPayload? toReturn = null;
-            string json = bodyString;
+            if (string.IsNullOrWhiteSpace(bodyString))
+                return null;
 
-            switch (contentType)
+            ISlackPayload? toReturn = null;
+            string mediaType = contentType?.Split(';')[0].Trim().ToLowerInvariant() ?? string.Empty;
+
+            switch (mediaType)
             {
                 case "application/x-www-form-urlencoded":
                     toReturn = processFormData(bodyString);
                     break;
 
                 case "application/json":
-                    toReturn = ISlackModel.FromJson<ISlackPayload>(json);
+                    toReturn = ISlackModel.FromJson<ISlackPayload>(bodyString);
                     break;
 
                 default:
-                    Console.WriteLine($"ContentType not found: {contentType}");
+                    // Unknown or unsupported content type
                     break;
             }
 
@@ -149,45 +149,45 @@
 
         }
 
-        private static ISlackPayload processFormData(string bodyString)
+        private static ISlackPayload? processFormData(string bodyString)
         {
 
-            if (bodyString.StartsWith("payload="))
+            if (string.IsNullOrWhiteSpace(bodyString))
+                return null;
+
+            var parsed = HttpUtility.ParseQueryString(bodyString);
+
+            var payloadJson = parsed["payload"];
+            if (!string.IsNullOrEmpty(payloadJson))
             {
-                var json = HttpUtility.UrlDecode(bodyString.Substring(8));
-                var toReturn = ISlackModel.FromJson<ISlackPayload>(json);
-                return toReturn;
+                return ISlackModel.FromJson<ISlackPayload>(payloadJson);
             }
-            else
+
+            Uri? responseUrl = null;
+            var responseUrlString = parsed["response_url"];
+            if (!string.IsNullOrEmpty(responseUrlString) && Uri.TryCreate(responseUrlString, UriKind.Absolute, out var uri))
             {
-
-                Dictionary<string, string> values = new();
-                var formData = bodyString.Split("&");
-
-                foreach (var item in formData)
-                {
-                    var split = item.Split("=");
-                    values.Add(split[0], split[1]);
-                }
-
-                SlackSlashCommandPayload toReturn = new()
-                {
-                    Token = HttpUtility.UrlDecode(values["token"]),
-                    TeamId = HttpUtility.UrlDecode(values["team_id"]),
-                    // EnterpriseId = HttpUtility.UrlDecode(values["enterprise_id"]),
-                    ResponseUrl = new Uri(HttpUtility.UrlDecode(values["response_url"])),
-                    TriggerId = HttpUtility.UrlDecode(values["trigger_id"]),
-                    ChannelId = HttpUtility.UrlDecode(values["channel_id"]),
-                    UserId = HttpUtility.UrlDecode(values["user_id"]),
-                    UserName = HttpUtility.UrlDecode(values["user_name"]),
-                    Command = HttpUtility.UrlDecode(values["command"]),
-                    Text = HttpUtility.UrlDecode(values["text"]),
-                    ApiAppId = HttpUtility.UrlDecode(values["api_app_id"]),
-                };
-
-                return toReturn;
-
+                responseUrl = uri;
             }
+
+            SlackSlashCommandPayload toReturn = new()
+            {
+                Token = parsed["token"],
+                TeamId = parsed["team_id"],
+                TeamDomain = parsed["team_domain"],
+                ResponseUrl = responseUrl,
+                TriggerId = parsed["trigger_id"],
+                ChannelId = parsed["channel_id"],
+                ChannelName = parsed["channel_name"],
+                UserId = parsed["user_id"],
+                UserName = parsed["user_name"],
+                Command = parsed["command"],
+                Text = parsed["text"],
+                ApiAppId = parsed["api_app_id"],
+                IsEnterpriseInstall = bool.TryParse(parsed["is_enterprise_install"], out var isEnterprise) ? isEnterprise : null,
+            };
+
+            return toReturn;
 
         }
 

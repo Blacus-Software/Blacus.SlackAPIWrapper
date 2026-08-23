@@ -24,6 +24,7 @@ namespace Blacus.SlackAPIWrapper
                 CTS?.Cancel();
                 WS?.Dispose();
                 CTS?.Dispose();
+                _sendLock.Dispose();
                 WS = null;
                 CTS = null;
             }
@@ -40,6 +41,7 @@ namespace Blacus.SlackAPIWrapper
 
         private ClientWebSocket? WS;
         private CancellationTokenSource? CTS;
+        private readonly SemaphoreSlim _sendLock = new(1, 1);
 
         public required Action<ISlackWebSocketBase> OnMessageReceived { get; set; }
         private ILogger logger { get; }
@@ -49,7 +51,27 @@ namespace Blacus.SlackAPIWrapper
             if (WS == null || WS.State != WebSocketState.Open || CTS == null)
                 return;
 
-            await this.WS.SendAsync(Encoding.UTF8.GetBytes(text), WebSocketMessageType.Text, true, CTS.Token).ConfigureAwait(false);
+            byte[] bytes = Encoding.UTF8.GetBytes(text);
+            try
+            {
+                await _sendLock.WaitAsync(CTS.Token).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
+            try
+            {
+                if (WS != null && WS.State == WebSocketState.Open && CTS != null)
+                {
+                    await WS.SendAsync(bytes, WebSocketMessageType.Text, true, CTS.Token).ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                _sendLock.Release();
+            }
         }
 
         private Task? taskReceiveLoop;
@@ -110,7 +132,22 @@ namespace Blacus.SlackAPIWrapper
                 if (ws.State == WebSocketState.Open || ws.State == WebSocketState.CloseReceived)
                 {
                     using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
-                    await ws.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Client disconnecting", timeoutCts.Token).ConfigureAwait(false);
+                    try
+                    {
+                        await _sendLock.WaitAsync(timeoutCts.Token).ConfigureAwait(false);
+                        try
+                        {
+                            await ws.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Client disconnecting", timeoutCts.Token).ConfigureAwait(false);
+                        }
+                        finally
+                        {
+                            _sendLock.Release();
+                        }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // Send lock timed out during disconnect
+                    }
                 }
             }
             catch (Exception ex)

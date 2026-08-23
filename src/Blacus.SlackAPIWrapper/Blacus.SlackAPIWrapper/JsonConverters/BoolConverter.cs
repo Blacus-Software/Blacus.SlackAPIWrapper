@@ -13,31 +13,42 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
         public override bool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
 
-            bool boolValue;
-
             switch (reader.TokenType)
             {
                 case JsonTokenType.True:
+                    return true;
+
                 case JsonTokenType.False:
-                    boolValue = reader.GetBoolean();
-                    return boolValue;
+                    return false;
 
                 case JsonTokenType.String:
                     var stringValue = reader.GetString();
 
-                    if (Boolean.TryParse(stringValue, out boolValue))
-                        return boolValue;
+                    if (bool.TryParse(stringValue, out var parsedBool))
+                        return parsedBool;
+
+                    if (stringValue == "1")
+                        return true;
+
+                    if (stringValue == "0")
+                        return false;
+
+                    break;
+
+                case JsonTokenType.Number:
+                    if (reader.TryGetInt64(out var numValue))
+                        return numValue != 0;
 
                     break;
 
             }
 
-            throw new Exception("Cannot unmarshal type bool");
+            throw new JsonException($"Cannot convert token '{reader.TokenType}' to bool.");
 
         }
 
         public override void Write(Utf8JsonWriter writer, bool value, JsonSerializerOptions options) =>
-            JsonSerializer.Serialize(writer, value);
+            writer.WriteBooleanValue(value);
 
         public static readonly BoolConverter Singleton = new BoolConverter();
 

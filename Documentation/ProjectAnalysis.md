@@ -35,6 +35,7 @@ The library features a declarative, attribute-driven architecture for Slack API 
         │   ├── JsonConverters/              # Custom System.Text.Json converters
         │   ├── Methods/                     # 23 Slack API method definitions
         │   ├── Models/                      # Blocks, BlockElements, Events, Payloads, WebSocket
+        │   ├── ISlackClient.cs              # Client interface for DI & testability
         │   ├── SlackClient.cs               # Core HTTP execution engine
         │   ├── SlackCredential.cs           # Token & secret container
         │   ├── Limiter.cs                   # Rate limiter implementation
@@ -47,10 +48,11 @@ The library features a declarative, attribute-driven architecture for Slack API 
 
 ## 3. Architecture & Key Components
 
-### 3.1. Method Execution (`SlackClient.cs` & `SlackMethodAttribute.cs`)
+### 3.1. Method Execution (`SlackClient.cs`, `ISlackClient.cs`, & `SlackMethodAttribute.cs`)
 - Each Slack endpoint is declared as a subclass of `SlackMethod` decorated with `[SlackMethod("path", "HttpMethod", SlackMethodContentType)]`.
 - Request arguments are encapsulated in a nested `OptionalArguments` class inheriting from `SlackOptionalArguments`.
-- `SlackClient.HttpRequestAsync<T>` inspects attributes via reflection, enforces rate limits, builds `HttpRequestMessage` (JSON or `x-www-form-urlencoded`), attaches Bearer authorization, sends via `HttpClient`, and deserializes into `T`.
+- `ISlackClient` defines `SendAsync<T>` for dependency injection and unit testability with `IHttpClientFactory`. `SlackClient` implements `ISlackClient` while also providing backward-compatible static `HttpRequestAsync<T>` convenience methods.
+- Requests inspect attributes via reflection, enforce tier-based rate limits via `Limiter.cs`, build `HttpRequestMessage` (JSON or `x-www-form-urlencoded`), attach authentication headers, send via `HttpClient`, and deserialize into `T`.
 
 ### 3.2. Models & Dynamic Properties (`ISlackModel.cs`, `JsonExtensionDataHelper.cs`)
 - All Slack models implement `ISlackModel` or inherit `SlackModel`.
@@ -63,7 +65,7 @@ The library features a declarative, attribute-driven architecture for Slack API 
   - **Tier 2:** 20 req / min
   - **Tier 3:** 50 req / min
   - **Tier 4:** 100 req / min
-- Uses a dictionary of singleton limiters mapped to `SemaphoreSlim` and `System.Timers.Timer`.
+- Implemented as an async token-bucket limiter driven by `PeriodicTimer` on a background loop with single-instance `Lazy<Limiter>` registry construction, `IAsyncDisposable`, and cancellation support.
 
 ### 3.4. Socket Mode Client (`SlackWebSocketClient.cs`)
 - Connects to Slack's Socket Mode via `apps.connections.open`.
@@ -88,29 +90,19 @@ The library features a declarative, attribute-driven architecture for Slack API 
 
 ## 5. Identified Issues & Technical Debt (Remove when resolved)
 
-### 5.1. Security Vulnerabilities (High Severity)
-_(None remaining.)_
+ 
 
 ### 5.2. Concurrency, Async, & Lifecycle Issues (High Severity)
 _(None remaining.)_
 
 ### 5.3. Architecture & Design Flaws (Medium Severity)
-1. **README API Divergence:**
-   - README documents `builder.Services.AddSlackAPIWrapper(...)`, but the actual method name is `AddSlackDependency(...)`.
-   - README refers to "Slack's Real-Time Messaging (RTM) API" instead of "Slack Socket Mode".
-2. **Fragile Form Parsing:**
-   - `SlackASPTransmission.processFormData` splits on `&` and `=` manually and will throw `KeyNotFoundException` or `IndexOutOfRangeException` on malformed requests or missing fields. Should use `Microsoft.AspNetCore.WebUtilities.QueryHelpers`.
+_(None remaining.)_
 
-### 5.4. Code Quality & Dead Code (Low Severity)
+### 5.4. Code Quality & Technical Debt
 1. **Dead Code:**
-   - `JsonConverters/EventConverter.cs` is completely commented out.
-   - `JsonExtensionDataHelper.GetMatchedProperties()` and `GetMissedProperties()` always return `null`.
-   - `ISlackASPTransmission.Code` property is unused.
-2. **Nullability Warnings Suppressed Globally:**
-   - The `.csproj` suppresses critical nullability warnings (`CS8600`, `CS8601`, `CS8602`, `CS8603`, `CS8604`, `CS8629`), masking potential runtime `NullReferenceException`s.
-3. **Missing Test Suite and CI/CD:**
-   - No automated unit/integration test projects (`*.Tests`).
-   - `.github/workflows` folder is empty.
+   - _(None remaining.)_
+2. **Automated Testing & CI/CD:**
+   - Fully resolved with xUnit test suite under `tests/Blacus.SlackAPIWrapper.Tests/` and GitHub Actions CI workflow in `.github/workflows/ci.yml`.
 
 ---
 
@@ -125,6 +117,6 @@ _(None remaining.)_
 | **P1** | ~~**Deduplicate Projects**~~ _(Resolved)_ | The `Blacus.SlackAPIWrapper.AspNetCore` project was merged into the core project (`Blacus.SlackAPIWrapper`); all duplicate classes were consolidated into a single library. See `AI_CHANGELOG.md`. |
 | **P2** | ~~**Refactor `SlackClient` for DI**~~ _(Resolved)_ | Introduced `ISlackClient`, added constructor injection supporting `HttpClient` and `IHttpClientFactory`, wired typed client via `AddSlackDependency()`, and deduplicated request dispatching. See `AI_CHANGELOG.md`. |
 | **P2** | ~~**Rewrite `Limiter.cs`~~ _(Resolved)_ | `Limiter` now uses a `PeriodicTimer`-driven refill loop, `Lazy<Limiter>` registry construction, `IAsyncDisposable`, `CancellationToken` support, and `RemoveAsync`/`DisposeAllAsync` cleanup; the blocking `Wait()` was removed. See `AI_CHANGELOG.md`. |
-| **P2** | **Add Automated Tests** | Create an xUnit test project covering serialization, request verification, method dispatching, and rate limiting. |
-| **P3** | **Setup CI/CD Pipeline** | Add GitHub Actions workflow for build, test, and automated NuGet publishing. |
-| **P3** | **Update Documentation & Clean Dead Code** | Fix README code samples to match actual APIs; delete commented-out and unused files. |
+| **P2** | ~~**Add Automated Tests**~~ _(Resolved)_ | Created an xUnit test project (`tests/Blacus.SlackAPIWrapper.Tests/`) covering JSON converters, HMAC request verification, rate limiting, dependency injection, polymorphic serialization, and client dispatching. |
+| **P3** | ~~**Setup CI/CD Pipeline**~~ _(Resolved)_ | Added `.github/workflows/ci.yml` and `.github/workflows/publish-nuget.yml` workflows for continuous integration testing and automated package releases. |
+| **P3** | ~~**Update Documentation & Clean Dead Code**~~ _(Resolved)_ | Fixed README code samples to match actual APIs, updated AGENTS.md, removed commented-out files, and eliminated dead code. See `AI_CHANGELOG.md`. |
