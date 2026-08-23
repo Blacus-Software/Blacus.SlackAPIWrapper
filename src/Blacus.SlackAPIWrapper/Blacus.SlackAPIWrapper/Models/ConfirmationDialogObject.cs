@@ -28,7 +28,10 @@ namespace Blacus.SlackAPIWrapper.Models
             set
             {
                 field = value;
-                field.MaxTextLength = field_MaxTextLength;
+                if (field != null)
+                {
+                    field.MaxTextLength = field_MaxTextLength;
+                }
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using Blacus.SlackAPIWrapper.Models;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -21,16 +22,22 @@ namespace Blacus.SlackAPIWrapper
         public JsonExtensionDataHelper(ISlackModel slackModel, string className)
         {
 
-            this.ClassName = className;
-            this.slackModel = slackModel;
+            this.ClassName = className ?? throw new ArgumentNullException(nameof(className));
+            this.slackModel = slackModel ?? throw new ArgumentNullException(nameof(slackModel));
 
-            Items = new ItemHandler[ModelExtensionData.Count];
-
-            var modelExtensionDataArray = ModelExtensionData.ToArray();
-
-            for (int i = 0; i < ModelExtensionData.Count; i++)
+            if (ModelExtensionData == null || ModelExtensionData.Count == 0)
             {
-                Items[i] = new ItemHandler(modelExtensionDataArray[i]);
+                Items = [];
+            }
+            else
+            {
+                Items = new ItemHandler[ModelExtensionData.Count];
+                var modelExtensionDataArray = ModelExtensionData.ToArray();
+
+                for (int i = 0; i < ModelExtensionData.Count; i++)
+                {
+                    Items[i] = new ItemHandler(modelExtensionDataArray[i]);
+                }
             }
 
             AddClass(this, Classes);
@@ -42,14 +49,14 @@ namespace Blacus.SlackAPIWrapper
 
             classes.TryAdd(helper.ClassName, helper.GetClassString(helper.ClassName));
 
-            foreach (var item in helper.Items.Where(itm => itm.IsObject))
+            foreach (var item in helper.Items.Where(itm => itm.IsObject && itm.Model != null))
             {
 
-                var extJamd = new JsonExtensionDataHelper(item.Model, item.ObjectName);
+                var extJamd = new JsonExtensionDataHelper(item.Model!, item.ObjectName);
 
                 classes.TryAdd(item.ObjectName, extJamd.GetClassString(item.ObjectName));
 
-                AddClass(new(item.Model, item.ObjectName), classes);
+                AddClass(new(item.Model!, item.ObjectName), classes);
 
             }
 
@@ -143,7 +150,7 @@ public {ObjectType}? {ObjectName} {{ get; set; }}
 
         public string PropertyJson => Element.ToString();
 
-        public ISlackModel Model
+        public ISlackModel? Model
         {
             get
             {

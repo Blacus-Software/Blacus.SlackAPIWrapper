@@ -63,14 +63,15 @@ namespace Blacus.SlackAPIWrapper.Models
         {
             get
             {
+                if (field == null)
+                    return null;
 
                 if (MaxTextLength != null)
                 {
-                    return field.Substring(0, Math.Min(MaxTextLength ?? 3000, field.Length));
+                    return field.Substring(0, Math.Min(MaxTextLength.Value, field.Length));
                 }
 
                 return field;
-
             }
             set { field = value; }
         }

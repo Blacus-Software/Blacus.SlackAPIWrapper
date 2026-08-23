@@ -3,8 +3,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 
-#pragma warning disable CS8603 // Possible null reference return.
-
 namespace Blacus.SlackAPIWrapper.Attributes
 {
 
@@ -23,7 +21,7 @@ namespace Blacus.SlackAPIWrapper.Attributes
             ContentType = contentType;
         }
 
-        public static SlackMethodAttribute GetSlackMethodAttribute<T>()
+        public static SlackMethodAttribute? GetSlackMethodAttribute<T>()
         {
 
             var type = typeof(T);

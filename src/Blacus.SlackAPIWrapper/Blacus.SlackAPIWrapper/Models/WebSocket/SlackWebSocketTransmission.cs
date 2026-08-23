@@ -7,6 +7,12 @@ using System.Text.Json.Serialization;
 namespace Blacus.SlackAPIWrapper.Models.WebSocket
 {
 
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "type", UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor)]
+    [JsonDerivedType(typeof(SlackWebSocketTransmissionHello), typeDiscriminator: "hello")]
+    [JsonDerivedType(typeof(SlackWebSocketTransmissionSlashCommand), typeDiscriminator: "slash_commands")]
+    [JsonDerivedType(typeof(SlackWebSocketTransmissionInteractive), typeDiscriminator: "interactive")]
+    [JsonDerivedType(typeof(SlackWebSocketTransmissionDisconnect), typeDiscriminator: "disconnect")]
+    [JsonDerivedType(typeof(SlackWebSocketTransmissionEventsApi), typeDiscriminator: "events_api")]
     public abstract class SlackWebSocketTransmission : SlackModel, ISlackWebSocketPayload
     {
 

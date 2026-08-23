@@ -1,7 +1,7 @@
 ﻿using Blacus.SlackAPIWrapper.Attributes;
 using Blacus.SlackAPIWrapper.Models;
 using System.Text.Json.Serialization;
-
+using System.Threading.Tasks;
 
 namespace Blacus.SlackAPIWrapper.Methods
 {
@@ -9,6 +9,9 @@ namespace Blacus.SlackAPIWrapper.Methods
     [SlackMethod("conversations.open", "Post")]
     public class ConversationsOpen : SlackMethod
     {
+
+        public static async Task<ConversationsOpen> ExecuteAsync(string token, OptionalArguments slackOptionalArguments)
+            => await SlackClient.HttpRequestAsync<ConversationsOpen>(token, slackOptionalArguments);
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("no_op")]

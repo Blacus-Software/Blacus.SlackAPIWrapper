@@ -14,6 +14,7 @@ using Xunit;
 namespace Blacus.SlackAPIWrapper.Tests
 {
 
+    [Collection("SlackClientStaticCollection")]
     public class SlackClientTests
     {
 
@@ -21,6 +22,8 @@ namespace Blacus.SlackAPIWrapper.Tests
         {
             public HttpRequestMessage? LastRequest { get; private set; }
             public string? LastRequestBody { get; private set; }
+            public Func<HttpRequestMessage, HttpResponseMessage>? ResponseFactory { get; set; }
+
             public HttpResponseMessage ResponseToReturn { get; set; } = new(HttpStatusCode.OK)
             {
                 Content = new StringContent("{\"ok\": true}")
@@ -34,7 +37,7 @@ namespace Blacus.SlackAPIWrapper.Tests
                 {
                     LastRequestBody = await request.Content.ReadAsStringAsync(cancellationToken);
                 }
-                return ResponseToReturn;
+                return ResponseFactory != null ? ResponseFactory(request) : ResponseToReturn;
             }
         }
 
@@ -60,6 +63,97 @@ namespace Blacus.SlackAPIWrapper.Tests
 
         private class MethodWithoutAttribute : SlackMethod
         {
+        }
+
+        [SlackLimiterTier(LimiterTier.WebAPITier4)]
+        [SlackMethod("test.limited", "POST", SlackMethodContentType.Json)]
+        private class TestLimitedMethod : SlackMethod
+        {
+        }
+
+        [Fact]
+        public async Task SendAsync_NonSuccessStatusCode_ThrowsHttpRequestException()
+        {
+            var handler = new MockHttpMessageHandler
+            {
+                ResponseToReturn = new HttpResponseMessage(HttpStatusCode.BadRequest)
+            };
+            var client = new SlackClient(new HttpClient(handler));
+
+            await Assert.ThrowsAsync<HttpRequestException>(async () =>
+            {
+                await client.SendAsync<TestJsonMethod>("token");
+            });
+        }
+
+        [Fact]
+        public async Task SendAsync_StreamJsonFalse_ReturnsDeserializedModel()
+        {
+            var handler = new MockHttpMessageHandler
+            {
+                ResponseToReturn = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent("{\"ok\": true, \"error\": null}")
+                }
+            };
+            var client = new SlackClient(new HttpClient(handler));
+
+            var result = await client.SendAsync<TestJsonMethod>("token", streamJson: false);
+            Assert.NotNull(result);
+            Assert.True(result.Ok);
+        }
+
+        [Fact]
+        public async Task SendAsync_WithLimiterTier_Succeeds()
+        {
+            var handler = new MockHttpMessageHandler
+            {
+                ResponseToReturn = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent("{\"ok\": true}")
+                }
+            };
+            var client = new SlackClient(new HttpClient(handler));
+
+            var result = await client.SendAsync<TestLimitedMethod>("token");
+            Assert.NotNull(result);
+            Assert.True(result.Ok);
+        }
+
+        [Fact]
+        public void SlackClient_Constructor_ThrowsArgumentNullException_ForNullFactory()
+        {
+            IHttpClientFactory nullFactory = null!;
+            Assert.Throws<ArgumentNullException>(() => new SlackClient(nullFactory));
+        }
+
+        [Fact]
+        public async Task HttpRequestAsync_StaticMethods_Succeed()
+        {
+            var originalClient = SlackClient.HttpClient;
+            var handler = new MockHttpMessageHandler
+            {
+                ResponseFactory = _ => new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent("{\"ok\": true}")
+                }
+            };
+            SlackClient.HttpClient = new HttpClient(handler);
+
+            try
+            {
+                var result1 = await SlackClient.HttpRequestAsync<TestJsonMethod>("test-token");
+                Assert.NotNull(result1);
+                Assert.True(result1.Ok);
+
+                var result2 = await SlackClient.HttpRequestAsync<TestJsonMethod>(new AuthenticationHeaderValue("Bearer", "test-token"));
+                Assert.NotNull(result2);
+                Assert.True(result2.Ok);
+            }
+            finally
+            {
+                SlackClient.HttpClient = originalClient;
+            }
         }
 
         [Fact]

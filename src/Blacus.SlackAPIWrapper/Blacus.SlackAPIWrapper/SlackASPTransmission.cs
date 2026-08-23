@@ -15,7 +15,7 @@
     public interface ISlackASPTransmission
     {
 
-        public ISlackPayload Payload { get; }
+        public ISlackPayload? Payload { get; }
 
         public SlackCredential DefaultSlackCredential { get; set; }
 
@@ -36,7 +36,7 @@
 
         public HttpContext HttpContext { get => httpContextAccessor.HttpContext; }
 
-        public ISlackPayload Payload
+        public ISlackPayload? Payload
         {
 
             get
@@ -89,7 +89,7 @@
             if (payload is SlackUrlResponsePayload urlPayload)
             {
 
-                string response = new UrlVerificationResponse(urlPayload.Challenge).ToJson();
+                string response = new UrlVerificationResponse(urlPayload.Challenge ?? string.Empty).ToJson();
                 HttpContext.Response.ContentType = "application/json";
                 await HttpContext.Response.WriteAsync(response);
 

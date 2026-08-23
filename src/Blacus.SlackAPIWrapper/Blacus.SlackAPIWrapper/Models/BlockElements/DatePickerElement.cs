@@ -31,7 +31,10 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
             set
             {
                 field = value;
-                field.MaxTextLength = field_MaxPlaceholderLength;
+                if (field != null)
+                {
+                    field.MaxTextLength = field_MaxPlaceholderLength;
+                }
             }
         }
 

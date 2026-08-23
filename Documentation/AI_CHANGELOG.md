@@ -7,18 +7,26 @@ All changes made to this repository by AI agents must be recorded in this file i
 ## [Unreleased]
 
 ### Fixed
-- Resolved all 24 compiler warnings (CS8618) across .NET 8, 9, and 10 targets:
-  - Made `payload` field nullable (`ISlackPayload?`) in `SlackASPTransmission.cs`.
-  - Made `Profile` property nullable (`Profile?`) in `UsersProfileGet.cs`.
-  - Annotated all response DTO string/Uri properties as nullable (`string?`, `Uri?`) in `OpenidConnectUserInfo.cs`.
-- Modernized `DateTimeHelpers.cs` to use `DateTime.UnixEpoch.AddSeconds(unixTimeStamp).ToLocalTime()`.
-- Encapsulated mutable fields in `JsonExtensionDataHelper.cs` into auto-properties (`Items`, `Classes`) and marked `myTI` as `readonly`.
+- Fixed critical runtime `NullReferenceException` bugs in property getters/setters:
+  - Added null check in `TextObject.Text` getter so null values with `MaxTextLength` return `null` instead of throwing when accessing string length.
+  - Added null guards in `ConfirmationDialogObject.Text`, `DatePickerElement.Placeholder`, and `BlockOptionObject.Text` setters before accessing `MaxTextLength`.
+  - Added null guard in `JsonExtensionDataHelper` constructor when `slackModel.ExtensionData` is null, and properly typed `Model` property as nullable (`ISlackModel?`).
+  - Added null check in `SlackASPTransmission.PrepareAsync` when passing `urlPayload.Challenge` to `UrlVerificationResponse`.
+- Eliminated all global CS86xx suppressions in `SlackAPIWrapper.csproj` (`NoWarn`) and local `#pragma warning disable` blocks:
+  - Corrected return types of `SlackMethodAttribute.GetSlackMethodAttribute<T>()` and `SlackLimiterTierAttribute.GetSlackLimiterAttribute<T>()` to nullable.
+  - Properly annotated nullable response fields and request parameters in `ConversationsHistory.cs`.
+  - Removed `#pragma` directives from `SlackMethodAttribute.cs`, `SlackLimiterTierAttribute.cs`, `BlockOptionObject.cs`, `ChatPostMessage.cs`, and `ConversationsHistory.cs`.
+- Fixed polymorphic deserialization on abstract `SlackWebSocketTransmission` by adding `[JsonPolymorphic]` and `[JsonDerivedType]` attributes matching `ISlackWebSocketBase`.
+- Added missing static `ExecuteAsync` helper methods to `ConversationsOpen.cs` and `ConversationsReplies.cs` for consistent API surface.
+- Removed orphaned dead code method `ChatPostMessage.TransmitAsync`.
 
-### Removed
-- Removed dead code file `SlackPayload_FormData.cs` (100% commented out).
-
-### Changed
-- Aligned documentation across `AGENTS.md` and `README.md` to reflect multi-targeting (`net8.0;net9.0;net10.0`) and the active automated test suite in `tests/Blacus.SlackAPIWrapper.Tests/`.
+### Added
+- Expanded automated xUnit test suite from 41 to 68 tests:
+  - Added comprehensive test coverage for `SlackASPTransmission.PrepareAsync` (URL challenge handling, valid signatures, expired timestamps, invalid signatures returning 401, idempotency).
+  - Added unit tests for null safety guards across `TextObject`, `ConfirmationDialogObject`, `DatePickerElement`, and `BlockOptionObject`.
+  - Added unit tests for `JsonExtensionDataHelper` with null and populated extension data.
+  - Added unit tests for `SlackWebSocketTransmission.FromJson` polymorphic deserialization.
+  - Added unit tests for `SlackMethodAttribute`, `SlackLimiterTierAttribute`, `SlackOptionalArguments`, and static `ExecuteAsync` methods.
 
 ### Fixed
 - Fixed critical bug in `DateOnlyConverter.cs`: corrected `CanConvert(Type t)` to check `t == typeof(DateOnly)` instead of `typeof(TimeOnly)`; optimized writing directly to `Utf8JsonWriter`.

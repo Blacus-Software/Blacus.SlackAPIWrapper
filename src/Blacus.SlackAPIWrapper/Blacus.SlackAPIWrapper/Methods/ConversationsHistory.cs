@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-
 namespace Blacus.SlackAPIWrapper.Methods
 {
 
@@ -18,7 +16,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("messages")]
-        public List<Message> Messages { get; set; }
+        public List<Message>? Messages { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("has_more")]
@@ -30,7 +28,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("channel_actions_ts")]
-        public string ChannelActionsTs { get; set; }
+        public string? ChannelActionsTs { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("channel_actions_count")]
@@ -53,11 +51,11 @@ namespace Blacus.SlackAPIWrapper.Methods
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("cursor")]
-            public string Cursor { get; set; }
+            public string? Cursor { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("oldest")]
-            public string Oldest { get; set; }
+            public string? Oldest { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("inclusive")]
@@ -65,11 +63,11 @@ namespace Blacus.SlackAPIWrapper.Methods
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("limit")]
-            public int Limit { get; set; }
+            public int? Limit { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             [JsonPropertyName("latest")]
-            public string Latest { get; set; }
+            public string? Latest { get; set; }
 
         }
 

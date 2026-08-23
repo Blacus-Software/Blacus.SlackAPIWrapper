@@ -2,6 +2,7 @@
 using Blacus.SlackAPIWrapper.Models;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Blacus.SlackAPIWrapper.Methods
 {
@@ -9,6 +10,9 @@ namespace Blacus.SlackAPIWrapper.Methods
     [SlackMethod("conversations.replies", "Post", SlackMethodContentType.FormUrlEncoded)]
     public class ConversationsReplies : SlackMethod
     {
+
+        public static async Task<ConversationsReplies> ExecuteAsync(string token, OptionalArguments slackOptionalArguments)
+            => await SlackClient.HttpRequestAsync<ConversationsReplies>(token, slackOptionalArguments);
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("messages")]
