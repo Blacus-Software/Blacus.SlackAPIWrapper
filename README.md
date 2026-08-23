@@ -4,7 +4,7 @@ A modern, extensible, and easy-to-use .NET wrapper for the Slack API, designed w
 
 ## Overview
 
-`Blacus.SlackAPIWrapper` is a .NET 10 library designed to simplify interactions with the Slack API. It provides a strongly-typed, attribute-driven architecture that makes adding and invoking Slack API methods straightforward. It handles authentication, rate limiting, and request/response serialization, allowing you to focus on building your application's logic.
+`Blacus.SlackAPIWrapper` is a .NET 8 / 9 / 10 library designed to simplify interactions with the Slack API. It provides a strongly-typed, attribute-driven architecture that makes adding and invoking Slack API methods straightforward. It handles authentication, rate limiting, and request/response serialization, allowing you to focus on building your application's logic.
 
 ## Core Features
 

@@ -19,7 +19,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [JsonPropertyName("profile")]
-        public Profile Profile { get; set; }
+        public Profile? Profile { get; set; }
 
         public class OptionalArguments : SlackOptionalArguments
         {

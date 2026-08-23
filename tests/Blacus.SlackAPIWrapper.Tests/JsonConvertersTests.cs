@@ -112,6 +112,15 @@ namespace Blacus.SlackAPIWrapper.Tests
             Assert.Equal(DateTimeOffset.FromUnixTimeSeconds(1700000000), modelString.Timestamp);
         }
 
+        [Fact]
+        public void DateTimeHelpers_ToDateTimeFromUnixTimeStamp_ConvertsCorrectly()
+        {
+            long unixTimestamp = 1700000000;
+            var expectedUtc = DateTime.UnixEpoch.AddSeconds(unixTimestamp);
+            var result = Helpers.DateTimeHelpers.ToDateTimeFromUnixTimeStamp(unixTimestamp);
+            Assert.Equal(expectedUtc.ToLocalTime(), result);
+        }
+
     }
 
 }

@@ -7,10 +7,12 @@
 ## 1. Project Overview
 
 - **Name:** `Blacus.SlackAPIWrapper`
-- **Target Framework:** `net10.0` (C# 14)
+- **Target Frameworks:** `net8.0;net9.0;net10.0` (C# 14)
 - **Language / Project settings:** `ImplicitUsings` is **disabled** (always add explicit `using` statements). `Nullable` is **enabled**, but CS86xx warnings are globally suppressed via `<NoWarn>`.
-- **Purpose:** A typed, attribute-driven .NET 10 wrapper around the Slack Web API, Slack Socket Mode (WebSocket), and ASP.NET Core request/webhook verification.
-- **Projects:** There is a single project, `src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/` — it contains the core library (HTTP client, methods, models, converters, rate limiter) and the ASP.NET Core integration (`SlackASPTransmission`, `AddSlackDependency`). The former `Blacus.SlackAPIWrapper.AspNetCore` project was merged into it.
+- **Purpose:** A typed, attribute-driven .NET 8 / 9 / 10 wrapper around the Slack Web API, Slack Socket Mode (WebSocket), and ASP.NET Core request/webhook verification.
+- **Projects:**
+  - `src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/` — Core library (HTTP client, methods, models, converters, rate limiter) and ASP.NET Core integration (`SlackASPTransmission`, `AddSlackDependency`).
+  - `tests/Blacus.SlackAPIWrapper.Tests/` — Automated xUnit test suite.
 - **Packaging:** `GeneratePackageOnBuild` is `True`; `dotnet build` will produce `.nupkg` artifacts.
 
 ---
@@ -22,12 +24,15 @@ Build the project:
 dotnet build src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/SlackAPIWrapper.csproj
 ```
 
+Run automated tests:
+```bash
+dotnet test tests/Blacus.SlackAPIWrapper.Tests/Blacus.SlackAPIWrapper.Tests.csproj
+```
+
 Clean build outputs:
 ```bash
 dotnet clean src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/SlackAPIWrapper.csproj
 ```
-
-> **Note:** Automated test suites (`*.Tests`) do not exist in this repository yet. Always run `dotnet build` on the project to verify compilation and avoid introducing build breaks.
 
 ---
 
@@ -47,12 +52,12 @@ namespace Blacus.SlackAPIWrapper.Methods
     public class UsersInfo : SlackModel
     {
         [JsonPropertyName("user")]
-        public User User { get; set; }
+        public User? User { get; set; }
 
         public class OptionalArguments : SlackOptionalArguments
         {
             [JsonPropertyName("user")]
-            public string UserId { get; set; }
+            public string? UserId { get; set; }
 
             [JsonPropertyName("include_locale")]
             public bool? IncludeLocale { get; set; }

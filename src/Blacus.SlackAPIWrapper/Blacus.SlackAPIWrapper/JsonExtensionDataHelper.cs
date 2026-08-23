@@ -14,9 +14,9 @@ namespace Blacus.SlackAPIWrapper
         public string ClassName { get; private set; }
         public ISlackModel slackModel { get; set; }
         public Dictionary<string, JsonElement>? ModelExtensionData { get => slackModel.ExtensionData; }
-        public ItemHandler[] Items;
+        public ItemHandler[] Items { get; set; }
 
-        public Dictionary<string, string> Classes = new();
+        public Dictionary<string, string> Classes { get; set; } = new();
 
         public JsonExtensionDataHelper(ISlackModel slackModel, string className)
         {
@@ -33,11 +33,11 @@ namespace Blacus.SlackAPIWrapper
                 Items[i] = new ItemHandler(modelExtensionDataArray[i]);
             }
 
-            AddClass(this, ref Classes);
+            AddClass(this, Classes);
 
         }
 
-        private static void AddClass(JsonExtensionDataHelper helper, ref Dictionary<string, string> classes)
+        private static void AddClass(JsonExtensionDataHelper helper, Dictionary<string, string> classes)
         {
 
             classes.TryAdd(helper.ClassName, helper.GetClassString(helper.ClassName));
@@ -49,7 +49,7 @@ namespace Blacus.SlackAPIWrapper
 
                 classes.TryAdd(item.ObjectName, extJamd.GetClassString(item.ObjectName));
 
-                AddClass(new(item.Model, item.ObjectName), ref classes);
+                AddClass(new(item.Model, item.ObjectName), classes);
 
             }
 
@@ -83,7 +83,7 @@ namespace Blacus.SlackAPIWrapper
 
         public override string ToString() => $"{ObjectName}";
 
-        public static TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
+        public static readonly TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
 
         public string Key { get; private set; }
         public JsonElement Element { get; private set; }

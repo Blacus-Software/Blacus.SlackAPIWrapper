@@ -31,7 +31,7 @@
     {
 
         private readonly IHttpContextAccessor httpContextAccessor;
-        private ISlackPayload payload;
+        private ISlackPayload? payload;
         private bool prepared;
 
         public HttpContext HttpContext { get => httpContextAccessor.HttpContext; }

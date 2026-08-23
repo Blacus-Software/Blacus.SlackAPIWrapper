@@ -7,6 +7,20 @@ All changes made to this repository by AI agents must be recorded in this file i
 ## [Unreleased]
 
 ### Fixed
+- Resolved all 24 compiler warnings (CS8618) across .NET 8, 9, and 10 targets:
+  - Made `payload` field nullable (`ISlackPayload?`) in `SlackASPTransmission.cs`.
+  - Made `Profile` property nullable (`Profile?`) in `UsersProfileGet.cs`.
+  - Annotated all response DTO string/Uri properties as nullable (`string?`, `Uri?`) in `OpenidConnectUserInfo.cs`.
+- Modernized `DateTimeHelpers.cs` to use `DateTime.UnixEpoch.AddSeconds(unixTimeStamp).ToLocalTime()`.
+- Encapsulated mutable fields in `JsonExtensionDataHelper.cs` into auto-properties (`Items`, `Classes`) and marked `myTI` as `readonly`.
+
+### Removed
+- Removed dead code file `SlackPayload_FormData.cs` (100% commented out).
+
+### Changed
+- Aligned documentation across `AGENTS.md` and `README.md` to reflect multi-targeting (`net8.0;net9.0;net10.0`) and the active automated test suite in `tests/Blacus.SlackAPIWrapper.Tests/`.
+
+### Fixed
 - Fixed critical bug in `DateOnlyConverter.cs`: corrected `CanConvert(Type t)` to check `t == typeof(DateOnly)` instead of `typeof(TimeOnly)`; optimized writing directly to `Utf8JsonWriter`.
 - Enhanced `TimeOnlyConverter.cs` and `BoolConverter.cs`: optimized writer output; added numeric (`0`/`1`) and string boolean support in `BoolConverter`; replaced generic exceptions with `JsonException`.
 - Enhanced `DateTimeOffsetAsIntConverter.cs` to support both numeric and string-encoded Unix timestamps (e.g. `"1512085950.000216"` common in Slack message `ts` values).
