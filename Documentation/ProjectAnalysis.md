@@ -8,8 +8,7 @@ The library features a declarative, attribute-driven architecture for Slack API 
 
 - **Target Framework:** `net10.0`
 - **Total Code Volume:** ~8,000 lines of C# across 173 tracked files
-- **Primary Package:** `Blacus.SlackAPIWrapper` (Core)
-- **Extension Package:** `Blacus.SlackAPIWrapper.AspNetCore` (ASP.NET Core integration)
+- **Package:** `Blacus.SlackAPIWrapper` (Core library + ASP.NET Core integration)
 
 ---
 
@@ -42,7 +41,6 @@ The library features a declarative, attribute-driven architecture for Slack API 
         │   ├── RequestVerification.cs       # Slack HMAC-SHA256 signature verification
         │   ├── SlackWebSocketClient.cs      # Socket Mode client
         │   └── SlackASPTransmission.cs      # ASP.NET Core payload parser & verifier
-        └── Blacus.SlackAPIWrapper.AspNetCore/ # ASP.NET Core integration library
 ```
 
 ---
@@ -88,39 +86,19 @@ The library features a declarative, attribute-driven architecture for Slack API 
 
 ---
 
-## 5. Identified Issues & Technical Debt
+## 5. Identified Issues & Technical Debt (Remove when resolved)
 
 ### 5.1. Security Vulnerabilities (High Severity)
-1. **Timing Attack Vulnerability in Signature Verification:**
-   - `RequestVerification.cs`: Uses `StringComparer.OrdinalIgnoreCase.Compare(SlackSignature, Hash) == 0`.
-   - *Fix:* Replace with `CryptographicOperations.FixedTimeEquals` to prevent side-channel timing attacks.
+_(None remaining.)_
 
 ### 5.2. Concurrency, Async, & Lifecycle Issues (High Severity)
-1. **Socket Mode Deadlock in `ConnectAsync`:**
-   - `SlackWebSocketClient.cs`: `taskReceiveLoop = await Task.Factory.StartNew(...); taskReceiveLoop.Wait();`
-   - Calling `.Wait()` blocks `ConnectAsync` permanently until the socket disconnects, making the method unusable in non-blocking asynchronous workflows.
-2. **Sync-Over-Async in ASP.NET Core Pipeline:**
-   - `SlackASPTransmission.cs` constructor uses `reader.ReadToEndAsync().Result` and `HttpContext.Response.WriteAsync(...).Wait()`.
-   - Blocking on asynchronous tasks inside constructors can lead to thread-pool starvation or deadlocks under load.
-3. **Thread Safety in `Limiter.cs`:**
-   - `LimiterFactory` has a race condition where two concurrent first calls can instantiate duplicate limiters before entering `lock (limiters)`.
-   - `lock (semaphoreSlim)` does not synchronize semaphore acquisition/release correctly.
-   - Timers run indefinitely with no disposal mechanism, causing memory and handle leaks.
-4. **Synchronous Blocking in `SlackClient`:**
-   - `Limiter.LimiterFactory(...).Wait()` is called synchronously inside `HttpRequestAsync<T>`, converting an async call chain into a blocking one.
+_(None remaining.)_
 
 ### 5.3. Architecture & Design Flaws (Medium Severity)
-1. **Static `HttpClient` vs `IHttpClientFactory`:**
-   - `SlackClient.HttpClient` is a static property. The README claims support for `HttpClientFactory` and dependency injection, but the code does not implement it.
-   - Prevents unit testing with mock HTTP handlers and circumvents ASP.NET Core client lifecycle management.
-2. **Code Duplication Across Projects:**
-   - `SlackWebSocketClient.cs`, `SlackASPTransmission.cs`, and `SlackDependencyExtensions.cs` are duplicated almost verbatim between `Blacus.SlackAPIWrapper` and `Blacus.SlackAPIWrapper.AspNetCore`.
-3. **Improper DI Registration (`BuildServiceProvider` Anti-Pattern):**
-   - `SlackDependencyExtensions.cs` calls `services.BuildServiceProvider().GetService<IHttpContextAccessor>()`, creating an unmanaged duplicate service provider container.
-4. **README API Divergence:**
+1. **README API Divergence:**
    - README documents `builder.Services.AddSlackAPIWrapper(...)`, but the actual method name is `AddSlackDependency(...)`.
    - README refers to "Slack's Real-Time Messaging (RTM) API" instead of "Slack Socket Mode".
-5. **Fragile Form Parsing:**
+2. **Fragile Form Parsing:**
    - `SlackASPTransmission.processFormData` splits on `&` and `=` manually and will throw `KeyNotFoundException` or `IndexOutOfRangeException` on malformed requests or missing fields. Should use `Microsoft.AspNetCore.WebUtilities.QueryHelpers`.
 
 ### 5.4. Code Quality & Dead Code (Low Severity)
@@ -129,7 +107,7 @@ The library features a declarative, attribute-driven architecture for Slack API 
    - `JsonExtensionDataHelper.GetMatchedProperties()` and `GetMissedProperties()` always return `null`.
    - `ISlackASPTransmission.Code` property is unused.
 2. **Nullability Warnings Suppressed Globally:**
-   - Both `.csproj` files suppress critical nullability warnings (`CS8600`, `CS8601`, `CS8602`, `CS8603`, `CS8604`, `CS8629`), masking potential runtime `NullReferenceException`s.
+   - The `.csproj` suppresses critical nullability warnings (`CS8600`, `CS8601`, `CS8602`, `CS8603`, `CS8604`, `CS8629`), masking potential runtime `NullReferenceException`s.
 3. **Missing Test Suite and CI/CD:**
    - No automated unit/integration test projects (`*.Tests`).
    - `.github/workflows` folder is empty.
@@ -141,12 +119,12 @@ The library features a declarative, attribute-driven architecture for Slack API 
 | Priority | Task | Description |
 |---|---|---|
 | **P0** | **Rotate & Externalize Secrets** | Rotate any exposed Slack and NuGet tokens, and store the replacements in User Secrets / Environment Variables rather than in source files. |
-| **P0** | **Fix Constant-Time Signature Check** | Use `CryptographicOperations.FixedTimeEquals` in `RequestVerification.cs`. |
-| **P1** | **Fix Async WebSocket Lifecycle** | Remove `taskReceiveLoop.Wait()` in `SlackWebSocketClient.cs`. Ensure `ConnectAsync` runs non-blocking and handles reconnection cleanly. |
-| **P1** | **Refactor `SlackASPTransmission`** | Eliminate constructor side-effects and sync-over-async (`.Result`, `.Wait()`). Implement as middleware/endpoint filter or async service. |
-| **P1** | **Deduplicate Projects** | Remove duplicate classes from `Blacus.SlackAPIWrapper.AspNetCore` and make it cleanly depend on the Core project. |
-| **P2** | **Refactor `SlackClient` for DI** | Introduce `ISlackClient`, support `IHttpClientFactory`, and make client instances injectable. |
-| **P2** | **Rewrite `Limiter.cs`** | Modernize to an async token-bucket limiter using `Channel<T>` or thread-safe `PeriodicTimer`. |
+| **P0** | ~~**Fix Constant-Time Signature Check**~~ _(Resolved)_ | `RequestVerification.cs` already uses `CryptographicOperations.FixedTimeEquals` for a constant-time comparison; no code change was required. See `AI_CHANGELOG.md`. |
+| **P1** | ~~**Fix Async WebSocket Lifecycle**~~ _(Resolved)_ | `SlackWebSocketClient.ConnectAsync` runs non-blocking via `Task.Run`, `Dispose` is non-blocking, `DisposeAsync` performs clean async disconnection, and handshake validation is enforced. See `AI_CHANGELOG.md`. |
+| **P1** | ~~**Refactor `SlackASPTransmission`~~ _(Resolved)_ | Constructor no longer performs I/O; body is read with `ReadToEndAsync()` and the challenge response via `WriteAsync()` in `PrepareAsync()`, with `Verified` / `ShortCircuited` state flags. See `AI_CHANGELOG.md`. |
+| **P1** | ~~**Deduplicate Projects**~~ _(Resolved)_ | The `Blacus.SlackAPIWrapper.AspNetCore` project was merged into the core project (`Blacus.SlackAPIWrapper`); all duplicate classes were consolidated into a single library. See `AI_CHANGELOG.md`. |
+| **P2** | ~~**Refactor `SlackClient` for DI**~~ _(Resolved)_ | Introduced `ISlackClient`, added constructor injection supporting `HttpClient` and `IHttpClientFactory`, wired typed client via `AddSlackDependency()`, and deduplicated request dispatching. See `AI_CHANGELOG.md`. |
+| **P2** | ~~**Rewrite `Limiter.cs`~~ _(Resolved)_ | `Limiter` now uses a `PeriodicTimer`-driven refill loop, `Lazy<Limiter>` registry construction, `IAsyncDisposable`, `CancellationToken` support, and `RemoveAsync`/`DisposeAllAsync` cleanup; the blocking `Wait()` was removed. See `AI_CHANGELOG.md`. |
 | **P2** | **Add Automated Tests** | Create an xUnit test project covering serialization, request verification, method dispatching, and rate limiting. |
 | **P3** | **Setup CI/CD Pipeline** | Add GitHub Actions workflow for build, test, and automated NuGet publishing. |
 | **P3** | **Update Documentation & Clean Dead Code** | Fix README code samples to match actual APIs; delete commented-out and unused files. |

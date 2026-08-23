@@ -9,28 +9,57 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Web;
 
     public interface ISlackASPTransmission
     {
 
-        public ISlackPayload Payload { get; set; }
+        public ISlackPayload Payload { get; }
 
         public SlackCredential DefaultSlackCredential { get; set; }
 
         public string Code { get; set; }
+
+        public bool Verified { get; }
+
+        public bool ShortCircuited { get; }
+
+        public Task PrepareAsync();
 
     }
 
     public class SlackASPTransmission : ISlackASPTransmission
     {
 
-        private IHttpContextAccessor httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private ISlackPayload payload;
+        private bool prepared;
+
         public HttpContext HttpContext { get => httpContextAccessor.HttpContext; }
 
-        public ISlackPayload Payload { get; set; }
+        public ISlackPayload Payload
+        {
+
+            get
+            {
+
+                if (!prepared)
+                    throw new InvalidOperationException("The transmission has not been prepared. Call PrepareAsync() before accessing the payload.");
+
+                return payload;
+
+            }
+
+            internal set => payload = value;
+
+        }
+
         public SlackCredential DefaultSlackCredential { get; set; }
         public string Code { get; set; }
+
+        public bool Verified { get; private set; }
+        public bool ShortCircuited { get; private set; }
 
         public SlackASPTransmission(IHttpContextAccessor httpContextAccessor, SlackCredential slackCredential)
         {
@@ -38,42 +67,61 @@
             this.httpContextAccessor = httpContextAccessor;
             DefaultSlackCredential = slackCredential;
 
-            string bodyAsString = null;
+        }
 
+        public async Task PrepareAsync()
+        {
+
+            if (prepared)
+                return;
+
+            string bodyAsString;
             using (StreamReader reader = new(HttpContext.Request.Body, encoding: Encoding.UTF8, detectEncodingFromByteOrderMarks: true, bufferSize: 1024, leaveOpen: true))
             {
-                bodyAsString = reader.ReadToEnd();
+                bodyAsString = await reader.ReadToEndAsync();
             }
 
-            Payload = PayloadFromASP(HttpContext.Request.ContentType, bodyAsString);
+            payload = PayloadFromASP(HttpContext.Request.ContentType, bodyAsString);
 
-            if (Payload == null)
-                return;
-
-            if (Payload.GetType() == typeof(SlackUrlResponsePayload))
+            if (payload == null)
             {
-                byte[] responseBytes = Encoding.UTF8.GetBytes(new UrlVerificationResponse(((SlackUrlResponsePayload)Payload).Challenge).ToJson());
-                this.HttpContext.Response.Body.Write(responseBytes, 0, responseBytes.Length);
+                prepared = true;
                 return;
             }
 
-            var headers = HttpContext.Request.Headers;
+            if (payload.GetType() == typeof(SlackUrlResponsePayload))
+            {
+
+                string response = new UrlVerificationResponse(((SlackUrlResponsePayload)payload).Challenge).ToJson();
+                HttpContext.Response.ContentType = "application/json";
+                await HttpContext.Response.WriteAsync(response);
+
+                prepared = true;
+                ShortCircuited = true;
+                return;
+
+            }
+
             var verified = new RequestVerification()
             {
                 RequestBody = bodyAsString,
                 SigningSecret = DefaultSlackCredential.SigningSecret,
-                SlackRequestTimestamp = headers["X-Slack-Request-Timestamp"].FirstOrDefault(),
-                SlackSignature = headers["X-Slack-Signature"].FirstOrDefault()
+                SlackRequestTimestamp = HttpContext.Request.Headers["X-Slack-Request-Timestamp"].FirstOrDefault(),
+                SlackSignature = HttpContext.Request.Headers["X-Slack-Signature"].FirstOrDefault()
             };
+
+            prepared = true;
 
             if (!verified.Verified)
             {
-                this.HttpContext.Response.StatusCode = 401;
+                HttpContext.Response.StatusCode = 401;
+                ShortCircuited = true;
                 return;
             }
 
-        }
+            Verified = true;
 
+        }
 
 
         public static ISlackPayload PayloadFromASP(string contentType, string bodyString)

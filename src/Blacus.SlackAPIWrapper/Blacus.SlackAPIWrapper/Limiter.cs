@@ -1,129 +1,202 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Blacus.SlackAPIWrapper
 {
 
-    public class Limiter
+    /// <summary>
+    /// A thread-safe, per-identifier permit limiter. Permits are refilled toward
+    /// the configured limit on a fixed interval by a background loop driven by
+    /// <see cref="PeriodicTimer"/>.
+    /// </summary>
+    public sealed class Limiter : IAsyncDisposable
     {
+
+        private static readonly ConcurrentDictionary<string, Lazy<Limiter>> limiters = new();
 
         public string Id { get; }
 
-        private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, Limiter> limiters = new();
+        private readonly int limit;
+        private readonly SemaphoreSlim semaphoreSlim;
+        private readonly PeriodicTimer refillTimer;
+        private readonly CancellationTokenSource cancellationSource;
+        private readonly Task refillLoop;
 
-        private System.Timers.Timer processorTimer;
+        private int disposed;
 
-        private SemaphoreSlim semaphoreSlim;
-
-        private int limit = 0;
-
-        private readonly object processorLock = new();
-
-        private void runProcessor()
+        private Limiter(string id, int limit, TimeSpan interval)
         {
 
-            int toRelease = 0;
+            if (limit <= 0)
+                throw new ArgumentOutOfRangeException(nameof(limit));
 
-            lock (processorLock)
+            if (interval <= TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException(nameof(interval));
+
+            this.Id = id;
+            this.limit = limit;
+            this.semaphoreSlim = new SemaphoreSlim(limit, limit);
+            this.cancellationSource = new CancellationTokenSource();
+            this.refillTimer = new PeriodicTimer(interval);
+
+            this.refillLoop = Task.Run(RefillLoopCore);
+
+        }
+
+        private async Task RefillLoopCore()
+        {
+
+            while (await refillTimer.WaitForNextTickAsync(cancellationSource.Token).ConfigureAwait(false))
             {
 
-                if (semaphoreSlim.CurrentCount == limit)
-                    processorTimer.Enabled = false;
+                int toRelease = limit - semaphoreSlim.CurrentCount;
 
-                toRelease = Math.Min(limit, limit - semaphoreSlim.CurrentCount);
-
-                if (semaphoreSlim.CurrentCount < limit)
+                if (toRelease > 0)
                     semaphoreSlim.Release(toRelease);
 
             }
 
         }
 
-        private Limiter(string id, int limit, TimeSpan timeSpan)
+        public async Task WaitAsync(CancellationToken cancellationToken = default)
         {
 
-            this.Id = id;
+            throwIfDisposed();
 
-            this.limit = limit;
-            semaphoreSlim = new SemaphoreSlim(limit, limit);
+            await semaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
 
-            processorTimer = new System.Timers.Timer(timeSpan.TotalMilliseconds)
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+
+            if (Interlocked.Exchange(ref disposed, 1) != 0)
+                return;
+
+            limiters.TryRemove(Id, out _);
+
+            cancellationSource.Cancel();
+
+            try
             {
-                AutoReset = true
-            };
-
-            processorTimer.Elapsed += (sender, e) => runProcessor();
-            processorTimer.Start();
+                await refillLoop.ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected: the refill loop was cancelled as part of shutdown.
+            }
+            finally
+            {
+                cancellationSource.Dispose();
+                refillTimer.Dispose();
+                semaphoreSlim.Dispose();
+            }
 
         }
 
-        public void Wait()
+        private void throwIfDisposed()
         {
 
-            if (!this.processorTimer.Enabled)
-                this.processorTimer.Enabled = true;
-
-            semaphoreSlim.Wait();
+            if (disposed != 0)
+                throw new ObjectDisposedException(nameof(Limiter));
 
         }
 
-        public async Task WaitAsync()
-        {
-
-            if (!this.processorTimer.Enabled)
-                this.processorTimer.Enabled = true;
-
-            await semaphoreSlim.WaitAsync();
-
-        }
-
-        public static Limiter LimiterFactory(LimiterTier limierTier)
+        public static Limiter LimiterFactory(LimiterTier limiterTier)
         {
 
             int? limit = null;
-            TimeSpan? timeSpan = null;
+            TimeSpan? interval = null;
 
-            switch (limierTier)
+            switch (limiterTier)
             {
                 case LimiterTier.WebAPITier1:
                     limit = 1;
-                    timeSpan = new(0, 1, 0);
+                    interval = new(0, 1, 0);
                     break;
 
                 case LimiterTier.WebAPITier2:
                     limit = 20;
-                    timeSpan = new(0, 1, 0);
+                    interval = new(0, 1, 0);
                     break;
 
                 case LimiterTier.WebAPITier3:
                     limit = 50;
-                    timeSpan = new(0, 1, 0);
+                    interval = new(0, 1, 0);
                     break;
 
                 case LimiterTier.WebAPITier4:
                     limit = 100;
-                    timeSpan = new(0, 1, 0);
+                    interval = new(0, 1, 0);
                     break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(limiterTier));
             }
 
-            return LimiterFactory(limierTier.ToString(), limit, timeSpan);
+            return LimiterFactory(limiterTier.ToString(), limit, interval);
 
         }
 
         public static Limiter LimiterFactory(string id, int? limit = null, TimeSpan? timeSpan = null)
         {
 
-            return limiters.GetOrAdd(id, (key) =>
+            if (id == null)
+                throw new ArgumentNullException(nameof(id));
+
+            if (limit == null)
+                throw new ArgumentNullException(nameof(limit));
+
+            if (timeSpan == null)
+                throw new ArgumentNullException(nameof(timeSpan));
+
+            // The first limiter registered for a given id wins; later calls with different
+            // parameters are silently ignored, matching the previous GetOrAdd contract.
+            Lazy<Limiter> lazy = limiters.GetOrAdd(id, (key) =>
+                new Lazy<Limiter>(
+                    () => new Limiter(key, limit.Value, timeSpan.Value),
+                    LazyThreadSafetyMode.ExecutionAndPublication));
+
+            return lazy.Value;
+
+        }
+
+        public static bool TryGet(string id, out Limiter limiter)
+        {
+
+            if (limiters.TryGetValue(id, out Lazy<Limiter>? lazy))
             {
+                limiter = lazy.Value;
+                return true;
+            }
 
-                if (limit == null || timeSpan == null)
-                    throw new NullReferenceException("Limit or Timespan not provided");
+            limiter = null!;
+            return false;
 
-                return new Limiter(key, limit.Value, timeSpan.Value);
+        }
 
-            });
+        public static async Task<bool> RemoveAsync(string id)
+        {
+
+            if (id == null)
+                throw new ArgumentNullException(nameof(id));
+
+            if (!limiters.TryRemove(id, out Lazy<Limiter>? lazy))
+                return false;
+
+            await lazy.Value.DisposeAsync();
+
+            return true;
+
+        }
+
+        public static async Task DisposeAllAsync()
+        {
+
+            foreach (string id in limiters.Keys)
+                await RemoveAsync(id);
 
         }
 

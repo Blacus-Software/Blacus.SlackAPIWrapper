@@ -18,9 +18,20 @@ namespace Blacus.SlackAPIWrapper.Authentication
 
         public bool IgnoreTimestamp { get; set; } = false;
 
-        public DateTime SlackRequestTimestampUTC { get => DateTime.UnixEpoch.AddSeconds(int.Parse(SlackRequestTimestamp)); }
+        public int SlackRequestTimestampInt
+        {
+            get
+            {
+                if (int.TryParse(SlackRequestTimestamp ?? string.Empty, out int timestamp))
+                    return timestamp;
 
-        public int SlackRequestTimestampInt { get => int.Parse(SlackRequestTimestamp); }
+                return int.MinValue;
+            }
+        }
+
+        public bool HasValidTimestamp { get => int.TryParse(SlackRequestTimestamp ?? string.Empty, out _); }
+
+        public DateTime SlackRequestTimestampUTC { get => HasValidTimestamp ? DateTime.UnixEpoch.AddSeconds(SlackRequestTimestampInt) : DateTime.MinValue; }
 
         public string Hash { get => "v0=" + getHash(SigningSecret, SignatureBaseString); }
         public string SignatureBaseString { get => $"{slackVersion}:{SlackRequestTimestamp}:{RequestBody}"; }
@@ -34,6 +45,11 @@ namespace Blacus.SlackAPIWrapper.Authentication
 
                 if (!IgnoreTimestamp)
                 {
+
+                    if (!HasValidTimestamp)
+                    {
+                        return false;
+                    }
 
                     double currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                     double delta = Math.Abs(currentTime - SlackRequestTimestampInt);

@@ -10,28 +10,24 @@
 - **Target Framework:** `net10.0` (C# 14)
 - **Language / Project settings:** `ImplicitUsings` is **disabled** (always add explicit `using` statements). `Nullable` is **enabled**, but CS86xx warnings are globally suppressed via `<NoWarn>`.
 - **Purpose:** A typed, attribute-driven .NET 10 wrapper around the Slack Web API, Slack Socket Mode (WebSocket), and ASP.NET Core request/webhook verification.
-- **Projects:**
-  - `src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/` — Core library (HTTP client, methods, models, converters, rate limiter).
-  - `src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper.AspNetCore/` — ASP.NET Core integration extensions.
-- **Packaging:** `GeneratePackageOnBuild` is `True` on the core project; `dotnet build` will produce `.nupkg` artifacts.
+- **Projects:** There is a single project, `src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/` — it contains the core library (HTTP client, methods, models, converters, rate limiter) and the ASP.NET Core integration (`SlackASPTransmission`, `AddSlackDependency`). The former `Blacus.SlackAPIWrapper.AspNetCore` project was merged into it.
+- **Packaging:** `GeneratePackageOnBuild` is `True`; `dotnet build` will produce `.nupkg` artifacts.
 
 ---
 
 ## 2. Essential Commands
 
-Build the projects individually (recommended due to `.sln` referencing non-tracked test projects):
+Build the project:
 ```bash
 dotnet build src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/SlackAPIWrapper.csproj
-dotnet build src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper.AspNetCore/SlackAPIWrapper.AspNetCore.csproj
 ```
 
 Clean build outputs:
 ```bash
 dotnet clean src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper/SlackAPIWrapper.csproj
-dotnet clean src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper.AspNetCore/SlackAPIWrapper.AspNetCore.csproj
 ```
 
-> **Note:** Automated test suites (`*.Tests`) do not exist in this repository yet. Always run `dotnet build` on both projects to verify compilation and avoid introducing build breaks.
+> **Note:** Automated test suites (`*.Tests`) do not exist in this repository yet. Always run `dotnet build` on the project to verify compilation and avoid introducing build breaks.
 
 ---
 
@@ -116,10 +112,10 @@ For full analysis, see `Documentation/ProjectAnalysis.md`. When modifying or ref
 1. **Sync-over-Async (`.Wait()`, `.Result`):**
    - Do **not** call `.Wait()` or `.Result` on tasks. Make methods `async Task` and `await` properly.
    - Do not block `ConnectAsync` with synchronous waiting loops in WebSocket/Socket Mode code.
-2. **Static `HttpClient`:**
-   - Avoid adding more static state to `SlackClient`. Favor `IHttpClientFactory` or instance-based clients where possible.
-3. **Duplicating files between projects:**
-   - Classes should not be copied verbatim between `Blacus.SlackAPIWrapper` and `Blacus.SlackAPIWrapper.AspNetCore`. ASP.NET Core project should reference and extend the core library.
+2. **Static `HttpClient` (Resolved via `ISlackClient`):**
+   - `SlackClient` now implements `ISlackClient` and supports constructor injection via `HttpClient` / `IHttpClientFactory`. Favor injecting `ISlackClient` in new code; static methods remain for backward compatibility.
+3. **Duplicating files between projects (Resolved via merge):**
+   - Do not copy classes verbatim across projects or directories. Consolidate shared logic into a single type that is referenced everywhere. The former `Blacus.SlackAPIWrapper.AspNetCore` project was merged into the core project to eliminate file duplication.
 4. **`BuildServiceProvider()` inside DI extensions:**
    - Do not call `services.BuildServiceProvider()` during service configuration.
 

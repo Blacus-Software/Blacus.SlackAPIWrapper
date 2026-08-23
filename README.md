@@ -12,7 +12,7 @@ The Blacus.SlackAPIWrapper is a .NET library designed to simplify interactions w
 *   **Built-in Rate Limiting**: A sophisticated token-bucket rate limiter (`Limiter.cs`) helps you stay within Slack's API limits automatically.
 *   **Strongly-Typed Models**: Comprehensive and strongly-typed C# classes for Slack API objects, requests, and responses, reducing runtime errors.
 *   **Dependency Injection Ready**: Designed for modern .NET applications with seamless `HttpClientFactory` and DI container integration.
-*   **ASP.NET Core Support**: A dedicated `Blacus.SlackAPIWrapper.AspNetCore` project provides extension methods for easy setup in web applications.
+*   **ASP.NET Core Support**: Built-in ASP.NET Core integration extensions (`AddSlackDependency` and `SlackASPTransmission`) for easy setup in web applications.
 *   **WebSocket Client**: Includes a `SlackWebSocketClient` for connecting to Slack's Real-Time Messaging (RTM) API.
 
 ## Architecture
@@ -114,8 +114,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 
 ## Project Structure
 
-*   `src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper`: The core library containing the `SlackClient`, method definitions, models, and rate limiter.
-*   `src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper.AspNetCore`: Provides ASP.NET Core integration, primarily the `AddSlackAPIWrapper` extension method.
+*   `src/Blacus.SlackAPIWrapper/Blacus.SlackAPIWrapper`: The library containing the `SlackClient`, method definitions, models, converters, rate limiter, and ASP.NET Core integration (`AddSlackDependency`, `SlackASPTransmission`).
 
 ## Contributing
 
