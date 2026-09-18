@@ -10,8 +10,8 @@ namespace Blacus.SlackAPIWrapper.Methods
     public class UsersIdentity : SlackMethod
     {
 
-        public static async Task<UsersIdentity> ExecuteAsync(string token, OptionalArguments slackOptionalArguments)
-              => await SlackClient.HttpRequestAsync<UsersIdentity>(token, slackOptionalArguments);
+        public static async Task<UsersIdentity> ExecuteAsync(string token)
+              => await SlackClient.HttpRequestAsync<UsersIdentity>(token, null);
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("user")]
@@ -20,11 +20,6 @@ namespace Blacus.SlackAPIWrapper.Methods
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("team")]
         public User? Team { get; set; }
-
-        public class OptionalArguments : SlackOptionalArguments
-        {
-
-        }
 
     }
 
