@@ -6,6 +6,14 @@ All changes made to this repository by AI agents must be recorded in this file i
 
 ## [Unreleased]
 
+### Fixed
+- Fixed and hardened GitHub Actions NuGet publishing workflow (`.github/workflows/publish-nuget.yml`):
+  - Added `workflow_dispatch` trigger to enable manual on-demand publishing from the GitHub Actions UI.
+  - Added `tags: ['v*']` and `release: [published]` triggers for automated publishing on tag pushes and GitHub releases.
+  - Aligned .NET SDK setup to install 8.0, 9.0, and 10.0 matching multi-targeting requirements.
+  - Updated NuGet source to canonical URL `https://api.nuget.org/v3/index.json`.
+  - Added secret validation step with clear error messaging if `NUGET_API_KEY` is not configured in repository secrets.
+
 ### Added
 - Added `views.publish` API method (`ViewsPublish.cs`):
   - Decorated with `[SlackMethod("views.publish", "Post", SlackMethodContentType.Json)]` and `[SlackLimiterTier(LimiterTier.WebAPITier4)]`.
