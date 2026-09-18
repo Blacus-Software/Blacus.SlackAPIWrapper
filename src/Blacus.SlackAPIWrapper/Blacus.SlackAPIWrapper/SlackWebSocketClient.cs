@@ -217,11 +217,19 @@ namespace Blacus.SlackAPIWrapper
                     }
 
                 }
+
+                logger.LogInformation("Socket Closed");
+
             }
             catch (OperationCanceledException) { }
             catch (WebSocketException ex)
             {
                 logger.LogError($"WebSocket error: {ex.Message}");
+                await DisconnectAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Unexpected error in WebSocket receive loop: {ex.Message}");
                 await DisconnectAsync().ConfigureAwait(false);
             }
 
@@ -230,26 +238,42 @@ namespace Blacus.SlackAPIWrapper
         private async Task ResponseReceived(Stream inputStream)
         {
 
-            ISlackWebSocketBase? slackWebSocketTransmission = ISlackModel.FromJson<ISlackWebSocketBase>(inputStream);
+            ISlackWebSocketBase? slackWebSocketTransmission;
+            string json;
 
-            if (slackWebSocketTransmission == null)
-                return;
-
-            slackWebSocketTransmission.Client = this;
-            slackWebSocketTransmission.AcknowledgePayload = new() { EnvelopeId = slackWebSocketTransmission.EnvelopeId };
-
-            switch (slackWebSocketTransmission)
+            try
             {
-                case SlackWebSocketTransmissionHello:
-                    logger.LogInformation($"WebSocket Hello");
-                    break;
 
-                default:
-                    OnMessageReceived?.Invoke(slackWebSocketTransmission);
-                    string ackPayload = slackWebSocketTransmission.AcknowledgePayload.ToJson();
-                    await SendMessageAsync(ackPayload).ConfigureAwait(false);
-                    break;
+                using var reader = new StreamReader(inputStream);
+                json = await reader.ReadToEndAsync();
 
+                // ISlackWebSocketBase? slackWebSocketTransmission = ISlackModel.FromJson<ISlackWebSocketBase>(inputStream);
+                slackWebSocketTransmission = ISlackModel.FromJson<ISlackWebSocketBase>(json);
+
+                if (slackWebSocketTransmission == null)
+                    return;
+
+                slackWebSocketTransmission.Client = this;
+                slackWebSocketTransmission.AcknowledgePayload = new() { EnvelopeId = slackWebSocketTransmission.EnvelopeId };
+
+                switch (slackWebSocketTransmission)
+                {
+                    case SlackWebSocketTransmissionHello:
+                        logger.LogInformation($"WebSocket Hello");
+                        break;
+
+                    default:
+                        OnMessageReceived?.Invoke(slackWebSocketTransmission);
+                        string ackPayload = slackWebSocketTransmission.AcknowledgePayload.ToJson();
+                        await SendMessageAsync(ackPayload).ConfigureAwait(false);
+                        break;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Failed to process received WebSocket message: {ex.Message}");
             }
 
         }

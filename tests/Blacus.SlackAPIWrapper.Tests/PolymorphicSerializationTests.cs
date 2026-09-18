@@ -50,6 +50,16 @@ namespace Blacus.SlackAPIWrapper.Tests
             string reactionJson = "{\"type\": \"reaction_added\", \"reaction\": \"thumbsup\"}";
             var reactionEvt = JsonSerializer.Deserialize<ISlackPayloadEvent>(reactionJson, JsonConverterSettings.Singleton);
             Assert.IsType<EventReactionAdded>(reactionEvt);
+
+            string appHomeOpenedJson = "{\"type\": \"app_home_opened\", \"user\": \"W014HM9KKU6\", \"channel\": \"D0C3L29LQ48\", \"tab\": \"home\", \"event_ts\": \"1789701549.064526\"}";
+            var homeEvt = JsonSerializer.Deserialize<ISlackPayloadEvent>(appHomeOpenedJson, JsonConverterSettings.Singleton);
+            Assert.IsType<EventAppHomeOpened>(homeEvt);
+            var appHomeOpened = (EventAppHomeOpened)homeEvt!;
+            Assert.Equal("app_home_opened", appHomeOpened.Type);
+            Assert.Equal("W014HM9KKU6", appHomeOpened.User);
+            Assert.Equal("D0C3L29LQ48", appHomeOpened.Channel);
+            Assert.Equal("home", appHomeOpened.Tab);
+            Assert.Equal("1789701549.064526", appHomeOpened.EventTs);
         }
 
         [Fact]

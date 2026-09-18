@@ -8,6 +8,7 @@ namespace Blacus.SlackAPIWrapper.Models.SlackEvents
     [JsonDerivedType(typeof(EventReactionAdded), typeDiscriminator: "reaction_added")]
     [JsonDerivedType(typeof(EventReactionRemoved), typeDiscriminator: "reaction_removed")]
     [JsonDerivedType(typeof(EventMessage), typeDiscriminator: "message")]
+    [JsonDerivedType(typeof(EventAppHomeOpened), typeDiscriminator: "app_home_opened")]
     public interface ISlackPayloadEvent : ISlackModel;
 
 }

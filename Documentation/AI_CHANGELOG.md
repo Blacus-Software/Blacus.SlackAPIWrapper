@@ -6,6 +6,21 @@ All changes made to this repository by AI agents must be recorded in this file i
 
 ## [Unreleased]
 
+### Added
+- Added `views.publish` API method (`ViewsPublish.cs`):
+  - Decorated with `[SlackMethod("views.publish", "Post", SlackMethodContentType.Json)]` and `[SlackLimiterTier(LimiterTier.WebAPITier4)]`.
+  - Added response `View` property.
+  - Implemented `OptionalArguments` supporting `UserId`, `View`, `Hash`, and `InteractivityPointer`.
+  - Added static helper `ExecuteAsync`.
+- Implemented payload properties on `EventAppHomeOpened.cs` for `app_home_opened` events:
+  - `Type` (with default `"app_home_opened"` and `[JsonIgnore]` to avoid conflict with polymorphic discriminator metadata property)
+  - `User` (`[JsonPropertyName("user")]`)
+  - `Channel` (`[JsonPropertyName("channel")]`)
+  - `Tab` (`[JsonPropertyName("tab")]`)
+  - `View` (`[JsonPropertyName("view")]`)
+  - `EventTs` (`[JsonPropertyName("event_ts")]`)
+- Added unit test in `PolymorphicSerializationTests.cs` verifying polymorphic deserialization of `EventAppHomeOpened` from JSON payload.
+
 ### Fixed
 - Fixed critical runtime `NullReferenceException` bugs in property getters/setters:
   - Added null check in `TextObject.Text` getter so null values with `MaxTextLength` return `null` instead of throwing when accessing string length.
