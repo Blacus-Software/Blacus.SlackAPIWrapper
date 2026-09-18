@@ -15,6 +15,11 @@ All changes made to this repository by AI agents must be recorded in this file i
   - Added secret validation step with clear error messaging if `NUGET_API_KEY` is not configured in repository secrets.
 
 ### Added
+- Added `oauth.v2.user.access` API method (`OAuthV2UserAccess.cs`):
+  - Decorated with `[SlackMethod("oauth.v2.user.access", "Post", SlackMethodContentType.FormUrlEncoded)]`.
+  - Added response properties: `AccessToken`, `TokenType`, `IdToken`, `Scope`, `AuthedUser`, `Team`, `Enterprise`, `ExpiresIn`, and `RefreshToken`.
+  - Implemented `OptionalArguments` supporting `ClientId`, `ClientSecret`, `Code`, `CodeVerifier`, `RedirectUri`, `GrantType`, `RefreshToken`, and `Assertion`.
+  - Added `ExecuteAsync` overloads supporting Basic authentication header encoding when `ClientId`/`ClientSecret` are provided, as well as token/PKCE requests.
 - Added `views.publish` API method (`ViewsPublish.cs`):
   - Decorated with `[SlackMethod("views.publish", "Post", SlackMethodContentType.Json)]` and `[SlackLimiterTier(LimiterTier.WebAPITier4)]`.
   - Added response `View` property.
