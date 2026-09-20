@@ -8,7 +8,7 @@
     <RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Blacus Slack API Wrapper</Title>
-    <Version>10.2.1</Version>
+    <Version>10.2.2</Version>
     <PackageId>Blacus.$(AssemblyName)</PackageId>
     <Authors>Blacus</Authors>
     <Product>Blacus.$(AssemblyName)</Product>
