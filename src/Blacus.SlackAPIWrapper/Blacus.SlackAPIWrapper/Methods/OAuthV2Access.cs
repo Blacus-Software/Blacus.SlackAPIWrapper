@@ -4,6 +4,7 @@ using System;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Blacus.SlackAPIWrapper.Methods
@@ -13,11 +14,19 @@ namespace Blacus.SlackAPIWrapper.Methods
     public class OAuthV2Access : SlackMethod
     {
 
-        public static async Task<OAuthV2Access> ExecuteAsync(OptionalArguments slackOptionalArguments)
+        public static async Task<OAuthV2Access> ExecuteAsync(OptionalArguments slackOptionalArguments, CancellationToken cancellationToken = default)
         {
-            var authToken = Encoding.ASCII.GetBytes($"{slackOptionalArguments.client_id}:{slackOptionalArguments.client_secret}");
-            return await SlackClient.HttpRequestAsync<OAuthV2Access>(new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken)), slackOptionalArguments);
+            if (!string.IsNullOrEmpty(slackOptionalArguments.ClientId) && !string.IsNullOrEmpty(slackOptionalArguments.ClientSecret))
+            {
+                var authToken = Encoding.ASCII.GetBytes($"{slackOptionalArguments.ClientId}:{slackOptionalArguments.ClientSecret}");
+                return await SlackClient.HttpRequestAsync<OAuthV2Access>(new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken)), slackOptionalArguments, cancellationToken: cancellationToken);
+            }
+
+            return await SlackClient.HttpRequestAsync<OAuthV2Access>((AuthenticationHeaderValue)null!, slackOptionalArguments, cancellationToken: cancellationToken);
         }
+
+        public static async Task<OAuthV2Access> ExecuteAsync(string token, OptionalArguments slackOptionalArguments, CancellationToken cancellationToken = default)
+            => await SlackClient.HttpRequestAsync<OAuthV2Access>(token, slackOptionalArguments, cancellationToken: cancellationToken);
 
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -60,18 +69,96 @@ namespace Blacus.SlackAPIWrapper.Methods
         [JsonPropertyName("refresh_token")]
         public string? RefreshToken { get; set; }
 
+        public class OptionalArguments : SlackOptionalArguments
+        {
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("client_id")]
+            public string? ClientId { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("client_secret")]
+            public string? ClientSecret { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("code")]
+            public string? Code { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("code_verifier")]
+            public string? CodeVerifier { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("redirect_uri")]
+            public string? RedirectUri { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("grant_type")]
+            public string? GrantType { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            [JsonPropertyName("refresh_token")]
+            public string? RefreshToken { get; set; }
+
+            #region Backward Compatibility Aliases
+
+            [Obsolete("Use ClientId instead.")]
+            [JsonIgnore]
+            public string? client_id
+            {
+                get => ClientId;
+                set => ClientId = value;
+            }
+
+            [Obsolete("Use ClientSecret instead.")]
+            [JsonIgnore]
+            public string? client_secret
+            {
+                get => ClientSecret;
+                set => ClientSecret = value;
+            }
+
+            [Obsolete("Use Code instead.")]
+            [JsonIgnore]
+            public string? code
+            {
+                get => Code;
+                set => Code = value;
+            }
+
+            [Obsolete("Use GrantType instead.")]
+            [JsonIgnore]
+            public string? grant_type
+            {
+                get => GrantType;
+                set => GrantType = value;
+            }
+
+            [Obsolete("Use RedirectUri instead.")]
+            [JsonIgnore]
+            public string? redirect_uri
+            {
+                get => RedirectUri;
+                set => RedirectUri = value;
+            }
+
+            [Obsolete("Use RefreshToken instead.")]
+            [JsonIgnore]
+            public string? refresh_token
+            {
+                get => RefreshToken;
+                set => RefreshToken = value;
+            }
+
+            #endregion
+
+        }
+
     }
 
-    public class OptionalArguments : SlackOptionalArguments
+    [Obsolete("Use OAuthV2Access.OptionalArguments instead.")]
+    public class OptionalArguments : OAuthV2Access.OptionalArguments
     {
-
-        public string? client_id { get; set; }
-        public string? client_secret { get; set; }
-        public string? code { get; set; }
-        public string? grant_type { get; set; }
-        public string? redirect_uri { get; set; }
-        public string? refresh_token { get; set; }
-
     }
 
 }

@@ -33,6 +33,18 @@ namespace Blacus.SlackAPIWrapper.Methods
         public string? AccessToken { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("user_id")]
+        public string? UserId { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("app_id")]
+        public string? AppId { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("is_enterprise_install")]
+        public bool? IsEnterpriseInstall { get; set; }
+        
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         [JsonPropertyName("token_type")]
         public string? TokenType { get; set; }
 

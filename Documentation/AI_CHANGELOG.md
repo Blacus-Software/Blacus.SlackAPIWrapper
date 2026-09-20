@@ -6,7 +6,20 @@ All changes made to this repository by AI agents must be recorded in this file i
 
 ## [Unreleased]
 
+### Changed
+- Modernized `OAuthV2Access.OptionalArguments` (`OAuthV2Access.cs`):
+  - Nested `OptionalArguments` class inside `OAuthV2Access` conforming to library-wide pattern.
+  - Replaced `snake_case` properties with standard C# PascalCase properties decorated with `[JsonPropertyName]` and null-ignoring serialization: `ClientId`, `ClientSecret`, `Code`, `CodeVerifier`, `RedirectUri`, `GrantType`, and `RefreshToken`.
+  - Maintained 100% backward compatibility via obsolete lowercase aliases (`client_id`, `client_secret`, `code`, `grant_type`, `redirect_uri`, `refresh_token`) and a top-level `OptionalArguments` type alias.
+  - Updated `OAuthV2Access.ExecuteAsync` overloads to support Basic authentication header creation from `ClientId`/`ClientSecret`, bearer token requests, and `CancellationToken` propagation.
+- Exposed virtual `ToJson()`, `GetFormUrlEncode()`, and `GetRequestQuery()` on `SlackOptionalArguments` base class backed by `SlackOptionalArgumentsHelper` for direct caller access without casting.
+
 ### Added
+- Added `UserId`, `AppId`, and `IsEnterpriseInstall` response properties on `OAuthV2UserAccess` (`OAuthV2UserAccess.cs`).
+- Added unit tests in `SlackMethodsTests.cs` for `OAuthV2Access.OptionalArguments`:
+  - Verified form URL encoding generates expected Slack API `snake_case` keys.
+  - Verified backward compatibility aliases and top-level type alias map correctly.
+  - Verified `OAuthV2Access.ExecuteAsync` populates Basic authentication header and parameters.
 - Added `LICENSE` file with standard MIT license text in repository root and packed into NuGet output.
 - Added `.gitattributes` file to enforce consistent line endings across platforms and eliminate phantom CRLF/LF working directory diffs.
 - Added `BotToken` and `AppLevelToken` convenience property aliases on `SlackCredential` to ensure code samples and consumer configuration bind cleanly.

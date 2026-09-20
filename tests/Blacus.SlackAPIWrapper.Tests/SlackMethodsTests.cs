@@ -202,6 +202,103 @@ namespace Blacus.SlackAPIWrapper.Tests
         }
 
         [Fact]
+        public void OAuthV2Access_OptionalArguments_FormUrlEncode_ProducesCorrectSnakeCaseKeys()
+        {
+            var args = new OAuthV2Access.OptionalArguments
+            {
+                ClientId = "test-client-id",
+                ClientSecret = "test-client-secret",
+                Code = "test-code",
+                CodeVerifier = "test-code-verifier",
+                RedirectUri = "https://example.com/oauth/callback",
+                GrantType = "authorization_code",
+                RefreshToken = "test-refresh-token"
+            };
+
+            var encoded = args.GetFormUrlEncode();
+
+            Assert.Contains(encoded, kv => kv.Key == "client_id" && kv.Value == "test-client-id");
+            Assert.Contains(encoded, kv => kv.Key == "client_secret" && kv.Value == "test-client-secret");
+            Assert.Contains(encoded, kv => kv.Key == "code" && kv.Value == "test-code");
+            Assert.Contains(encoded, kv => kv.Key == "code_verifier" && kv.Value == "test-code-verifier");
+            Assert.Contains(encoded, kv => kv.Key == "redirect_uri" && kv.Value == "https://example.com/oauth/callback");
+            Assert.Contains(encoded, kv => kv.Key == "grant_type" && kv.Value == "authorization_code");
+            Assert.Contains(encoded, kv => kv.Key == "refresh_token" && kv.Value == "test-refresh-token");
+        }
+
+        [Fact]
+        public void OAuthV2Access_BackwardCompatibilityAliases_WorkCorrectly()
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            var args = new OAuthV2Access.OptionalArguments
+            {
+                client_id = "old-client-id",
+                client_secret = "old-client-secret",
+                code = "old-code",
+                grant_type = "refresh_token",
+                redirect_uri = "https://example.com/cb",
+                refresh_token = "old-ref-token"
+            };
+
+            Assert.Equal("old-client-id", args.ClientId);
+            Assert.Equal("old-client-secret", args.ClientSecret);
+            Assert.Equal("old-code", args.Code);
+            Assert.Equal("refresh_token", args.GrantType);
+            Assert.Equal("https://example.com/cb", args.RedirectUri);
+            Assert.Equal("old-ref-token", args.RefreshToken);
+
+            // Test top-level obsolete type alias
+            Blacus.SlackAPIWrapper.Methods.OptionalArguments topLevelArgs = new()
+            {
+                ClientId = "alias-id"
+            };
+            Assert.Equal("alias-id", topLevelArgs.ClientId);
+#pragma warning restore CS0618
+        }
+
+        [Fact]
+        public async Task OAuthV2Access_ExecuteAsync_UsesBasicAuthHeader()
+        {
+            var originalClient = SlackClient.HttpClient;
+            HttpRequestMessage? capturedRequest = null;
+            var handler = new MockHandler
+            {
+                HandlerFunc = req =>
+                {
+                    capturedRequest = req;
+                    return new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent("{\"ok\": true, \"access_token\": \"xoxb-new\"}")
+                    };
+                }
+            };
+            SlackClient.HttpClient = new HttpClient(handler);
+
+            try
+            {
+                var result = await OAuthV2Access.ExecuteAsync(new OAuthV2Access.OptionalArguments
+                {
+                    ClientId = "my-client",
+                    ClientSecret = "my-secret",
+                    Code = "auth-code"
+                });
+
+                Assert.NotNull(result);
+                Assert.True(result.Ok);
+                Assert.Equal("xoxb-new", result.AccessToken);
+                Assert.NotNull(capturedRequest);
+                Assert.Equal("Basic", capturedRequest.Headers.Authorization?.Scheme);
+
+                string expectedAuthParam = Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("my-client:my-secret"));
+                Assert.Equal(expectedAuthParam, capturedRequest.Headers.Authorization?.Parameter);
+            }
+            finally
+            {
+                SlackClient.HttpClient = originalClient;
+            }
+        }
+
+        [Fact]
         public async Task Limiter_TryGetAndDisposeAll_BehavesCorrectly()
         {
             string limiterId = "limiter_test_" + Guid.NewGuid().ToString();

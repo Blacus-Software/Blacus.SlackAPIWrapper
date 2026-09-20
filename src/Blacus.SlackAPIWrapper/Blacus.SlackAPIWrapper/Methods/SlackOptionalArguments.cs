@@ -15,22 +15,29 @@ namespace Blacus.SlackAPIWrapper.Methods
         public string ToJson() =>
             JsonSerializer.Serialize<object>(this, JsonConverterSettings.Singleton);
 
+        public List<KeyValuePair<string, string>> GetFormUrlEncode() =>
+            SlackOptionalArgumentsHelper.GetFormUrlEncode(this);
 
-        public List<KeyValuePair<string, string>> GetFormUrlEncode()
+        public NameValueCollection GetRequestQuery() =>
+            SlackOptionalArgumentsHelper.GetRequestQuery(this);
+
+    }
+
+    internal static class SlackOptionalArgumentsHelper
+    {
+
+        public static List<KeyValuePair<string, string>> GetFormUrlEncode(ISlackOptionalArguments instance)
         {
-
             var toReturn = new List<KeyValuePair<string, string>>();
 
-            PropertyInfo[] properties = GetType().GetProperties();
+            PropertyInfo[] properties = instance.GetType().GetProperties();
 
             foreach (PropertyInfo property in properties)
             {
-
-                var propertyValue = property.GetValue(this);
+                var propertyValue = property.GetValue(instance);
 
                 if (propertyValue != null)
                 {
-
                     var jsonName = property.GetCustomAttribute<JsonPropertyNameAttribute>();
                     string stringValue = propertyValue switch
                     {
@@ -46,30 +53,24 @@ namespace Blacus.SlackAPIWrapper.Methods
                     {
                         toReturn.Add(new(jsonName.Name, stringValue));
                     }
-
                 }
-
             }
 
             return toReturn;
-
         }
 
-        public NameValueCollection GetRequestQuery()
+        public static NameValueCollection GetRequestQuery(ISlackOptionalArguments instance)
         {
-
             var toReturn = HttpUtility.ParseQueryString(string.Empty);
 
-            PropertyInfo[] properties = this.GetType().GetProperties();
+            PropertyInfo[] properties = instance.GetType().GetProperties();
 
             foreach (PropertyInfo property in properties)
             {
-
-                var propertyValue = property.GetValue(this);
+                var propertyValue = property.GetValue(instance);
 
                 if (propertyValue != null)
                 {
-
                     var jsonName = property.GetCustomAttribute<JsonPropertyNameAttribute>();
                     string stringValue = propertyValue switch
                     {
@@ -85,19 +86,25 @@ namespace Blacus.SlackAPIWrapper.Methods
                     {
                         toReturn.Add(jsonName.Name, stringValue);
                     }
-
                 }
-
             }
 
             return toReturn;
-
         }
 
     }
 
     public abstract class SlackOptionalArguments : ISlackOptionalArguments
     {
+
+        public virtual string ToJson() =>
+            JsonSerializer.Serialize<object>(this, JsonConverterSettings.Singleton);
+
+        public virtual List<KeyValuePair<string, string>> GetFormUrlEncode() =>
+            SlackOptionalArgumentsHelper.GetFormUrlEncode(this);
+
+        public virtual NameValueCollection GetRequestQuery() =>
+            SlackOptionalArgumentsHelper.GetRequestQuery(this);
 
     }
 
