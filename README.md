@@ -148,3 +148,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 ## Contributing
 
 Contributions are welcome! If you'd like to report a bug, suggest an improvement, or add a new feature, please open an issue or submit a pull request on GitHub.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

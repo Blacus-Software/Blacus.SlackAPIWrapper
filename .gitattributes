@@ -1,0 +1,25 @@
+# Set default behavior to automatically handle line endings
+* text=auto
+
+# Explicitly declare text files you want to always be normalized and converted
+# to native line endings on checkout
+*.cs text diff=csharp
+*.csproj text
+*.props text
+*.targets text
+*.json text
+*.yml text
+*.yaml text
+*.md text
+*.txt text
+
+# Visual Studio solution files require CRLF
+*.sln text eol=crlf
+
+# Shell scripts must have LF
+*.sh text eol=lf
+
+# Windows batch/cmd files must have CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf

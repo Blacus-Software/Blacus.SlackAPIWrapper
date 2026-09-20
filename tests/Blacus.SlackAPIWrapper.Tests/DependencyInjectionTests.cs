@@ -49,6 +49,21 @@ namespace Blacus.SlackAPIWrapper.Tests
             Assert.NotNull(provider.GetService<ISlackASPTransmission>());
         }
 
+        [Fact]
+        public void SlackCredential_PropertyAliases_MapCorrectly()
+        {
+            var credential = new SlackCredential
+            {
+                BotToken = "xoxb-alias-token",
+                AppLevelToken = "xapp-alias-token"
+            };
+
+            Assert.Equal("xoxb-alias-token", credential.BotUserToken);
+            Assert.Equal("xoxb-alias-token", credential.BotToken);
+            Assert.Equal("xapp-alias-token", credential.AppToken);
+            Assert.Equal("xapp-alias-token", credential.AppLevelToken);
+        }
+
     }
 
 }

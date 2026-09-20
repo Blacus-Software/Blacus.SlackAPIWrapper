@@ -17,29 +17,39 @@
     <PackageTags>slack;slack-api;slack-bot;webapi;socket-mode;wrapper;aspnetcore</PackageTags>
     <PackageOutputPath>$(OutputPath)</PackageOutputPath>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/Blacus-Software/Blacus.SlackAPIWrapper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Blacus-Software/Blacus.SlackAPIWrapper</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <Copyright>Copyright (c) 2026 Blacus</Copyright>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702</NoWarn>
+    <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702</NoWarn>
+    <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
-    </None> 
-	  <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
-	  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.1" />
-	  <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.1" />
-	  <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.1" />
-	  <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.1" />
+    </None>
+    <None Include="..\..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All" />
   </ItemGroup>	 
 
 </Project>

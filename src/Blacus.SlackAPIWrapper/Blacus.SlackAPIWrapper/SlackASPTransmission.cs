@@ -34,7 +34,7 @@
         private ISlackPayload? payload;
         private bool prepared;
 
-        public HttpContext HttpContext { get => httpContextAccessor.HttpContext; }
+        public HttpContext? HttpContext { get => httpContextAccessor.HttpContext; }
 
         public ISlackPayload? Payload
         {
@@ -71,6 +71,9 @@
 
             if (prepared)
                 return;
+
+            if (HttpContext == null)
+                throw new InvalidOperationException("HttpContext is not available.");
 
             string bodyAsString;
             using (StreamReader reader = new(HttpContext.Request.Body, encoding: Encoding.UTF8, detectEncodingFromByteOrderMarks: true, bufferSize: 1024, leaveOpen: true))

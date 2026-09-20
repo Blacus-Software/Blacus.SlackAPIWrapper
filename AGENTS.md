@@ -112,7 +112,7 @@ namespace Blacus.SlackAPIWrapper.Methods
 
 ## 6. Known Anti-Patterns — Do Not Replicate
 
-For full analysis, see `Documentation/ProjectAnalysis.md`. When modifying or refactoring existing code, avoid these patterns:
+When modifying or refactoring existing code, avoid these patterns:
 
 1. **Sync-over-Async (`.Wait()`, `.Result`):**
    - Do **not** call `.Wait()` or `.Result` on tasks. Make methods `async Task` and `await` properly.

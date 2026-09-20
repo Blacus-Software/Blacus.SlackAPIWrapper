@@ -25,8 +25,28 @@ namespace Blacus.SlackAPIWrapper
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string AppToken { get; set; } = string.Empty;
 
+        /// <summary>
+        /// Alias for <see cref="AppToken"/>.
+        /// </summary>
+        [JsonIgnore]
+        public string AppLevelToken
+        {
+            get => AppToken;
+            set => AppToken = value;
+        }
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string BotUserToken { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Alias for <see cref="BotUserToken"/>.
+        /// </summary>
+        [JsonIgnore]
+        public string BotToken
+        {
+            get => BotUserToken;
+            set => BotUserToken = value;
+        }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string UserToken { get; set; } = string.Empty;

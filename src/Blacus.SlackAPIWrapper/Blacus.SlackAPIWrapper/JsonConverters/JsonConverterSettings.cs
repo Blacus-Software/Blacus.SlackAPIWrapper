@@ -9,19 +9,25 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
 
         public static readonly JsonSerializerOptions Singleton = Generate();
 
-        public static JsonSerializerOptions Generate() => new System.Text.Json.JsonSerializerOptions
+        public static JsonSerializerOptions Generate()
         {
-            WriteIndented = false,
-            Converters =
+            var options = new JsonSerializerOptions
             {
-                BoolConverter.Singleton,
-                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
-                new DateTimeOffsetAsIntConverter(),
-                new TimeOnlyConverter(),
-                new DateOnlyConverter()
-            },
-            AllowOutOfOrderMetadataProperties = true,             
-        };
+                WriteIndented = false,
+                Converters =
+                {
+                    BoolConverter.Singleton,
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase),
+                    new DateTimeOffsetAsIntConverter(),
+                    new TimeOnlyConverter(),
+                    new DateOnlyConverter()
+                }
+            };
+#if NET9_0_OR_GREATER
+            options.AllowOutOfOrderMetadataProperties = true;
+#endif
+            return options;
+        }
 
     }
 

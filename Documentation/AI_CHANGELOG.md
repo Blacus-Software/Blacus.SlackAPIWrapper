@@ -6,6 +6,21 @@ All changes made to this repository by AI agents must be recorded in this file i
 
 ## [Unreleased]
 
+### Added
+- Added `LICENSE` file with standard MIT license text in repository root and packed into NuGet output.
+- Added `.gitattributes` file to enforce consistent line endings across platforms and eliminate phantom CRLF/LF working directory diffs.
+- Added `BotToken` and `AppLevelToken` convenience property aliases on `SlackCredential` to ensure code samples and consumer configuration bind cleanly.
+- Enabled XML documentation generation (`<GenerateDocumentationFile>true</GenerateDocumentationFile>`) on `SlackAPIWrapper.csproj`.
+- Added SourceLink and symbol packaging (`<IncludeSymbols>true</IncludeSymbols>`, `<SymbolPackageFormat>snupkg</SymbolPackageFormat>`, `Microsoft.SourceLink.GitHub 10.0.401`).
+- Added unit tests in `DependencyInjectionTests.cs` validating `SlackCredential` property aliases.
+
+### Changed
+- Replaced legacy `Microsoft.AspNetCore.Http.Abstractions 2.3.0` and bloated `Microsoft.Extensions.*` package references with `<FrameworkReference Include="Microsoft.AspNetCore.App" />` in both library and test projects.
+- Guarded `AllowOutOfOrderMetadataProperties` with `#if NET9_0_OR_GREATER` in `JsonConverterSettings.cs` to support `net8.0`.
+- Typed `SlackASPTransmission.HttpContext` as nullable (`HttpContext?`) with explicit null guard in `PrepareAsync` to ensure clean nullability across all target frameworks.
+- Updated `README.md` with License section and verified code samples.
+- Cleaned up stale reference to `ProjectAnalysis.md` in `AGENTS.md`.
+
 ### Fixed
 - Fixed and hardened GitHub Actions NuGet publishing workflow (`.github/workflows/publish-nuget.yml`):
   - Added `workflow_dispatch` trigger to enable manual on-demand publishing from the GitHub Actions UI.
