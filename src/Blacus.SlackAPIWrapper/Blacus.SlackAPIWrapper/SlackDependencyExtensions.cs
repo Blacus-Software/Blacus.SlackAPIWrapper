@@ -18,6 +18,8 @@
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
 
+            services.AddHttpContextAccessor();
+
             services.AddHttpClient<ISlackClient, SlackClient>();
             services.AddTransient<SlackClient>(sp => (SlackClient)sp.GetRequiredService<ISlackClient>());
 

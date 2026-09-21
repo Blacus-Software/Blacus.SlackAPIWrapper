@@ -26,6 +26,7 @@ namespace Blacus.SlackAPIWrapper.Tests
 
             Assert.NotNull(slackClient);
             Assert.NotNull(concreteClient);
+            Assert.NotNull(provider.GetService<IHttpContextAccessor>());
         }
 
         [Fact]

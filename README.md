@@ -91,6 +91,22 @@ var response = await ChatPostMessage.ExecuteAsync(botToken, new ChatPostMessage.
 
 ### 3. Handling Webhooks & Events in ASP.NET Core
 
+You can handle incoming webhooks and events cleanly using `SlackTransmissionHandler`:
+
+```csharp
+app.MapPost("/slack/events", async (ISlackASPTransmission transmission) =>
+{
+    return await SlackTransmissionHandler.HandleAsync(transmission, async (t) =>
+    {
+        var payload = t.Payload;
+        // Process verified Slack event or slash command and return a response string
+        return "OK";
+    });
+});
+```
+
+Or manage preparation directly with `ISlackASPTransmission`:
+
 ```csharp
 app.MapPost("/slack/events", async (ISlackASPTransmission transmission) =>
 {

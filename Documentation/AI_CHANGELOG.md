@@ -6,6 +6,13 @@ All changes made to this repository by AI agents must be recorded in this file i
 
 ## [Unreleased]
 
+### Added
+- Added `SlackTransmissionHandler` (`SlackTransmissionHandler.cs`):
+  - Provides a static `HandleAsync(ISlackASPTransmission, Func<ISlackASPTransmission, Task<string?>>)` method that executes `transmission.PrepareAsync()` before invoking custom handler code that returns a response string.
+  - Added unit test suite in `SlackTransmissionHandlerTests.cs` validating `PrepareAsync()` invocation, payload availability, return values, and argument null validation.
+  - Updated `README.md` with usage example for `SlackTransmissionHandler.HandleAsync`.
+- Added automatic `services.AddHttpContextAccessor()` registration to `AddSlackDependency` (`SlackDependencyExtensions.cs`) and added unit test in `DependencyInjectionTests.cs`.
+
 ### Changed
 - Modernized `OAuthV2Access.OptionalArguments` (`OAuthV2Access.cs`):
   - Nested `OptionalArguments` class inside `OAuthV2Access` conforming to library-wide pattern.
