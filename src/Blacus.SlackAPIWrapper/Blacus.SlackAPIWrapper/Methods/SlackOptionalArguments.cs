@@ -34,6 +34,9 @@ namespace Blacus.SlackAPIWrapper.Methods
 
             foreach (PropertyInfo property in properties)
             {
+                if (property.GetCustomAttribute<JsonIgnoreAttribute>()?.Condition == JsonIgnoreCondition.Always)
+                    continue;
+
                 var propertyValue = property.GetValue(instance);
 
                 if (propertyValue != null)
@@ -67,6 +70,9 @@ namespace Blacus.SlackAPIWrapper.Methods
 
             foreach (PropertyInfo property in properties)
             {
+                if (property.GetCustomAttribute<JsonIgnoreAttribute>()?.Condition == JsonIgnoreCondition.Always)
+                    continue;
+
                 var propertyValue = property.GetValue(instance);
 
                 if (propertyValue != null)

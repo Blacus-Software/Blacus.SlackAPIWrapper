@@ -7,6 +7,18 @@ All changes made to this repository by AI agents must be recorded in this file i
 ## [Unreleased]
 
 ### Added
+- Added `UsersInfo` method (`UsersInfo.cs`) implementing the Slack `users.info` endpoint:
+  - Decorated with `[SlackMethod("users.info", "POST", SlackMethodContentType.Json)]` and `[SlackLimiterTier(LimiterTier.WebAPITier4)]`.
+  - Implements static `ExecuteAsync(string, OptionalArguments?, CancellationToken)`.
+  - Nested `OptionalArguments` class supporting `User` (`user`), `UserId` convenience alias, and `IncludeLocale` (`include_locale`).
+- Added `Has2Fa` (`has_2fa`), `IsStranger` (`is_stranger`), and `Locale` (`locale`) properties on `User` model (`User.cs`).
+- Added unit tests in `SlackMethodsTests.cs` covering `UsersInfo` method metadata, optional arguments serialization, alias handling, and full JSON response deserialization.
+
+### Changed
+- Updated `SlackOptionalArgumentsHelper` (`SlackOptionalArguments.cs`) to skip properties decorated with `[JsonIgnore(Condition = JsonIgnoreCondition.Always)]` in both `GetFormUrlEncode` and `GetRequestQuery`, ensuring internal alias and computed properties do not leak into request payloads.
+- Bumped project version to `10.2.3` in `SlackAPIWrapper.csproj`.
+
+### Added
 - Added `SlackTransmissionHandler` (`SlackTransmissionHandler.cs`):
   - Provides a static `HandleAsync(ISlackASPTransmission, Func<ISlackASPTransmission, Task<string?>>)` method that executes `transmission.PrepareAsync()` before invoking custom handler code that returns a response string.
   - Added unit test suite in `SlackTransmissionHandlerTests.cs` validating `PrepareAsync()` invocation, payload availability, return values, and argument null validation.

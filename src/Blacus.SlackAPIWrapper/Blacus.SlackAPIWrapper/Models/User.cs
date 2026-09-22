@@ -98,6 +98,18 @@ namespace Blacus.SlackAPIWrapper.Models
         [JsonPropertyName("email")]
         public string? Email { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("has_2fa")]
+        public bool? Has2Fa { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("is_stranger")]
+        public bool? IsStranger { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonPropertyName("locale")]
+        public string? Locale { get; set; }
+
     }
 
 }
