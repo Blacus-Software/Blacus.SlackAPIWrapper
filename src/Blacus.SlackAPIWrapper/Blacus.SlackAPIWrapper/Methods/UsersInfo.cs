@@ -12,7 +12,7 @@ namespace Blacus.SlackAPIWrapper.Methods
     /// <see href="https://docs.slack.dev/reference/methods/users.info/"/>
     /// </summary>
     [SlackLimiterTier(LimiterTier.WebAPITier4)]
-    [SlackMethod("users.info", "POST", SlackMethodContentType.Json)]
+    [SlackMethod("users.info", "POST", SlackMethodContentType.FormUrlEncoded)]
     public class UsersInfo : SlackMethod
     {
 
