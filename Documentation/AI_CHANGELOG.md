@@ -6,6 +6,15 @@ All changes made to this repository by AI agents must be recorded in this file i
 
 ## [Unreleased]
 
+### Fixed
+- Updated `SlackMethodsTests.cs` (`UsersInfo_Metadata_HasCorrectAttributes`), `AGENTS.md`, and `README.md` to reflect `SlackMethodContentType.FormUrlEncoded` for `UsersInfo`, aligning test assertions and documentation with the Slack Web API specification and `UsersInfo.cs`.
+
+### Changed
+- Updated `UsersInfo` method (`UsersInfo.cs`) content type to `SlackMethodContentType.FormUrlEncoded`.
+- Bumped project version to `10.2.4` in `SlackAPIWrapper.csproj`.
+
+## [10.2.3]
+
 ### Added
 - Added `UsersInfo` method (`UsersInfo.cs`) implementing the Slack `users.info` endpoint:
   - Decorated with `[SlackMethod("users.info", "POST", SlackMethodContentType.Json)]` and `[SlackLimiterTier(LimiterTier.WebAPITier4)]`.

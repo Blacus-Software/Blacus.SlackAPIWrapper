@@ -48,7 +48,7 @@ using System.Text.Json.Serialization;
 
 namespace Blacus.SlackAPIWrapper.Methods
 {
-    [SlackMethod("users.info", "POST", SlackMethodContentType.Json)]
+    [SlackMethod("users.info", "POST", SlackMethodContentType.FormUrlEncoded)]
     public class UsersInfo : SlackModel
     {
         [JsonPropertyName("user")]

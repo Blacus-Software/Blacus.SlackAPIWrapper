@@ -320,7 +320,7 @@ namespace Blacus.SlackAPIWrapper.Tests
             Assert.NotNull(methodAttr);
             Assert.Equal("users.info", methodAttr.Path);
             Assert.Equal(HttpMethod.Post, methodAttr.HttpMethod);
-            Assert.Equal(SlackMethodContentType.Json, methodAttr.ContentType);
+            Assert.Equal(SlackMethodContentType.FormUrlEncoded, methodAttr.ContentType);
 
             var limiterAttr = SlackLimiterTierAttribute.GetSlackLimiterAttribute<UsersInfo>();
             Assert.NotNull(limiterAttr);
