@@ -13,8 +13,8 @@ namespace Blacus.SlackAPIWrapper
         /// <param name="handler">The custom handler delegate to process the prepared transmission.</param>
         /// <returns>The string result returned by the custom handler.</returns>
         public static async Task<string?> HandleAsync(
-            ISlackASPTransmission transmission,
-            Func<ISlackASPTransmission, Task<string?>> handler)
+            ISlackTransmission transmission,
+            Func<ISlackTransmission, Task<string?>> handler)
         {
 
             if (transmission == null)

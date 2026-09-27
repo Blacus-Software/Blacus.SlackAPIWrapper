@@ -47,7 +47,7 @@ namespace Blacus.SlackAPIWrapper.Tests
             Assert.NotNull(provider.GetService<ISlackClient>());
             Assert.NotNull(provider.GetService<SlackCredential>());
             Assert.Equal("xoxb-123", provider.GetService<SlackCredential>()?.BotUserToken);
-            Assert.NotNull(provider.GetService<ISlackASPTransmission>());
+            Assert.NotNull(provider.GetService<ISlackTransmission>());
         }
 
         [Fact]

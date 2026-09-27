@@ -12,7 +12,7 @@
     using System.Threading.Tasks;
     using System.Web;
 
-    public interface ISlackASPTransmission
+    public interface ISlackTransmission
     {
 
         public ISlackPayload? Payload { get; }
@@ -27,7 +27,7 @@
 
     }
 
-    public class SlackTransmission : ISlackASPTransmission
+    public class SlackTransmission : ISlackTransmission
     {
 
         private readonly IHttpContextAccessor httpContextAccessor;

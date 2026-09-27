@@ -18,7 +18,7 @@ namespace Blacus.SlackAPIWrapper.Tests
             public HttpContext? HttpContext { get; set; }
         }
 
-        private class MockSlackASPTransmission : ISlackASPTransmission
+        private class MockSlackASPTransmission : ISlackTransmission
         {
             public bool PrepareAsyncCalled { get; private set; }
             public ISlackPayload? Payload { get; set; }

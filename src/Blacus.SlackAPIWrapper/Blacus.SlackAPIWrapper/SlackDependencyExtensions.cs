@@ -29,7 +29,7 @@
 
         /// <summary>
         /// Registers <see cref="ISlackClient"/>, <see cref="SlackClient"/>, <see cref="SlackCredential"/>,
-        /// and <see cref="ISlackASPTransmission"/> with the dependency injection container.
+        /// and <see cref="ISlackTransmission"/> with the dependency injection container.
         /// </summary>
         public static IServiceCollection AddSlackDependency(this IServiceCollection services, SlackCredential slackCredential)
         {
@@ -44,7 +44,7 @@
 
             services.AddSingleton(slackCredential);
 
-            services.AddScoped<ISlackASPTransmission>((sp) =>
+            services.AddScoped<ISlackTransmission>((sp) =>
                 new SlackTransmission(
                     sp.GetRequiredService<IHttpContextAccessor>(),
                     slackCredential 
