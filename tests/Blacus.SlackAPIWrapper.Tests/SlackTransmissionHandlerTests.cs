@@ -77,7 +77,7 @@ namespace Blacus.SlackAPIWrapper.Tests
 
             var accessor = new MockHttpContextAccessor { HttpContext = httpContext };
             var credential = new SlackCredential { SigningSecret = "secret" };
-            var transmission = new SlackASPTransmission(accessor, credential);
+            var transmission = new SlackTransmission(accessor, credential);
 
             string? handlerResult = await SlackTransmissionHandler.HandleAsync(transmission, async t =>
             {

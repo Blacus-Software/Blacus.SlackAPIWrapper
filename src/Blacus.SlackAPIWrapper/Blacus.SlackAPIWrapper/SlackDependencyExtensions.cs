@@ -45,7 +45,7 @@
             services.AddSingleton(slackCredential);
 
             services.AddScoped<ISlackASPTransmission>((sp) =>
-                new SlackASPTransmission(
+                new SlackTransmission(
                     sp.GetRequiredService<IHttpContextAccessor>(),
                     slackCredential 
                     ));

@@ -27,7 +27,7 @@
 
     }
 
-    public class SlackASPTransmission : ISlackASPTransmission
+    public class SlackTransmission : ISlackASPTransmission
     {
 
         private readonly IHttpContextAccessor httpContextAccessor;
@@ -58,7 +58,7 @@
         public bool Verified { get; private set; }
         public bool ShortCircuited { get; private set; }
 
-        public SlackASPTransmission(IHttpContextAccessor httpContextAccessor, SlackCredential slackCredential)
+        public SlackTransmission(IHttpContextAccessor httpContextAccessor, SlackCredential slackCredential)
         {
 
             this.httpContextAccessor = httpContextAccessor;
