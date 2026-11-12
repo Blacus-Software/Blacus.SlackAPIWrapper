@@ -7,6 +7,7 @@ namespace Blacus.SlackAPIWrapper.Models.BlockElements
 
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "type", UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor)]
     [JsonDerivedType(typeof(ButtonElement), typeDiscriminator: "button")]
+    [JsonDerivedType(typeof(FeedbackButtonsElement), typeDiscriminator: "feedback_buttons")]
     [JsonDerivedType(typeof(DatePickerElement), typeDiscriminator: "datepicker")]
     [JsonDerivedType(typeof(DatetimePickerElement), typeDiscriminator: "datetimepicker")]
     [JsonDerivedType(typeof(EmailInputElement), typeDiscriminator: "email_text_input")]

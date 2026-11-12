@@ -7,6 +7,7 @@ namespace Blacus.SlackAPIWrapper.Models.Blocks
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "type", UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor)]
     [JsonDerivedType(typeof(ActionBlock), typeDiscriminator: "actions")]
     [JsonDerivedType(typeof(ContextBlock), typeDiscriminator: "context")]
+    [JsonDerivedType(typeof(ContextActionsBlock), typeDiscriminator: "context_actions")]
     [JsonDerivedType(typeof(DividerBlock), typeDiscriminator: "divider")]
     [JsonDerivedType(typeof(HeaderBlock), typeDiscriminator: "header")]
     [JsonDerivedType(typeof(InputBlock), typeDiscriminator: "input")]

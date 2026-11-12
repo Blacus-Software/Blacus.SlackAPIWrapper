@@ -9,11 +9,12 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
 
         public static readonly JsonSerializerOptions Singleton = Generate();
 
-        public static JsonSerializerOptions Generate()
+        public static JsonSerializerOptions Generate(bool writeIndented = false)
         {
+            
             var options = new JsonSerializerOptions
             {
-                WriteIndented = false,
+                WriteIndented = writeIndented,
                 Converters =
                 {
                     BoolConverter.Singleton,
@@ -23,10 +24,13 @@ namespace Blacus.SlackAPIWrapper.JsonConverters
                     new DateOnlyConverter()
                 }
             };
+
 #if NET9_0_OR_GREATER
             options.AllowOutOfOrderMetadataProperties = true;
 #endif
+
             return options;
+
         }
 
     }

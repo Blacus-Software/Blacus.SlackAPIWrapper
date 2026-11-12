@@ -5,10 +5,10 @@
     <LangVersion>14</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <RootNamespace>Blacus.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Blacus Slack API Wrapper</Title>
-    <Version>10.3.2</Version>
+    <Version>10.3.3</Version>
     <PackageId>Blacus.$(AssemblyName)</PackageId>
     <Authors>Blacus</Authors>
     <Product>Blacus.$(AssemblyName)</Product>

@@ -16,4 +16,8 @@ namespace Blacus.SlackAPIWrapper.Models.SlackActions
 
     }
 
+    public class FeedbackButtonAction : ButtonAction { }
+
+    public class IconButtonAction : ButtonAction { }
+
 }

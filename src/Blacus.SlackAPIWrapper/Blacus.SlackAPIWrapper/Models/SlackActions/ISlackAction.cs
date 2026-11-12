@@ -5,6 +5,8 @@ namespace Blacus.SlackAPIWrapper.Models.SlackActions
 
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "type", UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor)]
     [JsonDerivedType(typeof(ButtonAction), typeDiscriminator: "button")]
+    [JsonDerivedType(typeof(FeedbackButtonAction), typeDiscriminator: "feedback_buttons")]
+    [JsonDerivedType(typeof(IconButtonAction), typeDiscriminator: "icon_button")]
     [JsonDerivedType(typeof(ChannelsSelectAction), typeDiscriminator: "channels_select")]
     [JsonDerivedType(typeof(CheckBoxAction), typeDiscriminator: "checkboxes")]
     [JsonDerivedType(typeof(ConversationsSelectAction), typeDiscriminator: "conversations_select")]
